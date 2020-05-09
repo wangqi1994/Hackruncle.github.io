@@ -1,0 +1,186 @@
+---
+title: "早课2"
+catalog: true
+toc_nav_num: true
+date: 2020-04-23 12:00:00
+subtitle: "若泽数据第二次早课作业-4.23"
+tags:
+- [ruozedata]
+categories:
+- [ruozedata]
+updateDate: 2020-04-23 12:00:00
+top: 0  #置顶
+---
+
+### 1.查看当前目录
+
+```bash
+pwd
+```
+
+### 2.隐藏文件、文件夹以什么开始，怎样查看
+
+以.开头
+```bash
+ls -a
+```
+
+### 3.ls -l 等价于什么？
+
+ls -l = ll 显示额外信息  权限 用户用户组 时间 大小
+
+### 4.级联创建文件夹
+
+mkdir dir1 dir2 dir3 并
+mkdir -p dir4/dir5/dir6  串 级联创建-p
+
+### 5.创建文件哪几种方式
+
+a.touch 1.log  创建空文件
+b.vi    2.log  创建文件并用vim编辑器打开编辑
+c.echo "ruozedata" > 3.log
+主要场景是为了  覆盖内容 或者 追加内容 
+打印一句话进入3.log文件   
+">" 创建或覆盖    【高危命令1】
+'>>' 追加
+
+### 6.cp和mv谁快？ 能不能在cp 、mv过程，顺便修改名称呢？
+
+mv是始终一份  快
+cp是两份      慢
+同时支持修改名称
+mv  dir2 ruozedata/dir22
+cp -r dir3 dir33
+
+### 7.查看文件的大小哪两种命令？
+
+ls -l 显示额外信息  权限 用户用户组 时间 大小 = ll
+ls -l -h  仅仅查看文件的可读大小 
+
+### 8.查看文件夹的大小的命令？
+
+du -l 查看当前目录下各文件夹大小
+du -sh 查看当前目录大小
+du -h 显示可读的大小
+
+### 9.ll 命令执行完成后，文件、文件夹展示一长串信息，有哪些？
+
+除文件名或文件夹名之外，还显示额外信息  权限 用户用户组 时间 大小
+
+### 10.绝对路径和相对路径，区别是什么？
+
+绝对路径就是文件的真正存在的路径，是指从硬盘的根目录(盘符)开始，进行一级级目录指向文件。
+相对路径就是以当前文件为基准进行一级级目录指向被引用的资源文件。         
+../             表示当前文件所在的目录的上一级目录         
+./              表示当前文件所在的目录(可以省略)        
+/               表示当前用户的根目录
+
+### 11.root的家目录在哪？普通用户的默认家目录在哪？
+
+root家目录/root
+xx用户家目录/home/xxx
+
+### 12.切换到用户的家目录，哪三种方式？
+
+切换到家目录
+cd ~
+cd 空格
+cd /home/用户
+
+### 13.切换到 上一层目录 与 上一次目录，命令分别是什么？
+
+切换上一次目录
+cd -
+切换到上一层目录
+cd ../
+
+### 14.清除屏幕信息
+
+clear
+
+### 15.查看文件内容 哪几个命令？
+
+cat  文件内容一下子全部显示  ctrl+z 中断
+more 文件内容一页页往下翻，按空格往下  Ctrl+B 回退 q退出
+less 文件内容 按上下键   q退出
+tail 实时查看文件最新内容
+
+### 16.实时查看文件内容，-f -F区别是什么？
+
+tail 实时查看文件最新内容
+&emsp;&emsp;&emsp;tail -f xxx.log  基本不太用来自动提取实时监控，当文件不在之后就不会在尝试查看，即使文件重新创建
+&emsp;&emsp;&emsp;tail -F yyy.log   =-f+ retry再次尝试采集信息
+
+### 17.谈谈你对  如何定位ERROR的 理解？
+
+a.当文件内容超多时  需要定位ERROR 信息
+```bash
+cat xxx.log | grep ERROR        #提取当前行
+cat xxx.log | grep -A 5 ERROR   #提取关键字出现的后5行
+cat xxx.log | grep -B 5 ERROR   #提取关键字出现的前5行
+cat xxx.log | grep -C 5 ERROR   #提取关键字出现的前后各5行
+```
+如果没有-A-B-C则只会打出错误行，最好前后打印15.20行的数据
+| 管道符   前面命令的结果是接下来的输入数据
+grep 过滤
+比如 xxx.log ERROR 很多  上万个 可以导出到单独文件查看
+```bash
+cat xxx.log | grep -C 5 ERROR > 20200418error.log
+more 20200418error.log  
+```
+b.当文件不是很大时，可通过vim编辑器查看文件进行定位
+vi xxx.log
+&emsp;&emsp;shift+:  
+&emsp;&emsp;/       代表搜索的语法，之后输入需要寻找的对象
+&emsp;&emsp;ERROR 输入错误的关键字
+&emsp;&emsp;n寻找，下翻
+c.可以将文件下载到windows，利用文件处理软件进行错误定位  
+&emsp;&emsp;&emsp;editplus（window）  
+&emsp;&emsp;&emsp;notepad++ 
+&emsp;&emsp;&emsp;sublime（widnow  mac）工具 搜索  统计 校验  
+
+### 18. >   >>区别是什么？
+
+'>' 创建或覆盖    【高危命令1】
+'>>' 追加
+
+### 19.设置变量  key= value  ,这样写对吗？如何引用呢？
+
+普通变量可以，引用只需要输入key即可
+设置环境变量：
+alias key = 'value'
+想在配置后，全局生效，需要新开窗口，老窗口可看作静态窗口
+
+生效文件:设置完变量之后需要进行生效操作source，三种方式
+```bash
+    source /etc/profile
+    source ~/.bash_profile
+    source ~/.bashrc
+    cd 进家目录
+    .空格.bashrc  
+```
+
+### 20.全局环境变量文件在哪？ 个人环境变量文件(推荐哪个)在哪？如何生效？
+
+全局 : /etc/profile    所有用户都可以使用  
+个人: 
+&emsp;&emsp;&emsp; ~/.bash_profile   只能是设置命令的当前用户使用  其他不能使用
+&emsp;&emsp;&emsp; ~/.bashrc [设置个人别名主要修改这个文件]      
+&emsp;&emsp;&emsp; 场景: 使用ssh 远程执行B机器 +命令
+&emsp;&emsp;&emsp; 提示找不到命令    java command not found 
+&emsp;&emsp;&emsp; 但是直接登录B机器 命令是找到的   which java有的 
+
+       命令的环境变量配置在.bash_profile  是不正确的。
+       应该配置在.bashrc文件
+
+
+想在配置后，全局生效，需要新开窗口，老窗口可看作静态窗口
+
+生效文件:修改后需要操作之后才会生效
+```bash
+    source /etc/profile
+    source ~/.bash_profile
+    source ~/.bashrc
+    cd 进家目录
+    .空格.bashrc  
+```

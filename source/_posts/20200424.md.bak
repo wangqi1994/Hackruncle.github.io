@@ -1,0 +1,212 @@
+---
+title: "早课3"
+catalog: true
+toc_nav_num: true
+date: 2020-04-24 12:00:00
+subtitle: "若泽数据第三次早课作业-4.24"
+tags:
+- [ruozedata]
+categories:
+- [ruozedata]
+updateDate: 2020-04-24 12:00:00
+top: 0  #置顶
+---
+
+### 1.强制删除文件夹
+
+```bash
+rm -rf 文件夹
+```
+
+### 2.个人环境变量文件，默认在哪里？推荐使用哪个呢？怎样生效？生效完成后，习惯做一件事是执行什么命令？
+
+个人: 默认用户家目录下隐藏文件
+&emsp;&emsp;&emsp; ~/.bash_profile   只能是设置命令的当前用户使用  其他不能使用
+&emsp;&emsp;&emsp; ~/.bashrc [设置个人环境变量主要修改这个文件]**推荐**      
+&emsp;&emsp;&emsp; 场景: 使用ssh 远程执行B机器 +命令
+&emsp;&emsp;&emsp; 提示找不到命令    java command not found 
+&emsp;&emsp;&emsp; 但是直接登录B机器 命令是找到的   which java有的 
+
+生效文件:修改后需要操作之后才会生效
+```bash
+    source /etc/profile
+    source ~/.bash_profile
+    source ~/.bashrc
+    cd 进家目录
+    .空格.bashrc  
+```
+想在配置后，全局生效，需要新开窗口，老窗口可看作静态窗口
+生效完成后习惯上的which一下，看看是否成功
+
+### 3.历史命令，执行第55行；清空历史命令
+
+输入history，弹出历史命令
+!55  执行第55行命令 
+
+history -c 清空历史 ，不想让人知道自己的操作，把尾巴擦干净
+
+### 4.用户的文件是哪个？
+
+```bash
+[root@hadoop001 ~]# ll /usr/sbin/user* #用户命令
+-rwxr-x---. 1 root root 114056 Mar  6  2015 /usr/sbin/useradd
+-rwxr-x---. 1 root root  80352 Mar  6  2015 /usr/sbin/userdel
+-rws--x--x. 1 root root  40312 Jun 10  2014 /usr/sbin/userhelper
+-rwxr-x---. 1 root root 113808 Mar  6  2015 /usr/sbin/usermod
+-rwsr-xr-x. 1 root root  11272 Nov 20  2015 /usr/sbin/usernetctl
+```
+用户存储信息 /etc/passwd
+
+### 5.用户组的文件是哪个？
+
+```bash
+[root@hadoop001 ~]# ll /usr/sbin/group* #用户组命令
+-rwxr-x---. 1 root root 61336 Mar  6  2015 /usr/sbin/groupadd
+-rwxr-x---. 1 root root 56992 Mar  6  2015 /usr/sbin/groupdel
+-rwxr-x---. 1 root root 57024 Mar  6  2015 /usr/sbin/groupmems
+-rwxr-x---. 1 root root 76400 Mar  6  2015 /usr/sbin/groupmod
+```
+用户组存储信息 /etc/group
+
+### 6.假如su/ssh 无法登录机器，这个用户是不是有可能在/etc/passwd文件里，做了禁止？
+
+/etc/passwd文件中权限sbin/nologin
+会出现无法切换用户的现象，报错无法登录
+权限设为/usr/bin/false，无法登录，但是无报错
+需要修改为/bin/bash
+
+### 7.修改一个用户 usermod命令，指定主组 和 附加组，会吗？
+
+```bash
+[root@hadoop001 ~]# groupadd bigdata
+[root@hadoop001 ~]# usermod -a -G bigdata ruoze #将bigdata附加到ruoze的groups中
+[root@hadoop001 ~]# id ruoze
+uid=1002(ruoze) gid=1002(ruoze) groups=1002(ruoze),1003(bigdata)
+[root@hadoop001 ~]# usermod -g bigdata ruoze #强制将ruoze主组改为bigdata
+[root@hadoop001 ~]# id ruoze 
+uid=1002(ruoze) gid=1003(bigdata) groups=1003(bigdata) #gid编程bigdata用户组
+[root@hadoop001 ~]# usermod -a -G ruoze ruoze #将ruoze附加到ruoze的groups中
+[root@hadoop001 ~]# id ruoze
+uid=1002(ruoze) gid=1003(bigdata) groups=1003(bigdata),1002(ruoze)
+[root@hadoop001 ~]#  
+```
+
+### 8.设置密码
+
+在root用户下，可输入passwd +用户名， 修改对应用户的密码
+在对应用户下，可输入passwd修改该用户的密码
+```bash
+[root@hadoop001 ~]# passwd
+Changing password for user root.
+New password: 
+BAD PASSWORD: The password is shorter than 8 characters
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+```
+
+### 9.su - ruoze,这个命令执行完成后，做哪些事？
+
+切换到ruoze用户根目录，并执行环境变量
+
+### 10.一个普通用户，想要瞬间临时获取root的最大权限，请问在哪个配置文件修改什么内容？博客写了吗？  在执行命令时，sudo命令加在前面？
+
+```bash
+vi /etc/sudoers #找到allow设置root权限
+ruoze   ALL=(root)      NOPASSWD:ALL
+[ruoze@hadoop001 ~]$ cat /root/rz.log
+cat: /root/rz.log: Permission denied
+[ruoze@hadoop001 ~]$ sudo cat /root/rz.log
+www.ruozedata.com
+[ruoze@hadoop001 ~]$ 
+```
+
+### 11. >  >>区别是什么
+
+">" 创建或覆盖    【高危命令1】
+'>>' 追加
+
+### 12.rwx分别代表数字多少？  rwx- - x - w - ,请问权限数字多少？
+
+r: read  读权限 4
+w: write 写权限 2
+x: 执行         1
+-: 没权限       0  占位 
+rwx- - x - w - = 712
+
+### 13.上题中，三组分别代表哪个方面的权限呢？
+
+r: read  读权限 4
+w: write 写权限 2
+x: 执行         1
+-: 没权限       0  占位 
+
+### 14.修改权限 和 所属用户用户组的命令，分别是什么？ 假如修改文件夹，加什么参数
+
+修改权限chmod
+修改用户用户组的chown
+修改文件夹参数   -R
+
+### 15.简述vi编辑文件的流程
+
+vi命令进入命令行模式，
+i键进入插入模式，编辑内容，
+ESC键退出插入模式，
+shift+：进入尾行模式，
+wq回车-保存退出
+
+### 16.简述vi清空文件的命令
+
+a.vi命令行模式：dd光标到第一行第一个字母，dG删除当前光标以下所有内容
+b.文件操作
+```bash
+cat /dev/null > 1.log
+echo  "" > 2.log
+true > 1.log #也是清空文件内容 0字节
+[root@hadoop001 ~]# ll
+total 16
+-rw-r--r-- 1 root  root     0 Apr 19 21:58 1.log
+-rw-r--r-- 1 root  root     1 Apr 19 21:58 2.log
+```
+
+### 17.vi编辑文件，想要从外部文件内容粘贴复制到这个文件，必须提前做一件什么事？否则数据丢失
+
+i键进入插入模式
+
+### 18.查看进程、端口号命令？
+
+ps -ef打印所有进程
+&emsp;&emsp;PID是计算分配ID,PPID是上级ID，即由PID调用PPID
+&emsp;&emsp;PID 1是系统ID，从根目录开始的
+ps -ef | grep http 
+```bash
+[root@hadoop001 ~]# yum install -y net-tools.x86_64
+[root@hadoop001 ~]# netstat -nlp| grep 18670 
+tcp6       0      0 :::80                   :::*                    LISTEN      18670/httpd         
+[root@hadoop001 ~]# netstat -nlp| grep 18671 #子进程可能没有端口号
+[root@hadoop001 ~]# netstat -nlp| grep 18672
+[root@hadoop001 ~]# netstat -nlp| grep 18673
+```
+
+### 19.window 和 Linux 去测试端口号的命令，会先部署吗？会使用吗？
+
+windows：控制面板-卸载程序-启用或关闭windows功能
+使用：talnet ip port
+![](/img/talnet.png)
+linux：下载安装   yum install -y talnet
+使用：talnet ip port 或者 talnet 主机名 port
+
+### 20.netstat 一个服务时，显示  127.0.0.1:8899  ，外部window 或者其他服务器进行 访问，能通吗？
+
+不能
+
+### 21.netstat 一个服务时，显示  hostname:8899  ，外部window 或者其他服务器进行 访问，假如不通，我们应该要调整什么？
+
+ping ip 
+telnet ip port
+ip不通不代表端口不通
+假如不通，本地机器看本身防火墙配置，云主机看web界面的安全组配置，配置成放这个端口号通信
+如果都不通，咋找运维看硬件防火墙是否有问题
+将hostname设置为以下三种格式
+ :::port                      
+0 0.0.0.0:port 
+ip:port 

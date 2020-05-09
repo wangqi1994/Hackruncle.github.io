@@ -1,0 +1,302 @@
+---
+title: "数仓培训第三天"
+catalog: true
+toc_nav_num: true
+date: 2020-04-23 12:00:00
+subtitle: "大数据之Linux生产命令三"
+tags:
+- [ruozedata]
+- [Linux]
+categories:
+- [ruozedata]
+- [Linux]
+updateDate: 2020-04-23 12:00:00
+top: 0  #置顶
+---
+
+### 大数据之Linux生产命令三
+#### 1.用户 用户组
+```bash
+# 查看用户命令
+[root@hadoop001 ~]# ll /usr/sbin/user*
+-rwxr-x---. 1 root root 114056 Mar  6  2015 /usr/sbin/useradd
+-rwxr-x---. 1 root root  80352 Mar  6  2015 /usr/sbin/userdel
+-rws--x--x. 1 root root  40312 Jun 10  2014 /usr/sbin/userhelper
+-rwxr-x---. 1 root root 113808 Mar  6  2015 /usr/sbin/usermod
+-rwsr-xr-x. 1 root root  11272 Nov 20  2015 /usr/sbin/usernetctl
+# 查看用户组命令
+[root@hadoop001 ~]# ll /usr/sbin/group*
+-rwxr-x---. 1 root root 61336 Mar  6  2015 /usr/sbin/groupadd
+-rwxr-x---. 1 root root 56992 Mar  6  2015 /usr/sbin/groupdel
+-rwxr-x---. 1 root root 57024 Mar  6  2015 /usr/sbin/groupmems
+-rwxr-x---. 1 root root 76400 Mar  6  2015 /usr/sbin/groupmod
+# 增加用户,查看id 
+[root@hadoop001 ~]# useradd ruoze
+[root@hadoop001 ~]# id ruoze
+uid=1002(ruoze) gid=1002(ruoze) groups=1002(ruoze) 
+```
+创建一个普通用户  用户名称 ruoze 
+同时也会创建一个 ruoze用户组
+设置ruoze用户的组为ruoze,且把这个ruoze用户组设置为 主组
+同时也创建家目录  /home/ruoze 
+```bash
+[root@hadoop001 ~]# ll /home
+total 12
+drwx------. 3 hadoop001 hadoop001 4096 Apr 20 13:56 hadoop001
+drwx------. 5 luc       luc       4096 Apr 23 09:54 luc
+drwx------. 3 ruoze     ruoze     4096 Apr 23 13:36 ruoze
+```
+用户存储信息 /etc/passwd
+用户组       /etc/group
+```bash
+[root@hadoop001 ~]# userdel ruoze #删除之后再添加同一名称用户，会沿用以前那创建的文件
+[root@hadoop001 ~]# useradd ruoze
+useradd: warning: the home directory already exists.
+Not copying any file from skel directory into it.
+Creating mailbox file: File exists
+[root@hadoop001 ~]# 
+```
+
+##### 样式丢失
+在删除之后重新加上该用户，可能会缺失某些文件导致丢失样式
+三种解决方法：
+a.自己创建
+b.去其它用户文件夹copy
+c.去skel隐藏文件copy
+```bash
+[root@hadoop001 ~]# su - ruoze #删除了bash相关的文件之后，下次切用户会丢失样式
+[ruoze@hadoop001 ~]$ ll -a
+total 32
+drwx------. 5 ruoze ruoze 4096 Apr 23 13:50 .
+drwxr-xr-x. 5 root  root  4096 Apr 23 13:36 ..
+-rw-r--r--. 1 ruoze ruoze   18 Nov 20  2015 .bash_logout
+-rw-r--r--. 1 ruoze ruoze  193 Nov 20  2015 .bash_profile
+-rw-r--r--. 1 ruoze ruoze  231 Nov 20  2015 .bashrc
+drwxrwxr-x. 3 ruoze ruoze 4096 Apr 23 13:50 .cache
+drwxrwxr-x. 3 ruoze ruoze 4096 Apr 23 13:50 .config
+drwxr-xr-x. 4 ruoze ruoze 4096 Apr 20 13:56 .mozilla
+[ruoze@hadoop001 ~]$ rm -rf .bash*
+[ruoze@hadoop001 ~]$ ll -a
+total 20
+drwx------. 5 ruoze ruoze 4096 Apr 23 13:51 .
+drwxr-xr-x. 5 root  root  4096 Apr 23 13:36 ..
+drwxrwxr-x. 3 ruoze ruoze 4096 Apr 23 13:50 .cache
+drwxrwxr-x. 3 ruoze ruoze 4096 Apr 23 13:50 .config
+drwxr-xr-x. 4 ruoze ruoze 4096 Apr 20 13:56 .mozilla
+[ruoze@hadoop001 ~]$  exit
+logout
+[root@hadoop001 ~]# su - ruoze
+Last login: Thu Apr 23 13:50:13 CST 2020 on pts/1
+-bash-4.2$ 
+-bash-4.2$
+-bash-4.2$ id
+-bash-4.2$ id
+uid=1002(ruoze) gid=1002(ruoze) groups=1002(ruoze) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+```
+
+##### 样式恢复
+```bash
+-bash-4.2$ cp /etc/skel/.* ./ #将备份文件重新复制过来后，重新登录之后样式恢复
+cp: omitting directory ‘/etc/skel/.’
+cp: omitting directory ‘/etc/skel/..’
+cp: omitting directory ‘/etc/skel/.mozilla’
+-bash-4.2$ ll -a
+total 36
+drwx------. 5 ruoze ruoze 4096 Apr 23 13:56 .
+drwxr-xr-x. 5 root  root  4096 Apr 23 13:36 ..
+-rw-------. 1 ruoze ruoze   52 Apr 23 13:53 .bash_history
+-rw-r--r--. 1 ruoze ruoze   18 Apr 23 13:56 .bash_logout
+-rw-r--r--. 1 ruoze ruoze  193 Apr 23 13:56 .bash_profile
+-rw-r--r--. 1 ruoze ruoze  231 Apr 23 13:56 .bashrc
+drwxrwxr-x. 3 ruoze ruoze 4096 Apr 23 13:50 .cache
+drwxrwxr-x. 3 ruoze ruoze 4096 Apr 23 13:50 .config
+drwxr-xr-x. 4 ruoze ruoze 4096 Apr 20 13:56 .mozilla
+-bash-4.2$ exit
+logout
+[root@hadoop001 ~]# su - ruoze
+Last login: Thu Apr 23 13:53:28 CST 2020 on pts/1
+[ruoze@hadoop001 ~]$ 
+ ```
+##### 添加用户到bigdata用户组
+```bash
+[root@hadoop001 ~]# groupadd bigdata
+[root@hadoop001 ~]# usermod -a -G bigdata ruoze #将bigdata附加到ruoze的groups中
+[root@hadoop001 ~]# id ruoze
+uid=1002(ruoze) gid=1002(ruoze) groups=1002(ruoze),1003(bigdata)
+[root@hadoop001 ~]# usermod -g bigdata ruoze #强制将ruoze主组改为bigdata
+[root@hadoop001 ~]# id ruoze 
+uid=1002(ruoze) gid=1003(bigdata) groups=1003(bigdata) #gid编程bigdata用户组
+[root@hadoop001 ~]# usermod -a -G ruoze ruoze #将ruoze附加到ruoze的groups中
+[root@hadoop001 ~]# id ruoze
+uid=1002(ruoze) gid=1003(bigdata) groups=1003(bigdata),1002(ruoze)
+[root@hadoop001 ~]#  
+```
+#### 2.设置密码passwd
+```bash
+[root@hadoop001 ~]# passwd
+Changing password for user root.
+New password: 
+BAD PASSWORD: The password is shorter than 8 characters
+Retype new password: 
+passwd: all authentication tokens updated successfully.
+```
+
+#### 3.切换用户
+su ruoze 会进入该用户账号，但是目录位置不变
+su - ruoze [J哥推荐]
+     代表该用户切换到家目录，且执行环境变量文件
+```bash
+[root@hadoop001 ~]# su ruoze #切换到ruoze用户的root目录下
+[ruoze@hadoop001 root]$ pwd
+/root
+[ruoze@hadoop001 root]$ exit
+exit
+[root@hadoop001 ~]# su - ruoze #切换到ruoze用户的家目录下
+Last login: Thu Apr 23 14:10:24 CST 2020 on pts/1
+[ruoze@hadoop001 ~]$ pwd
+/home/ruoze
+[ruoze@hadoop001 ~]$ 
+```
+
+
+#### 4.sudo  普通用户临时使用root的最大权限
+```bash
+vi /etc/sudoers #找到allow设置root权限
+ruoze   ALL=(root)      NOPASSWD:ALL
+[ruoze@ruozedata001 ~]$ cat /root/rz.log
+cat: /root/rz.log: Permission denied
+[ruoze@ruozedata001 ~]$ sudo cat /root/rz.log
+www.ruozedata.com
+[ruoze@ruozedata001 ~]$ 
+```
+#### 5./etc/passwd文件
+ruoze:x:1004:1005::/home/ruoze:/sbin/nologin  有提示 
+ruoze:x:1004:1005::/home/ruoze:/usr/bin/false 没提示 
+
+CDH平台  hdfs yarn hive hbase
+su - yarn 不成功的 
+
+/sbin/nologin /usr/bin/false ===》/bin/bash 可以登陆
+
+/etc/passwd文件中权限sbin/nologin
+会出现无法切换用户的，报错无法登录
+权限设为/usr/bin/false，无法登录，但是无报错
+需要修改为/bin/bash
+
+#### 6.权限 
+```bash
+[root@hadoop001 ~]# ll
+total 48
+-rw-------. 1 root root 1732 Apr 20 14:06 anaconda-ks.cfg
+drwxr-xr-x. 2 root root 4096 Apr 20 14:36 Desktop
+drwxr-xr-x. 2 root root 4096 Apr 23 09:17 dir2
+```
+第一个字母：d文件夹 -文件 l连接
+后面9个字母,3个字母为一组:
+rw- r-- r--
+
+r: read  读权限 4
+w: write 写权限 2
+x: 执行         1
+-: 没权限       0  占位 
+
+7=4 2 1
+5=4 1
+6=4 2
+
+
+rw- 第一组 6  代表文件或文件夹的所属用户，读写权限
+r-- 第二组 4  代表文件或文件夹的所属用户组，读权限
+r-- 第三组 4  代表其他用户组的用户对这个文件或文件夹，读权限
+
+rw-r--r--    root root     22.log
+
+关于权限：
+chmod -R 777          文件或文件夹
+chown -R 用户:用户组  文件或文件夹
+
+案例:
+```bash
+[root@ruozedata001 tmp]# vi ruoze.log
+www.ruozedata.com
+
+[ruoze@ruozedata001 tmp]$ cat  ruoze.log 
+www.ruozedata.com
+[ruoze@ruozedata001 tmp]$ 
+
+[root@ruozedata001 tmp]# chmod 640 ruoze.log #收回其他组的r权限 
+[ruoze@ruozedata001 tmp]$ cat  ruoze.log 
+cat: ruoze.log: Permission denied
+```
+
+#### 7.大小
+文件： ll -h 、du -sh
+文件夹:        du -sh
+
+
+#### 8.搜索 find
+接手大数据平台，服务器登录，大数据组件安装目录在哪？
+```bash
+find / -name '*hadoop*'
+find /home/hadoop/ -name '*hadoop*'#根目录搜索会很多，最好顶死安装目录搜索
+```
+补充:
+history 命令 hietory -c 
+ps -ef 查看进程
+kill -PID 杀死PID进程
+
+#### 9.vi命令
+##### 9.1 正常编辑一个文件，要正常退出 wq
+vi异常中断出现swap结尾文件会报错
+-rw-r--r--   1 root  root       16 Apr 19 21:26 2.log
+-rw-r--r--   1 root  root    12288 Apr 19 21:31 .2.log.swp
+swap文件需要删除
+rm -rf .2.log.swp
+
+##### 9.2 粘贴操作
+必须进入编辑模式，否则第一行内容丢失 不完整
+
+##### 9.3 搜索 
+尾行模式（shift+:)--》 /error
+
+##### 9.4 行号
+尾行--》 set nu   设置行号
+         set nonu 取消行号
+
+	 f 也是可以显示 当前光标的所在的行
+
+##### 9.5 常用快捷方式
+```bash
+dd #删除当前行
+dG #删除当前及以下所有行
+ndd #删除当前及以下n行
+gg #跳转到第一行的第一个字母
+G  #跳转到最后一行的第一个字母
+shift+$ #行尾 
+```
+
+场景：
+清空这个文件内容，从另外一个文件内容 拷贝过来
+gg--》dG   --》 i  -->鼠标右键单击 粘贴上
+
+清空补充：
+```bash
+cat /dev/null > 1.log
+echo  "" > 2.log
+true > 1.log #也是清空文件内容 0字节
+[root@ruozedata001 ~]# ll
+total 16
+-rw-r--r-- 1 root  root     0 Apr 19 21:58 1.log
+-rw-r--r-- 1 root  root     1 Apr 19 21:58 2.log
+```
+场景:
+shell脚本，数据文件清空操作，根据字节大小判断是否清空完成
+```bash
+echo  "" > 2.log
+if filezie > 0 then
+   业务不操作
+
+else
+    2.log 灌业务数据
+```
+

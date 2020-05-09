@@ -1,0 +1,313 @@
+---
+title: "数仓培训第四天"
+catalog: true
+toc_nav_num: true
+date: 2020-04-24 12:00:00
+subtitle: "大数据之Linux生产命令四"
+tags:
+- [ruozedata]
+- [Linux]
+categories:
+- [ruozedata]
+- [Linux]
+updateDate: 2020-04-24 12:00:00
+top: 0  #置顶
+---
+
+### 大数据之Linux生产常用命令四
+#### 1.系统常用检查命令
+磁盘 df -h
+内存 free -m
+负载 top
+**内存 free -m**
+```bash
+[root@hadoop001 ~]# free -m # -g是以GB为单位，不建议，会丢数据 
+              total        used        free      shared  buff/cache   available
+Mem:           1993         759         203          11        1030        1022
+Swap:          2047           0        2047        #大数据 生产服务器 swap是设置0  10也可以 10是惰性
+```
+**磁盘 df -h**
+```bash
+[root@hadoop001 ~]# df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda2        57G  5.2G   49G  10% /
+ #主要查看以下数据文件
+/dev/vdb1        2T   16G   25G  1% /data01
+/dev/vdb2        2T   16G   25G  1% /data02
+/dev/vdb3        2T   16G   25G  1% /data03
+/dev/vdb4        2T   16G   25G  1% /data04
+ #需要监控500G以上的硬盘ssd 
+ #不太需要看
+devtmpfs        3.9G     0  3.9G   0% /dev
+tmpfs           3.9G   16K  3.9G   1% /dev/shm
+tmpfs           3.9G  258M  3.6G   7% /run
+tmpfs           3.9G     0  3.9G   0% /sys/fs/cgroup
+tmpfs           783M     0  783M   0% /run/user/1004
+```
+**系统负载 top**
+```bash
+top - 21:20:22 up 7 days, 58 min,  1 user,  load average: 0.01, 0.03, 0.05
+Tasks:  89 total,   1 running,  88 sleeping,   0 stopped,   0 zombie
+%Cpu(s):  0.2 us,  0.5 sy,  0.0 ni, 99.0 id,  0.0 wa,  0.0 hi,  0.0 si,  0.3 st
+KiB Mem :  8011076 total,  6377388 free,   229060 used,  1404628 buff/cache
+KiB Swap:        0 total,        0 free,        0 used.  7265724 avail Mem 
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                  
+ 2374 root      20   0  394348  31376   8608 S   0.3  0.4  41:44.99 jdog-kunlunmirr                          
+    1 root      20   0  125356   3796   2508 S   0.0  0.0   1:22.32 systemd                                  
+    2 root      20   0       0      0      0 S   0.0  0.0   0:00.00 kthreadd                                 
+    3 root      20   0       0      0      0 S   0.0  0.0   0:00.08 ksoftirqd/0                              
+    5 root       0 -20       0      0      0 S   0.0  0.0   0:00.00 kworker/0:0H                             
+    6 root      20   0       0      0      0 S   0.0  0.0   0:02.50 kworker/u4:0  
+ ```
+刷新时间up 运行时间，用户数，load average: 0.01, 0.03, 0.05(分别代表 1min   5min  15min)
+	     
+**J哥的经验值: 10  生产不用超过这个 ，否则认为服务器就是卡**
+a.是你的程序有问题 在大量跑计算
+b.是不是被挖矿 yarn redis 最容易被hacker 攻击
+c.硬件问题  不仅内存条问题，还可能是硬盘   、
+判断方法：重启服务器系统 
+**cpu加起来超过100就要看，还有就是看内存**
+#### 2.yum
+**安装**
+```bash
+yum search http  #会出来很多可选项
+yum search httpd  # 最后的d一般代表进程
+yum install httpd # -y 对所有的选项选择yes
+```
+centos6:
+service httpd status|start|stop  只能操作1个应用httpd
+启动服务用service
+centos7:
+service httpd status|start|stop  兼容 能使用
+systemctl status|start|stop|restart httpd app2 app3 app4  一次性操作多个应用
+可选择状态，开始或者结束,重启
+
+**搜索 卸载:**
+```bash
+[root@hadoop001 ~]# rpm -qa|grep http #搜索
+httpd-2.4.6-90.el7.centos.x86_64
+httpd-tools-2.4.6-90.el7.centos.x86_64
+[root@hadoop001 ~]# rpm -e 包名称 --nodeps # --nodeps不校验你的依赖，直接卸载
+[root@hadoop001 ~]# yum remove httpd-2.4.6-90.el7.centos.x86_64 # 也可以卸载
+```
+#### 3.进程 端口号
+ps -ef打印所有进程
+&emsp;&emsp;PID是计算分配ID,PPID是上级ID，即由PID调用PPID
+&emsp;&emsp;PID 1是系统ID，从根目录开始的
+ps -ef | grep http 父ID被干掉，子不一定会被干掉
+kill -9 16629  #-9级别最高
+kill -9 16630 16631  16632  16633  16634 多杀进程
+
+**查看进程和杀死进程**
+```bash
+[root@hadoop001 ~]# ps -ef |grep httpd
+root     20092     1  0 14:28 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20094 20092  0 14:29 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20095 20092  0 14:29 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20096 20092  0 14:29 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20097 20092  0 14:29 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20098 20092  0 14:29 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+root     20101 19478  0 14:29 pts/2    00:00:00 grep --color=auto httpd
+```
+根据匹配字段 搜索所有符合的进程 全部杀死 
+但是: 生产慎用 除非你先ps查看 这个关键词搜索的进程 是不是都是你想要杀死的进程 
+保不齐有个其他服务的进程 会造成误杀 生产事故！！！
+```bash
+[root@hadoop001 ~]# kill -9 $(pgrep -f httpd) #全局杀死进程
+[root@hadoop001 ~]# ps -ef |grep httpd
+root     20131 19478  0 14:31 pts/2    00:00:00 grep --color=auto httpd
+```
+**重启之后进程号改变**
+```bash
+[root@hadoop001 ~]# ps -ef |grep httpd
+root     20153     1  0 14:33 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20154 20153  0 14:33 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20155 20153  0 14:33 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20156 20153  0 14:33 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20157 20153  0 14:33 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+apache   20158 20153  0 14:33 ?        00:00:00 /usr/sbin/httpd -DFOREGROUND
+root     20169 19478  0 14:34 pts/2    00:00:00 grep --color=auto httpd
+```
+**查看端口号**
+```bash
+[root@hadoop001 ~]# yum install -y net-tools.x86_64
+[root@hadoop001 ~]# netstat -nlp| grep 20153 #-nlp死记硬背 
+tcp6       0      0 :::80                   :::*                    LISTEN      20153/httpd          
+[root@hadoop001 ~]# netstat -nlp| grep 20154
+[root@hadoop001 ~]# netstat -nlp| grep 20155
+```
+
+进程不一定都会起到端口号 #子进程可能没有，与外部无交流
+但是与其他服务通信 必然需要端口号！！！
+
+**面试题**
+老板: 去打开xxx服务器的应用yyy的网页？你会涉及到哪些Linux命令 #面试题
+ip #知道IP，之后需要知道yyy的端口号
+ps -ef|grep yyy --》pid #找到pid
+netstat -nlp|grep pid --》port #找到端口号
+浏览器: http://ip:port
+要确定ping的通和telnet的通端口号
+
+
+**ip和port设置细节:**
+```bash
+[root@hadoop001 ~]# netstat -nlp| grep 18670
+tcp6       0      0 :::80                   :::*                    LISTEN      18670/httpd         
+tcp6       0      0 0.0.0.0:80                   :::*                    LISTEN      18670/httpd         
+tcp6       0      0 192.168.0.3:80                   :::*                    LISTEN      18670/httpd         
+tcp6       0      0 127.0.0.1:80                   :::*                    LISTEN      18670/httpd         
+tcp6       0      0 localhost:80                   :::*                    LISTEN      18670/httpd    
+```
+前三种一样，前两种等价于本机器的ip # 查看ip命令ifconfig
+危险: 后两种服务只能自己服务器的里面自己访问自己  
+
+**生产上，注意ip要查看，如果127开头或者localhost不能连外网**
+
+**测试网络，连接失败问题**
+ping   ip #测试网络通不通
+telnet ip port #ping端口号
+
+**window cmd：**
+ping 192.168.111.131
+telnet 192.168.111.131 22 弹出新窗口成功，弹提示即不成功
+![](/img/telnet-cheng.png)
+**Linux：**
+```bash
+yum install -y telnet
+[root@hadoop001 ~]# telnet hadoop001 80
+Trying 192.168.0.3...
+Connected to hadoop001.
+Escape character is '^]'.#通的
+^Z
+Connection closed by foreign host.
+[root@hadoop001 ~]# telnet hadoop001 809
+Trying 192.168.0.3...
+telnet: connect to address 192.168.0.3: Connection refused
+```
+
+如果ip和端口都不通，解决方法：
+有可能你的服务器的防火墙 开启，云主机 需要开启 安全组策略 
+直接找Linux运维 网络工程师 加防火墙(硬件)策略  
+
+**总结:**
+Connection refused #无法连接
+1.ping   ip 因为服务器是ping功能禁止，导致ping不通 #防黑客
+2.telnet ip  port  ok
+
+repo结尾文件
+yum下载配置文件/etc/yum  #yum.repos.d  --确认
+
+建议配置企业级别yum源 取代互联网的repo文件的URL，物理隔绝
+
+#### 4.下载
+wget https://repo1.maven.org/maven2/org/apache/spark/spark-core_2.12/2.4.5/spark-core_2.12-2.4.5.jar #下载链接
+curl https://repo1.maven.org/maven2/org/apache/spark/spark-core_2.12/2.4.5/spark-core_2.12-2.4.5.jar -O  spark-core_2.12-2.4.5.jar #-O是输出的意思
+
+#### 5.压缩 解压
+创建一个例子，空文件
+zip -r xxx.zip xxx/*
+unzip xxx.zip
+如果两个没有则需要单独安装，不是一体的
+```bash
+tar -czvf xxxx.tar.gz  xxxx/*  #压缩
+tar -xzvf xxxx.tar.gz #解压
+
+Examples:# 不加-zv，则文件后缀是.tar
+  tar -cf archive.tar foo bar  # Create archive.tar from files foo and bar.
+  tar -tvf archive.tar         # List all files in archive.tar verbosely.
+  tar -xf archive.tar          # Extract all files from archive.tar.
+```
+#### 6.命令找不到
+使用which 命令查看，只会显示出环境变量中的第一个匹配命令
+```bash 
+[root@hadoop001 ~]# ls
+dir1  dir1.tar.gz
+[root@hadoop001 ~]# which ls
+alias ls='ls --color=auto'
+        /usr/bin/ls
+[root@hadoop001 ~]# which jjj
+/usr/bin/which: no jjj in (/home/dwz/app/python3/bin:/usr/java/jdk1.8.0_181/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin)
+[root@hadoop001 ~]# 
+```
+想要命令快速找到  which xxx 来验证，其实就是提前将命令的目录配置在环境变量$PATH
+通过echo $PATH 来查看是否将命令的目录配置上！
+```bash
+[root@hadoop001 ~]# echo $PATH
+/home/dwz/app/python3/bin:/usr/java/jdk1.8.0_181/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+[root@hadoop001 ~]# jjj
+-bash: jjj: command not found
+```
+
+**command not found**
+ a.没安装上
+ b.路径没配置
+
+**whereis 命令** 能匹配到的都给你展示出来
+
+#### 7.定时 
+ 脚本:
+```bash
+[root@hadoop001 ~]# vi ruoze.sh  #shell脚本
+#!/bin/bash
+date
+
+[root@hadoop001 ~]# ll
+total 8
+drwxr-xr-x 2 root root  30 Apr 22 22:50 dir1
+-rw-r--r-- 1 root root 128 Apr 22 22:49 dir1.tar.gz
+-rw-r--r-- 1 root root  19 Apr 22 23:02 ruoze.sh
+[root@hadoop001 ~]# ./ruoze.sh # 当前目录方式执行
+-bash: ./ruoze.sh: Permission denied
+[root@hadoop001 ~]# sh ./ruoze.sh # 不想赋权限,用sh命令
+Wed Apr 22 23:02:36 CST 2020
+[root@hadoop001 ~]# chmod 744 ruoze.sh
+[root@hadoop001 ~]# ll
+total 8
+drwxr-xr-x 2 root root  30 Apr 22 22:50 dir1
+-rw-r--r-- 1 root root 128 Apr 22 22:49 dir1.tar.gz
+-rwxr--r-- 1 root root  19 Apr 22 23:02 ruoze.sh
+[root@hadoop001 ~]# ./ruoze.sh 
+Wed Apr 22 23:03:17 CST 2020
+[root@hadoop001 ~]# 
+[root@hadoop001 ~]# date
+Wed Apr 22 23:03:21 CST 2020
+
+[root@hadoop001 ~]# crontab -e #-e是编辑 ， crontab命令可以当一个文本编辑框用
+* * * * * /root/ruoze.sh >> /root/ruoze.log  #五个星号
+五个星号分别代表
+分
+小时
+日
+月
+周
+
+* 表示 每
+
+* * * * *  每分钟   #最常用
+*/1 * * * *  每分钟
+```
+![crontab](/img/crontab.png)
+
+**面试题:**
+每隔10s打印一次 怎么做
+```bash
+ */6 * * * * # 不对，这是每6分钟
+```
+如果时间是秒
+```bash
+[root@hadoop001 ~]# vi ruoze2.sh #每次六次之后休眠，10秒一跳
+#!/bin/bash
+for((i=1;i<=6;i++));
+do
+	date
+	sleep 10s
+done 
+
+[root@hadoop001 ~]# chmod +x ruoze2.sh # 设置完之后需要赋权限,所有人都拥有可以执行的权限
+```
+#### 8.后台执行脚本
+
+nohup  /root/ruoze.sh >> /root/ruoze.log 2>&1 &  # 生产标准写法 nohup  中间随便命令  &
+
+

@@ -1,0 +1,31 @@
+---
+title: "解决bash:hexo:command not found"
+catalog: true
+toc_nav_num: true
+date: 2020-04-29 12:00:00
+subtitle: "bug解决方案"
+tags:
+- [BUG]
+- [hexo]
+categories:
+- [BUG]
+- [hexo]
+updateDate: 2020-04-29 12:00:00
+top: 0 #置顶
+---
+
+介绍：电脑注销未关闭git正在运行的本地Hexo博客，再次打开想更新的时候输入 hexo，报错 bash: hexo: command not found。
+
+解决思路：
+
+1.本着能解决问题就不重装的原则，首先检查 nodejs 和 npm 是否正常，依次输入命令 node -v 和 npm -v 看看是否有相关版本信息
+
+![](/img/bug/bash_q.png)
+
+出现了版本信息就证明 nodejs 和 npm 是没有问题的，那么就应该是环境变量的配置问题了，在【此电脑】右键【属性】，依次选择【高级系统设置】-【环境变量】，选择系统变量 Path，将 node_modules 下的 .bin 文件路径添加到 Path 里面
+
+注意要添加到 Path 里面的是与 _config.yml 在同一个目录的 node_modules 文件夹！
+环境变量添加好了之后重新打开 git 即可运行 hexo 命令.
+
+2.如果此时仍然无法执行 hexo 命令，那就只能运行命令 npm install hexo-cli -g 重新安装 hexo ！
+

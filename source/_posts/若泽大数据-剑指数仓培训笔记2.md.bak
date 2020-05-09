@@ -1,0 +1,221 @@
+---
+title: "数仓培训第二天"
+catalog: true
+toc_nav_num: true
+date: 2020-04-23 12:00:00
+subtitle: "大数据之Linux生产常用命令一+二笔记整理"
+tags:
+- [ruozedata]
+- [Linux]
+categories:
+- [ruozedata]
+- [Linux]
+updateDate: 2020-04-23 12:00:00
+top: 0  #置顶
+---
+
+### 大数据之Linux生产常用命令一+二
+#### 1.清楚屏幕 clear
+#### 2.mv移动  cp复制
+mv是文件始终一份  速度快
+cp是存在两份文件  速度慢
+不标准写法:
+```bash
+mv dir1  ruozedata
+cp -r dir2 ruozedata
+```
+标准写法:
+```bash
+mv dir1  ruozedata/dir1
+cp -r dir2 ruozedata/dir2
+```
+也支持修改名称
+```bash
+mv  dir2 dir22
+cp -r dir3 dir33 #可以支持复制的同时修改文件名称
+```
+#### 3.创建文件 
+a.touch 1.log  创建空文件
+b.vi    2.log  创建文件并用vim编辑器打开编辑
+vim操作简介：
+&emsp;&emsp;&emsp;默认命令行
+&emsp;&emsp;&emsp;i键 编辑模式，进行编辑
+&emsp;&emsp;&emsp;esc键 从编辑模式--》命令行模式
+&emsp;&emsp;&emsp;shift+:键 从命令行模式--》尾行模式，输入wq 保存退出
+c.主要场景是为了  覆盖内容 或者 追加内容 
+echo "ruozedata" > 3.log
+打印一句话进入3.log文件       
+">" 创建或覆盖    【高危命令1】
+'>>' 追加
+#### 4.查看文件内容 log config data 
+cat  文件内容一下子全部显示  ctrl+z 中断
+more 文件内容一页页往下翻，按空格往下  Ctrl+B 回退 q退出
+less 文件内容 按上下键   q退出
+
+cat   适用于文件内容少的情况
+more  适用于文件内容稍微多点的情况
+
+tail 实时查看文件最新内容
+&emsp;&emsp;&emsp;tail -f xxx.log  基本不太用来自动提取实时监控，
+&emsp;&emsp;&emsp;当文件不在之后就不会在尝试查看，即使文件重新创建
+&emsp;&emsp;&emsp;tail -F yyy.log   =-f+ retry再次尝试采集信息
+
+场景: 
+a.采集业务log日志内容   log4j（业务系统中很多是）
+&emsp;&emsp;规则: 每份100m 保留10份
+&emsp;&emsp;系统--》 erp.log 90m ...100m
+&emsp;&emsp;&emsp;mv erp.log  erp.log1
+&emsp;&emsp;&emsp;touch erp.log
+
+	    ll命令查看，会存在11份数据
+	    erp.log 
+	    erp.log1
+	    erp.log2
+	    ....
+	    erp.log10
+
+
+             
+b.大数据Flume组件 exec source:  tail -F erp.log 生产上面监控数据指令
+
+想要查看文件内容倒数100行,同时实时监控
+tail -100f   xxx.log
+tail -100F   xxx.log  错误的 
+
+文件内容超多时  需要定位ERROR 信息
+```bash
+cat xxx.log | grep ERROR        #提取当前行
+cat xxx.log | grep -A 5 ERROR   #提取关键字出现的后5行
+cat xxx.log | grep -B 5 ERROR   #提取关键字出现的前5行
+cat xxx.log | grep -C 5 ERROR   #提取关键字出现的前后各5行
+```
+
+如果没有-A-B-C则只会打出错误行，最好前后打印15.20行的数据
+| 管道符   前面命令的结果是接下来的输入数据
+grep 过滤
+比如 xxx.log ERROR 很多  上万个 可以导出到单独文件查看
+```bash
+cat xxx.log | grep -C 5 ERROR > 20200418error.log
+more 20200418error.log  
+```
+文件内容100m   :
+&emsp;&emsp;&emsp;vi xxx.log
+		&emsp;&emsp;&emsp;&emsp;shift+:  
+		&emsp;&emsp;&emsp;&emsp;/       代表搜索的语法，之后输入需要寻找的对象
+		&emsp;&emsp;&emsp;&emsp;ERROR
+		&emsp;&emsp;&emsp;&emsp;n寻找，下翻
+&emsp;&emsp;&emsp;下载到window  
+&emsp;&emsp;&emsp;editplus（window）  
+&emsp;&emsp;&emsp;notepad++ 
+&emsp;&emsp;&emsp;sublime（widnow  mac）工具 搜索  统计 校验  
+#### 5. 上传下载
+安装工具包 yum install -y lrzsz
+sz xxx.log是下载 Linux--》window
+rz 是上传   window--》Linux
+#### 6.别名 alias
+```bash
+[root@hadoop001 log]# alias
+alias cp='cp -i'  #需要加引号才可以设置
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto'
+alias l.='ls -d .* --color=auto'
+alias ll='ls -l --color=auto'
+alias ls='ls --color=auto'
+alias mv='mv -i'
+alias rm='rm -i'
+alias which='alias | /usr/bin/which --tty-only --read-alias --show-dot --show-tilde'
+[root@hadoop001 log]# 
+```
+自制别名只在当前会话生效，会话即xshell的一个窗口
+```bash
+[root@hadoop001 log]#  alias jj='cd /tmp'
+其他会话不生效
+[root@hadoop001 ~]# jj
+-bash: jj: command not found
+```
+是因为没有在环境变量文件配置 
+
+#### 7.环境变量
+全局 : /etc/profile    所有用户都可以使用  
+
+个人: 
+&emsp;&emsp;&emsp; ~/.bash_profile   只能是设置命令的当前用户使用  其他不能使用
+&emsp;&emsp;&emsp; ~/.bashrc [设置个人别名主要修改这个文件]      
+&emsp;&emsp;&emsp; 场景: 使用ssh 远程执行B机器 +命令
+&emsp;&emsp;&emsp; 提示找不到命令    java command not found 
+&emsp;&emsp;&emsp; 但是直接登录B机器 命令是找到的   which java有的 
+
+       命令的环境变量配置在.bash_profile  是不正确的。
+       应该配置在.bashrc文件
+
+
+想在配置后，全局生效，需要新开窗口，老窗口可看作静态窗口
+
+生效文件:修改后需要操作之后才会生效
+```bash
+    source /etc/profile
+    source ~/.bash_profile
+    source ~/.bashrc
+    cd 进家目录
+    .空格.bashrc  
+```
+#### 8.创建用户
+root 默认管理员用户 已存在的 
+创建luc用户
+```bash
+[root@hadoop001 ~]# useradd luc
+[root@hadoop001 ~]# su - luc
+[luc@hadoop001 ~]$ pwd
+/home/luc
+[luc@hadoop001 ~]$ 
+[luc@hadoop001 ~]$ jj  是因为jj配置在全局变量文件 
+[luc@hadoop001 tmp]$ pwd
+/tmp
+[luc@hadoop001 tmp]$ 
+```
+#### 9.自动补全  
+tab键一次，只有1个 命令自动补全
+&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;多个  没响应
+&emsp;按二次，会把当前匹配到的 所有命令打印出来，再挑选
+#### 10.history 历史命令
+输入history，弹出历史命令
+!2  执行第二行命令 
+
+history -c 清空历史 ，不想让人知道自己的操作，把尾巴擦干净
+
+可使用的情况，区分服务器类型
+直连 服务器           ok
+跳板机(vpn)  服务器   ok
+堡垒机  敲一个命令 都记录  堡垒机系统里   web界面 可视化
+#### 11.【高危命令】 rm
+千万不要做 rm -rf  全完蛋
+```bash
+[root@hadoop001 ~]# rm 11.log
+rm: remove regular file ‘11.log’? y #rm命令会询问是否删除
+[root@hadoop001 ~]# rm -f 1.log #-f直接删除不询问
+[root@hadoop001 ~]# rm -r dir22 #-r删除文件夹，之前询问
+rm: remove directory ‘dir22’? y
+[root@hadoop001 ~]# rm -rf dir33 #-rf所有东西全部直接删除不提示，慎用
+[root@hadoop001 ~]# 
+```
+
+可用场景:
+在脚本里设置
+LOG_PATH=/xxx/yyy
+需要根据业务逻辑判断 去赋值
+&emsp;&emsp;漏了一种  没有赋值
+rm -rf ${LOG_PATH}/*  ==》rm -rf /*
+
+该怎么避免 ：
+每次删除之前 都判断${LOG_PATH} 是否存在 
+
+#### 补充:
+```bash
+[root@JD ~]# hostnamectl set-hostname hadoop001 #JD云改主机名
+[root@hadoop001 ~]# ifconfig # 找内网ip 或者 京东云控制台查看  
+[root@hadoop001 ~]# vi /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+192.168.0.3 hadoop001
+```

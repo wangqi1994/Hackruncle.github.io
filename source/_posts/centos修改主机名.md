@@ -1,0 +1,38 @@
+---
+title: "CentOS修改主机名"
+catalog: true
+toc_nav_num: true
+date: 2020-04-22 12:00:00
+subtitle: "备忘"
+article_type: 0 # 0 原创，1 转载
+tags:
+- [系统配置]
+categories:
+- [系统配置]
+updateDate: 2020-04-22 12:00:00
+top: 0  #置顶
+---
+
+**CentOS6.5**修改主机名
+
+**1.**编辑**/etc/sysconfig/network**
+```bash
+[root\@localhost \~]\# vi /etc/sysconfig/network
+NETWORKING=yes
+HOSTNAME=hadoop001
+```
+**2.hostname**直接命名
+```bash
+[root\@localhost \~]\#hostname hadoop-01
+```
+**3.**编辑**/etc/hosts**
+```bash
+[root\@localhost \~]\# vi /etc/hosts
+
+127.0.0.1 localhost localhost.localdomain localhost4 localhost4.localdomain4
+
+::1 localhost localhost.localdomain localhost6 localhost6.localdomain6
+
+192.168.137.130 hadoop001
+```
+主机名修改之后需要重新打开终端，才能显示。

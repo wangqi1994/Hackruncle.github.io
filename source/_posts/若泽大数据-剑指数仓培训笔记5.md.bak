@@ -1,0 +1,156 @@
+---
+title: "数仓培训第五天"
+catalog: true
+toc_nav_num: true
+date: 2020-04-26 12:00:00
+subtitle: "MySQL"
+tags:
+- [ruozedata]
+- [MySQL]
+categories:
+- [ruozedata]
+- [MySQL]
+updateDate: 2020-04-26 12:00:00
+top: 0  #置顶
+---
+
+### MySQL
+#### 1.MySQL安装包准备
+windows下载安装包，通过rz上传到Linux系统中
+```bash
+[root@ruozedata001 ~]# ll -h
+-rw-r--r-- 1 root root 166M Jul 24  2019 jdk-8u45-linux-x64.gz
+-rw-r--r-- 1 root root 523M Jul 24  2019 mysql-5.7.11-linux-glibc2.5-x86_64.tar.gz
+```
+mysql（小写） MySQL（大写）
+
+#### 2.JDK部署
+windows下载安装包，通过rz上传到Linux系统中
+```bash
+[root@ruozedata001 ~]# ll -h
+-rw-r--r-- 1 root root 166M Jul 24  2019 jdk-8u45-linux-x64.gz
+```
+具体部署流程参考
+https://wangqi1994.github.io/2020/04/26/JDK部署
+
+#### 3.MySQL部署 5.7
+具体部署流程参考
+https://wangqi1994.github.io/2020/04/26/MySQL部署
+
+**创建用户组及用户**
+mysql  mysql用户来管理
+oracle oracle用户
+hadoop hive   bigdata用户来管理
+
+sudo su - 用户 #切换用户建议命令格式，业务场景经常连着使用
+
+#### 4.重新部署怎么办？
+删除binlog文件夹和数据文件夹
+```bash
+rm -rf mysql/arch/*  binlog文件夹
+rm -rf mysql/data/*  数据文件
+
+bin/mysqld \
+--defaults-file=/etc/my.cnf \
+--user=mysqladmin \
+--basedir=/usr/local/mysql/ \
+--datadir=/usr/local/mysql/data/ \
+--initialize
+```
+#### 5.dbeaver 海狸
+5.1 window / mac 安装好jdk1.8 64位
+安装参考：
+https://jingyan.baidu.com/article/b907e62789c79346e7891ced.html
+
+5.2 下载 绿色版本
+https://dbeaver.io/files/dbeaver-ce-latest-win32.win32.x86_64.zip
+
+海狸dbeaver 必须要安装jdk1.8 64位的 
+
+当建立MySQL连接时 使用云主机 ，3306 假如没有放开，
+我们就使用安全组，设置该端口通行 放开
+
+
+#### 6.常用命令
+```bash
+create database ruozedata; # 创建ruozedata数据库
+grant all privileges on ruozedata.* to ruoze@'%' identified by 'ruozedata';
+flush privileges;  # 养成习惯！！！
+```
+
+% 代表任意客户端机器去访问mysql服务器
+
+192.168.1.1  这台机器有权限去访问
+
+192.168.1.%  这个网段的所有ip机器有权限去访问
+
+
+检验:
+select user,authentication_string,host from mysql.user;
+
+
+#### 7.登录
+标准登录写法
+mysql -u用户 -p密码 -h 机器 -P端口号 指定db（默认不加）
+```bash
+mysql -uroot -phadoop001 -hhadoop001 -P3306 mysql
+```
+**Usage: mysql [OPTIONS] [database]**
+
+database schema namespace 是一个意思  就可以认为是一个文件夹
+table    就可以认为是一个Excel表格  
+
+切换：
+```bash
+mysql> use hadoop001;
+Database changed
+mysql> 
+mysql> show tables;# 看表格
+Empty set (0.00 sec)
+
+#提醒一点: 密码不要写在命令行 不然 history命令可以发现
+mysql -uroot -p -hhadoop001 -P3306  直接回车
+
+注意一点:
+mysql -u root -phadoop001 -h hadoop001 -P 3306 mysql
+-p后面如果非要写密码 不能有空格，其他参数无所谓！
+```
+#### 8.进程
+```bash
+show processlist; # 看进程
+kill Id #杀进程
+```
+**如果卡住了，time一直在变大，企业中这时候要找公司dba做**
+
+#### 9.字段类型
+汉字等于两个字节
+英文字母一个字节
+
+**数值类型**
+	int  整型
+	long 长整型
+
+	float   单精度
+	double  双精度   
+	decimal 小数值  钱有关的 *****
+
+**字符串**
+	char 字节        定长0-255 长度    ruozexxxxxxx 自动补齐
+	varchar 字符串   变长0-65535字节？ ruoze
+
+**日期**
+	date 日期 YYYY-MM-DD
+	time 时间 HH:MM:SS
+	datetime  年月日时分秒 YYYY-MM-DD HH:MM:SS
+	timestamp 年月日时分秒 YYYY-MM-DD HH:MM:SS
+
+
+#### 面试题
+
+datetime timestamp差别
+
+1.datatime字段默认为NULL， timestamp为NOT NULL默认值为当前时间
+2.DATATIME使用八字节的存储空间，TIMESTAMP的存储空间为4字节。TIMESTAMP空间利用率更高
+3.timestamp存储和时区相关，即会根据时区做转换。datatime存进去是什么就是什么不会变动
+
+**生产上一般不会用yum源安装sql**

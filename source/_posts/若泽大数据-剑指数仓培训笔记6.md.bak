@@ -1,0 +1,208 @@
+---
+title: "数仓培训第六天"
+catalog: true
+toc_nav_num: true
+date: 2020-04-27 12:00:00
+subtitle: "MySQL1"
+tags:
+- [ruozedata]
+- [MySQL]
+categories:
+- [ruozedata]
+- [MySQL]
+updateDate: 2020-04-27 12:00:00
+top: 0  #置顶
+---
+
+### 1.sql类型
+ddl 数据定义语言  create  drop 
+dml 数据操作语言  select insert update delete  增删改查
+dcl 数据控制语言  grant 
+
+### 2.建表规范
+```sql
+create  table ruoze(
+id int(11) not null auto_increment, # 第一列必须是id自增长 加了唯一可以去掉not null
+name varchar(255),
+age int (3),
+
+create_user varchar(255), # 建议增加以下字段，以后有用，举例：用于大数据的实时数仓的数据结构，需要加入创建时间和修改时间
+create_time timestamp not null default current_timestamp,  #固定
+update_user varchar(255),
+update_time timestamp not null default current_timestamp on update current_timestamp, # 可变
+
+primary key(id)  # 主键 = 唯一约束+非空约束
+
+)default charset=utf8; #支持中文编码
+
+
+insert into mysql.ruoze(name,age) values('jj',18),('rz',18),('qq',26); # 批量插入数据
+insert into mysql.ruoze(name,age) values('rz',18); # 海狸单个insert语句插入数据执行ctrl+enter
+insert into mysql.ruoze(name,age) values('qq',26); # 海狸多个insert语句插入数据执行alt+x
+update mysql.ruoze set age=22 where name ='jj'; 
+
+delete from mysql.ruoze where id =3;
+
+select * from mysql.ruoze;
+
+```
+**注意点：**
+1.表名称 字段名称 **不要写中文**  不要汉语拼音
+2.**统一风格:**
+已经存在表结构设计，风格比如是create_user，那么新建的表也遵循。
+或者不遵循设计，建表语句需要让leader check。
+假如不存在，那么你应该建议设计规则
+反例：
+创建时间：
+	ctime
+	cretime
+	createtime
+	cre_time
+	create_time
+
+订单号:
+	 order
+	 orderno
+	 orderid
+
+3.**第一个字段必须是自增长字段** 主键  无业务意义  架构设计的遵循
+4.**一张表只有一个主键  primary key(id)**
+
+业务数据 唯一约束  
+ALTER TABLE mysql.ruoze ADD CONSTRAINT 
+ruoze_un UNIQUE KEY (name);
+
+ Duplicate entry 'jj' for key 'ruoze_un' # 存在重复的唯一标识
+
+5.**后面四个字段 务必要加**
+
+6.**业务字段 务必注释加上**
+comment 'xxxx'  # 在创建时最好加上
+
+
+### 3.增删改查
+```sql
+# 增加
+insert into mysql.ruoze(name,age) values('jj',18),('rz',18),('qq',26); # 批量插入数据
+insert into mysql.ruoze(name,age) values('rz',18); # 海狸单个insert语句插入数据执行ctrl+enter
+insert into mysql.ruoze(name,age) values('qq',26); # 海狸多个insert语句插入数据执行alt+x
+
+insert into mysql.ruoze
+values(3,'jj',23,'j1','2020-12-12 00:00:00','j1','2020-12-12 00:00:00');
+
+Column count doesn't match value count at row 1 # 以上语法可能有内容匹配不到，不建议这种插入方式
+#修改
+update mysql.ruoze set age=33 where name='jj'; #修改单个参数
+update mysql.ruoze set age=33,name='小丽' where id=1; #修改多个参数
+#删除
+delete from mysql.ruoze; #全部删除，慎重!!!!
+delete from mysql.ruoze where id =3; #删除id=3的数据
+#查看
+select * from mysql.ruoze; #选择全部
+
+##update delete select语法慎重执行，仔细思考是否要加where过滤筛选
+
+
+Incorrect string value: '\xE5\xB0\x8F\xE4\xB8\xBD' for column 'name' at row 1 
+#数据编码不支持中文 default charset=utf8;
+
+select * from db.t;
+select name,age from db.t; 
+
+* 代表所有字段
+```
+### 4.其他操作符
+```sql
+# where语法 判断
+select * from mysql.ruoze where age <=18; # 支持比较运算符
+select * from mysql.ruoze where name ='jj';
+select * from mysql.ruoze where age >=18 and name='jj'; #支持逻辑运算符
+select * from mysql.ruoze where age >=18 or name='jj';
+
+select * from mysql.ruoze where name in ('jj','qq'); # 字符串判断
+select * from mysql.ruoze where name not in ('jj','qq');
+
+# 排序语法
+select * from mysql.ruoze order by age; # 默认是递增 asc
+select * from mysql.ruoze order by age asc;
+select * from mysql.ruoze order by age desc; # 递减
+
+like语法
+select * from mysql.ruoze where name like 'j%'; # 字母开头为j的数据行
+select * from mysql.ruoze where name like '%q'; # 字母结尾为u的数据行
+select * from mysql.ruoze where name like '%q%';  # 含有h的数据行 不关心位置
+select * from mysql.ruoze where name like '_q%';  # 查第2个字母是h的数据
+
+_ 占位符  
+
+# 合并表
+create table a(i int,name varchar(255)); 
+create table b(i int,name varchar(255));
+
+insert into a values(1,'rz');
+
+insert into b values(1,'rz');
+insert into b values(2,'jj');
+
+
+select * from a union all select * from b # 全部数据合并，不管重复
+
+select * from a union select * from b # 合并重复数据之后合并
+
+null语法
+select * from mysql.ruoze  where age is null; # 查询age为null的数据
+select * from mysql.ruoze  where age is not null;
+```
+
+### 5.分组语法 
+```sql
+# 分组/聚合函数: 
+sum # 求和
+avg # 平均值
+max # 最大值
+min # 最小值
+count # 计数
+
+
+select 
+sum(age) as age_sum, # 可以进行字段命名
+avg(age),
+max(age),
+min(age),
+count(1) #计数，第一列
+from mysql.ruoze ;
+
+
+select 
+name,
+ifnull(sum(age),0) as age_sum # 如果是null，当成0处理，进行求和操作
+
+from mysql.ruoze #数据来源
+group by name # 以name进行分组
+having ifnull(sum(age),0) >20; # 子查询只显示求和超过20的数据
+
+##子查询
+select 
+*
+from 
+(
+	select 
+	name,
+	ifnull(sum(age),0) as age_sum
+	
+	from mysql.ruoze 
+	group by name 
+) t where age_sum>20;
+
+
+
+select 
+name,xxx,
+ifnull(sum(age),0) as age_sum
+
+from mysql.ruoze 
+group by name ,xxx # 以两个参数进行分组统计
+having ifnull(sum(age),0) >20;
+
+##分组字段必须select出现和group 出现是一致的
+```

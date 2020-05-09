@@ -1,0 +1,195 @@
+---
+title: "早课5"
+catalog: true
+toc_nav_num: true
+date: 2020-04-30 12:00:00
+subtitle: "若泽数据第一次早课作业-4.20"
+tags:
+- [ruozedata]
+categories:
+- [ruozedata]
+updateDate: 2020-04-30 12:00:00
+top: 0  #置顶
+---
+
+#### 1.Linux的hosts文件，我们应该注意什么 -复习
+
+主机名的配置文件是/etc/hosts 
+
+#### 2.Windows系统的hosts会找吗？-复习
+
+C:\Windows\System32\drivers\etc文件下的hosts文件
+
+#### 3.一般shell，代码这些我们与机器通信，是hostname吗？
+
+一般是以ip通信，所有的计算机都不能相互通过Hostname来访问
+
+#### 4.后台执行脚本或命令，前后加什么?
+
+nohup   脚本  &
+
+#### 5.执行xxx.sh脚本需要什么权限，哪两种方式执行
+
+执行权限 
+chmod +x xxx.sh
+chmod 755 xxx.sh
+切换到有权限的用户
+
+#### 7.crontab 编辑和查看参数是什么?  五个 * ，分别代表什么 -复习
+
+```bash
+crontab -l #-e是查看 
+crontab -e #-e是编辑 ， crontab命令可以当一个文本编辑框用
+五个星号分别代表
+分 时 日 月 周
+
+* 表示 每
+
+* * * * *  每分钟   
+*/1 * * * *  每分钟
+```
+
+#### 9.Linux现在遇见两个经典错误，链接拒绝，权限受限，会排查解决了吗？
+
+**链接拒绝:**
+ping ip
+telnet ip port
+防火墙或者安全组策略
+**权限受限:**
+查看用户组 id usermod
+查看文件权限 ll chmod
+利用sudo操作，需要去sudoers文件/etc/sudoers 
+
+#### 10.mysql部署简述流程-复习文档
+
+1.解压及创建目录
+2.创建my.cnf文件
+3.创建用户组及用户
+4.copy 环境变量配置文件至mysqladmin用户的home目录中，解决样式丢失问题
+5.配置环境变量
+6.赋权限和用户组，切换用户mysqladmin，安装
+7.配置服务及开机自启动
+8.安装libaio及安装mysql的初始db
+9.查看临时密码
+10.启动
+11.登录及修改用户密码
+12.重启
+
+#### 11.对用户执行完权限相关操作，最后一句命令是什么? -复习
+
+flush privileges;  刷权限
+
+#### 12.%代表什么
+
+代表任意客户端机器去访问mysql服务器
+
+#### 13.创建用户和设置密码，那句sql会背吗？-复习
+
+**创建用户**
+```bash
+useradd -u 515 -g dba -G root -d /usr/local/mysql mysqladmin
+#-u uid -g 主组 -G 次组 -d 家目录设置 
+```
+**设置密码**
+```bash
+mysql> alter user root@localhost identified by 'hadoop001' # 记住以分号;结束命令，修改密码
+    -> ;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'hadoop001' ;# 一般是公司DBA进行操作
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+
+mysql> flush privileges; # 刷新权限
+Query OK, 0 rows affected (0.00 sec)
+```
+
+#### 14.vi简述编辑流程
+
+vi 进入编辑模式
+i键进入编辑模式
+esc退出编辑模式
+shift+：进入尾行模式
+wq 保存退出
+
+#### 15.Linux命令里带有大写 R的命令，哪两个?-复习
+
+关于权限：
+chmod -R 777          文件或文件夹
+chown -R 用户:用户组  文件或文件夹
+
+#### 16.rwxr--r--  数字多少
+
+744
+
+#### 17.一个log文件很大，1G，找ERROR怎么办
+
+```bash
+cat xxx.log | grep ERROR        #提取当前行
+cat xxx.log | grep -A 5 ERROR   #提取关键字出现的后5行
+cat xxx.log | grep -B 5 ERROR   #提取关键字出现的前5行
+cat xxx.log | grep -C 5 ERROR   #提取关键字出现的前后各5行
+```
+如果没有-A-B-C则只会打出错误行，最好前后打印15.20行的数据
+如果 xxx.log ERROR 很多  上万个 可以导出到单独文件查看
+```bash
+cat xxx.log | grep -C 5 ERROR > 20200418error.log
+more 20200418error.log  
+```
+下载到window，使用文档软件进行查找
+editplus（window）  
+notepad++ 
+
+#### 18.个人环境变量文件在哪，怎样生效-复习
+
+全局 : /etc/profile    所有用户都可以使用  
+
+个人: 
+&emsp;&emsp;&emsp; ~/.bash_profile   只能是设置命令的当前用户使用  其他不能使用
+&emsp;&emsp;&emsp; ~/.bashrc [设置个人别名主要修改这个文件]      
+&emsp;&emsp;&emsp; 场景: 使用ssh 远程执行B机器 +命令
+&emsp;&emsp;&emsp; 提示找不到命令    java command not found 
+&emsp;&emsp;&emsp; 但是直接登录B机器 命令是找到的   which java有的 
+
+       命令的环境变量配置在.bash_profile  是不正确的。
+       应该配置在.bashrc文件
+
+
+想在配置后，全局生效，需要新开窗口，老窗口可看作静态窗口
+
+生效文件:修改后需要操作之后才会生效
+```bash
+    source /etc/profile
+    source ~/.bash_profile
+    source ~/.bashrc
+    cd 进家目录
+    .空格.bashrc  
+```
+
+#### 19.su - 做什么事
+
+切换用户
+
+#### 20.三种方式切换用户的家目录
+
+```bash
+cd ~
+cd /home/xxx # xxx用户家目录
+cd 空格
+```
+
+#### 21.一个文件差不多1W行，我要去vi编辑一个参数xxx，但是我不知道在多少行，怎么快速找到?
+
+```bash
+vi yyy.log
+shift+:  
+/xxx       #代表搜索的语法，之后输入需要寻找的对象
+n   # 寻找，下翻
+```
+
+
+
+
+
+
+
+

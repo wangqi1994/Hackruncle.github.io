@@ -1,0 +1,111 @@
+---
+title: "数仓培训第一天"
+catalog: true
+toc_nav_num: true
+date: 2020-04-22 12:00:00
+subtitle: "开班课笔记整理"
+tags:
+- [ruozedata]
+- [Linux]
+categories:
+- [ruozedata]
+- [Linux]
+updateDate: 2020-04-22 12:00:00
+top: 0  #置顶
+---
+
+数仓培训第一天
+
+### 一、系统安装部署
+
+具体流程参考：
+**Centos7.2**安装部署（图文教程）[ici](https://wangqi1994.github.io/2020/04/21/centos7.2/)
+**CentOS6.5**配置静态**IP**和可访问外网[ici](https://wangqi1994.github.io/2020/04/21/centos6.5配置静态IP和可访问外网/)
+**CentOS6.5**修改主机名[ici](https://wangqi1994.github.io/2020/04/22/centos修改主机名/)
+### 二、Linux部分认知和命令
+
+### 1.  [root@hadoop001 ~]#
+root默认管理员，拥有最大权限
+
+hadoop001是机器名称，可以自行修改
+~表示当前用户家目录 root用户家目录/root , hadoop001用户家目录/home/hadoop001
+### 2.  pwd查看当前光标所在目录 路径
+```bash
+[root@ hadoop001 ~]# pwd
+root
+```
+### 3.  ls 查看
+[root@ hadoop001 ~]# ls
+ls 显示文件夹 文件名称
+ls -l 显示额外信息 权限 用户用户组 更新时间 大小
+ls -l -a 显示隐藏文件夹和文件 = ls -al
+```bash
+[root@ hadoop001 ~]# ls -l -a
+total 4
+dr-xr-x---. 6 root root 4096 Apr 15 21:51 .
+dr-xr-xr-x. 17 root root 4096 Aug 8 2018 ..
+-rw-------. 1 root root 3814 Apr 15 21:49 .bash_history
+-rw-r--r--. 1 root root 18 Dec 29 2013 .bash_logout
+```
+隐藏文件夹 文件是以.开头
+```bash
+
+ls -l -h #仅仅查看文件的大小
+
+ls -l -r -t #按时间排序 （解决如何快速找到最新更新文件的问题）
+
+ll -a   #ls -l ==》ll #等价
+ll -rt
+ll -h
+```
+### 4.  mkdir 创建文件夹
+
+```bash
+[root@ hadoop001 ~]# mkdir ruozedata
+[root@ hadoop001 ~]# ls
+ruozedata
+mkdir dir1 dir2 dir3 #并联创建，可以同时创建三个文件夹
+mkdir -p dir4/dir5/dir6 #串级创建，可以直接创建三层文件夹
+```
+###  5.  cd 切换目录 路径
+Linux系统 从根目录的标识 /
+```bash
+[root@ hadoop001 ~]# cd /
+cd dir1 #进入dir1文件夹
+
+cd ../ #退到上一层目录 注意：不是上一次的目录
+
+cd ../../ #退到上面2层
+
+```
+root用户 家目录 /root
+普通xx用户 家目录 /home/xx
+家目录 是 ~ 表示
+如何进当前用户的家目录:
+cd /root #当前用户的家目录的完整路径
+
+cd 直接回车
+cd ~
+```bash
+cd - #回退到上一次的目录
+[root@ hadoop001 ~]# cd dir4
+[root@ hadoop001 dir4]# cd dir5/dir6
+[root@ hadoop001 dir6]#
+[root@ hadoop001 dir6]# cd -
+[root@ hadoop001 dir4]#
+```
+### 6.  帮助命令 --help
+ # []标识的参数可选      ... 多个参数
+Usage: ls [OPTIONS]
+Usage: ls XXX [OPTIONS]
+```bash
+[root@ hadoop001 ~]# ls --help
+Usage: ls [OPTION]... [FILE]...
+List information about the FILEs (the current directory by default).
+Sort entries alphabetically if none of -cftuvSUX nor --sort is specified.
+Mandatory arguments to long options are mandatory for short options too.
+-a, --all do not ignore entries starting with .
+-A, --almost-all do not list implied . and ..--author with -l, print the author of each file
+-b, --escape print C-style escapes for nongraphic characters--block-size=SIZE scale sizes by SIZE before printing them; e.g.,'--block-size=M' prints sizes in units of1,048,576 bytes; see SIZE format below
+```
+man 命令 比--help更加详细
