@@ -50,7 +50,7 @@ top: 0  #置顶
 ```
 yarn默认你端口号8088.
 8088端口暴露外网，会被病毒感染 植入挖矿程序  用来计算比特币  
-
+8088内网不用怕，外网可加安全验证
 
 **Start ResourceManager daemon and NodeManager daemon:** 启动yarn进程
 ```bash
