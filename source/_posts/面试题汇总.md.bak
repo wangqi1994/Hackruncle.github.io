@@ -4,6 +4,7 @@ catalog: true
 toc_nav_num: true
 date: 2020-04-29 12:00:00
 subtitle: "拓展"
+article_type: 0 # 0 原创，1 转载
 tags:
 - [面试]
 categories:

@@ -4,15 +4,13 @@ catalog: true
 toc_nav_num: true
 date: 2020-05-07 12:00:00
 subtitle: "Hadoop介绍、安装部署"
-article_type: 0
+article_type: 0 # 0 原创，1 转载
 tags:
 - [ruozedata]
 - [Hadoop]
-- [HDFS]
 categories:
 - [ruozedata]
 - [Hadoop]
-- [HDFS]
 updateDate: 2020-05-07 12:00:00
 top: 0  #置顶
 ---
