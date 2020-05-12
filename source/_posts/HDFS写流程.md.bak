@@ -30,7 +30,7 @@ drwx------   - hadoop supergroup          0 2020-05-11 16:19 /tmp
 drwxr-xr-x   - hadoop supergroup          0 2020-05-11 15:35 /usr
 drwxr-xr-x   - hadoop supergroup          0 2020-05-11 16:57 /wordcount2
 ``` 
-![HDFS写流程图](/img/Hadoop/HDFS写流程.png)
+![HDFS写流程图](HDFS写流程.png)
 
 写入操作对用户操作是无感知的
 流程：

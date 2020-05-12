@@ -76,4 +76,22 @@ and a.sal<b.sal #判断最高
 )=0
 order by a.deptno
 ```
+### 面试题5
+
+端口号范围：
+1-65535
+
+### 面试题6
+HDFS写流程 
+
+[HDFS写流程](https://wangqi1994.github.io/2020/05/11/HDFS写流程/)
+
+
+### 面试题7
+HDFS读流程
+
+[HDFS读流程](https://wangqi1994.github.io/2020/05/11/HDFS读流程/)
+
+### 面试题8
+
 

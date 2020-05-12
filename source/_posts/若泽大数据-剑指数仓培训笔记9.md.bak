@@ -191,6 +191,7 @@ wang	3
 ```
 
 ### 3.jps命令
+[Jps命令—使用详解](https://wangqi1994.github.io/2020/05/08/Jps命令—使用详解/)
 #### 3.1 位置
 ```bash
 [hadoop@hadoop001 hadoop]$ which jps

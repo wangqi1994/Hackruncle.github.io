@@ -16,15 +16,19 @@ top: 0  #置顶
 ---
 
 **HDFS读流程**
-
-[hadoop@ruozedata001 ~]$ hdfs dfs -cat  /1.log
-20/05/10 21:53:19 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+```bash
+[hadoop@hadoop001 ~]$ hdfs dfs -cat  /1.log
+20/05/12 09:51:19 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... \
+using builtin-java classes where applicable
 ruozedata
-[hadoop@ruozedata001 ~]$ 
-对用户操作是无感知的 
+[hadoop@hadoop001 ~]$ 
+```
+![HDFS读流程图](/img/Hadoop/HDFS读流程.png)
 
-1.Client调用FileSystem的open(filePath),
-与NN进行RPC通信，返回该文件的部分或者全部的block列表
+读取流程对用户操作是无感知的 
+
+1.Client调用FileSystem的open(filePath)方法,与NN进行RPC通信，
+返回该文件的部分或者全部的block列表
 也就是返回【FSDataInputStream】对象
 
 2.Client调用【FSDataInputStream】对象的read方法
