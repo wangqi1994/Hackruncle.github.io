@@ -1,0 +1,269 @@
+---
+title: "数仓培训第十一天"
+catalog: true
+toc_nav_num: true
+date: 2020-05-13 12:00:00
+subtitle: "SNN流程、HDFS命令、数据平衡"
+article_type: 0 # 0 原创，1 转载
+tags:
+- [Hadoop]
+- [HDFS]
+categories:
+- [Hadoop]
+- [HDFS]
+updateDate: 2020-05-13 12:00:00
+top: 0  #置顶
+---
+
+
+### 1.SNN的流程
+
+[SNN流程](https://wangqi1994.github.io/2020/05/13/SNN流程/)
+
+### 2.HDFS命令
+
+大数据中配置文件一般为
+/etc
+/conf
+/config
+```bash
+[hadoop@hadoop001 hadoop]$ ll
+total 164
+drwxr-xr-x.  2 hadoop hadoop  4096 Jun  3  2019 bin    #可执行脚本  命令
+drwxr-xr-x.  2 hadoop hadoop  4096 Jun  3  2019 bin-mapreduce1
+drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 cloudera
+drwxr-xr-x.  6 hadoop hadoop  4096 Jun  3  2019 etc     #配置文件夹 conf/config
+drwxr-xr-x.  5 hadoop hadoop  4096 Jun  3  2019 examples  #例子
+drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 examples-mapreduce1
+drwxr-xr-x.  2 hadoop hadoop  4096 Jun  3  2019 include
+drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 lib  #lib目录 jar包
+drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 libexec
+-rw-r--r--.  1 hadoop hadoop 85063 Jun  3  2019 LICENSE.txt
+drwxrwxr-x.  3 hadoop hadoop  4096 May 11 15:33 logs  #日志文件
+-rw-r--r--.  1 hadoop hadoop 14978 Jun  3  2019 NOTICE.txt
+drwxrwxr-x.  2 hadoop hadoop  4096 May 11 16:53 output 
+-rw-r--r--.  1 hadoop hadoop    43 May 11 17:00 part-r-00000
+-rw-r--r--.  1 hadoop hadoop  1366 Jun  3  2019 README.txt
+drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 sbin    #启动 停止 重启脚本
+drwxr-xr-x.  4 hadoop hadoop  4096 Jun  3  2019 share  #共享的
+drwxr-xr-x. 18 hadoop hadoop  4096 Jun  3  2019 src   #源代码
+-rw-r--r--.  1 hadoop hadoop     0 May 11 17:00 _SUCCESS
+[hadoop@hadoop001 hadoop]$ cd bin
+[hadoop@hadoop001 bin]$ ll
+total 92
+-rwxr-xr-x. 1 hadoop hadoop  5701 Jun  3  2019 hadoop
+-rwxr-xr-x. 1 hadoop hadoop  8443 Jun  3  2019 hadoop.cmd
+-rwxr-xr-x. 1 hadoop hadoop 12356 Jun  3  2019 hdfs
+-rwxr-xr-x. 1 hadoop hadoop  6915 Jun  3  2019 hdfs.cmd
+-rwxr-xr-x. 1 hadoop hadoop  5463 Jun  3  2019 mapred
+-rwxr-xr-x. 1 hadoop hadoop  5949 Jun  3  2019 mapred.cmd
+-rwxr-xr-x. 1 hadoop hadoop  1776 Jun  3  2019 rcc
+-rwxr-xr-x. 1 hadoop hadoop 12476 Jun  3  2019 yarn
+-rwxr-xr-x. 1 hadoop hadoop 10895 Jun  3  2019 yarn.cmd
+[hadoop@hadoop001 bin]$ 
+# cmd是windows的脚本
+```
+生产上主要看三个目录
+lib
+bin
+etc
+生产上用的最多的命令是a,c,d,e
+#### a.查看ls
+从shell文件查看可知 hadoop fs -ls=  hdfs dfs -ls
+```shell
+hadoop fs -ls /
+ if [ "$COMMAND" = "fs" ] ; then
+      CLASS=org.apache.hadoop.fs.FsShell
+
+hdfs dfs -ls /
+ elif [ "$COMMAND" = "dfs" ] ; then
+      CLASS=org.apache.hadoop.fs.FsShell
+```
+#### b.上传下载:
+-get上传 -put 下载
+-copyToLocal 上传  -copyFromLocal 下载
+
+#### c.创建文件夹 
+hdfs dfs -mkdir 目录名
+
+#### d.移动 拷贝
+hdfs dfs -mv 原位置 目标位置
+hdfs dfs -cp 源文件 目标文件位置、
+
+**生产上保险起见用拷贝，不咋用移动**
+拷贝之后校验，如果不出问题，则返回删除原来的文件
+
+#### e.删除
+
+-rm [-f] [-r|-R] [-skipTrash] <src> ...]
+```shell
+#回收站设置 core-site.xml
+  <property>
+        <name>fs.trash.interval</name> #设置回收站保留有效期
+        <value>10080</value>
+  </property>
+```
+在core-site.xml文件设置回收站保留时间，生产上设置10080=7天
+**设置完之后，重启hdfs**
+
+
+**1.生产上一定开启回收站！+回收站的有效期至少7天！！**
+**2.-skipTrash 是删除不经过回收站，慎用-skipTrash 不要加！！！**
+
+使用CDH/HDP 要去检查是否开启 开启周期
+```bash
+[hadoop@hadoop001 hadoop]$ hdfs dfs -rm /1.log
+20/05/13 11:46:49 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... 
+using builtin-java classes where applicable
+20/05/13 11:46:51 INFO fs.TrashPolicyDefault: Moved: 'hdfs://hadoop001:9000/1.log' to trash at: 
+hdfs://hadoop001:9000/user/hadoop/.Trash/Current/1.log   #进入回收站
+[hadoop@hadoop001 ~]$ hdfs dfs -ls /user/hadoop/.Trash/Current
+20/05/13 11:50:18 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Found 1 items
+-rw-r--r--   1 hadoop supergroup         10 2020-05-12 09:40 /user/hadoop/.Trash/Current/1.log
+[hadoop@hadoop001 ~]$  hdfs dfs -rm -skipTrash /1.log
+20/05/13 13:48:24 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Deleted /1.log  #直接删除
+[hadoop@hadoop001 ~]$ 
+```
+
+#### f.权限
+-chmod
+-chown 
+
+#### g.checknative
+hadoop checknative 列出来不支持的压缩方式
+需要的话，只能自己编译，编译一般在国外环境下进行
+```bash
+[hadoop@hadoop001 ~]$ hadoop checknative
+20/05/13 13:53:11 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Native library checking:
+hadoop:  false 
+zlib:    false 
+snappy:  false 
+lz4:     false 
+bzip2:   false 
+openssl: false 
+20/05/13 13:53:11 INFO util.ExitUtil: Exiting with status 1
+[hadoop@hadoop001 ~]$ 
+```
+
+#### h.safemode安全模式
+利用dfsadmin 管理员的权限 进行设置
+```bash
+hdfs dfsadmin -report #查看报告，可以设置进行监控+
+
+[-safemode <enter | leave | get | wait>]
+#安全模式-自我保护-不能写只能读
+hdfs dfsadmin -safemode enter #进入
+hdfs dfsadmin -safemode leave #离开
+```
+
+错误： Name node is in safe mode.
+
+什么时候会安全模式：
+1.hdfs故障  nn 查看log日志 
+根据错误去看看尝试能不能解决，和尝试先手动让他离开安全模式
+2.业务场景
+![](/img/Hadoop/HDFS安全模式的维护窗口的场景.png)
+离线抽取sqoop  datax kettle
+实时抽取 flume canal/maxwell
+进入安全模式之后要发邮件说明窗口期多长
+生产上要最小化的窗口维护
+注意：生产上不要频繁启动关闭hdfs，可能会出现起不来的情况
+
+### 3.数据平衡
+#### 各个DN节点的数据平衡
+sbin/start-balancer.sh的sh文件如下，使用这个sh文件调用bin"/hdfs start balancer命令
+```bash
+# Start balancer daemon.
+
+"$HADOOP_PREFIX"/sbin/hadoop-daemon.sh --config $HADOOP_CONF_DIR --script "$bin"/hdfs start balancer $@
+
+[hadoop@hadoop001 hadoop]$ sbin/start-balancer.sh 
+starting balancer, logging to /home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-hadoop-balancer-hadoop001.out
+Time Stamp               Iteration#  Bytes Already Moved  Bytes Left To Move  Bytes Being Moved
+[hadoop@hadoop001 hadoop]$ sbin/start-balancer.sh -threshold 10.0   # 默认是10  threshold = 10.0
+starting balancer, logging to /home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-hadoop-balancer-hadoop001.out
+Time Stamp               Iteration#  Bytes Already Moved  Bytes Left To Move  Bytes Being Moved
+[hadoop@hadoop001 hadoop]$ 
+```
+
+每个节点的磁盘使用率-平均的磁盘使用率< 10%
+
+**建议**：
+生产上 从现在开始，每天进行./start-balancer.sh -threshold 10.0 操作，并且要放到业务低谷比如凌晨，
+每天定时的去做平衡操作，做平衡操作时，需要算一下能不能承载
+
+如果传输量太大，可以调节平衡操作的网络带宽设置参数
+在hdfs-site.xml文件中添加
+
+    <property>
+        <name>dfs.datanode.balance.bandwidthPerSec</name>
+        <value>50</value>
+    </property>
+
+dfs.datanode.balance.bandwidthPerSec 
+默认是10m/s
+10m/s-->50m/s
+
+#### 单个DN的多块磁盘的数据均衡
+a.在投产前规划  (这个DN机器上 10块磁盘  2T 不做raid==》20T  大数据不用raid)
+配置多个磁盘
+在hdfs-site.xml文件中添加
+```bash
+  <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/data01,/data02,/data03</value>#配置多块磁盘，中间以逗号分割
+  </property>
+```
+ **为什么要用多块物理磁盘 ？**
+ 多个磁盘的 IO是叠加的 
+
+**建议**：
+规划时，和领导说明，磁盘不值钱，要规划两年的存储空间
+
+服务器上面的硬盘不是越大越好
+
+生产上2.5英寸 一万转 2T的性价比最高 
+
+
+ b.在投产后
+ 第一个月 1个磁盘 500G 已经使用480G 
+ 第二个月 新增一个磁盘：
+ 如果第二个比第一个大的多的话就直接移动，然后做软连接回连
+ 如果一样大就做磁盘均衡数据操作
+
+**如何多个磁盘 均衡数据？**
+
+hadoop-2.6.0-cdh5.16.2  dfs.disk.balancer.enabled #cdh包大了很多补丁，版本相当于打补丁=高版本
+apache hadoop 3.x  dfs.disk.balancer.enabled
+apache hadoop 2.10 找不到 
+
+生产上Apache环境 只有3.x版本才支持，但是大部分公司是2.x
+所以这个特性用不了！！！
+
+在hdfs-site.xml文件中添加
+```bash
+  <property>
+        <name>dfs.disk.balancer.enabled</name>
+        <value>true</value>
+  </property>
+```
+
+20/05/12 23:25:48 INFO command.Command: No plan generated. 
+DiskBalancing not needed for node: ruozedata001 threshold used: 10.0
+
+
+hdfs diskbalancer  -plan ruozedata001 
+生成 ruozedata001.plan.json 文件
+
+hdfs diskbalancer -execute ruozedata001.plan.json  执行
+hdfs diskbalancer  -query ruozedata001 
+
+
+-query 查看
+
+生产上发现磁盘不均衡时，不需要每天做，半个月一次即可
+
+[官方文档](http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2/)

@@ -267,7 +267,7 @@ hadoop001: starting secondarynamenode, logging to /home/hadoop/app/hadoop-2.6.0-
 42555 DataNode
 [hadoop@hadoop001 hadoop]$ 
 ```
-
+**sbin/stop-all.sh =stop_dfs和stop_yarn**
 
 #### 2.10 open web：
 ```bash
