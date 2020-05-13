@@ -4,7 +4,7 @@ catalog: true
 toc_nav_num: true
 date: 2020-05-13 12:00:00
 subtitle: "拓展"
-article_type: 0 # 0 原创，1 转载
+article_type: 1 # 0 原创，1 转载
 tags:
 - [Linux]
 

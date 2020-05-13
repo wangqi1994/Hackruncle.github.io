@@ -244,26 +244,60 @@ apache hadoop 2.10 找不到
 所以这个特性用不了！！！
 
 在hdfs-site.xml文件中添加
-```bash
+```
   <property>
         <name>dfs.disk.balancer.enabled</name>
         <value>true</value>
   </property>
 ```
+##### a.生成计划
+```bash
+[hadoop@hadoop001 hadoop]$ hdfs diskbalancer  -plan hadoop001
+20/05/13 16:23:03 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+20/05/13 16:23:06 INFO planner.GreedyPlanner: Starting plan for Node : hadoop001:50020
+20/05/13 16:23:06 INFO planner.GreedyPlanner: Compute Plan for Node : hadoop001:50020 took 7 ms 
+20/05/13 16:23:08 INFO command.Command: No plan generated. DiskBalancing not needed for node: hadoop001 threshold used: 10.0
+[hadoop@hadoop001 hadoop]$ 
+#生成 hadoop001.plan.json 文件
+```
+##### b.执行计划
 
-20/05/12 23:25:48 INFO command.Command: No plan generated. 
-DiskBalancing not needed for node: ruozedata001 threshold used: 10.0
+```bash
+[hadoop@hadoop001 hadoop]$ hdfs diskbalancer -execute hadoop001.plan.json
+20/05/13 16:26:14 INFO command.Command: Executing "execute plan" command
+20/05/13 16:26:14 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+20/05/13 16:26:15 ERROR tools.DiskBalancerCLI: java.io.FileNotFoundException: File does not exist: /user/hadoop/hadoop001.plan.json
+	at org.apache.hadoop.hdfs.server.namenode.INodeFile.valueOf(INodeFile.java:66)
+	at org.apache.hadoop.hdfs.server.namenode.INodeFile.valueOf(INodeFile.java:56)
+	at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getBlockLocationsInt(FSNamesystem.java:2157)
+	at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getBlockLocations(FSNamesystem.java:2127)
+	at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getBlockLocations(FSNamesystem.java:2040)
+	at org.apache.hadoop.hdfs.server.namenode.NameNodeRpcServer.getBlockLocations(NameNodeRpcServer.java:583)
+	at org.apache.hadoop.hdfs.server.namenode.AuthorizationProviderProxyClientProtocol.getBlockLocations(AuthorizationProviderProxyClientProtocol.java:94)
+	at org.apache.hadoop.hdfs.protocolPB.ClientNamenodeProtocolServerSideTranslatorPB.getBlockLocations(ClientNamenodeProtocolServerSideTranslatorPB.java:377)
+	at org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos$ClientNamenodeProtocol$2.callBlockingMethod(ClientNamenodeProtocolProtos.java)
+	at org.apache.hadoop.ipc.ProtobufRpcEngine$Server$ProtoBufRpcInvoker.call(ProtobufRpcEngine.java:617)
+	at org.apache.hadoop.ipc.RPC$Server.call(RPC.java:1073)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2278)
+	at org.apache.hadoop.ipc.Server$Handler$1.run(Server.java:2274)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at javax.security.auth.Subject.doAs(Subject.java:422)
+	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1924)
+	at org.apache.hadoop.ipc.Server$Handler.run(Server.java:2272)
+
+[hadoop@hadoop001 hadoop]$ #没有json计划文件
+```
+##### c.查看状态
+```bash
+[hadoop@hadoop001 hadoop]$ hdfs diskbalancer  -query hadoop001 
+20/05/13 16:24:26 INFO command.Command: Executing "query plan" command.
+20/05/13 16:24:26 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+Plan File: 
+Plan ID: 
+Result: NO_PLAN
+```
+
+生产上发现磁盘不均衡时，不需要每天做磁盘均衡，半个月一次即可
 
 
-hdfs diskbalancer  -plan ruozedata001 
-生成 ruozedata001.plan.json 文件
-
-hdfs diskbalancer -execute ruozedata001.plan.json  执行
-hdfs diskbalancer  -query ruozedata001 
-
-
--query 查看
-
-生产上发现磁盘不均衡时，不需要每天做，半个月一次即可
-
-[官方文档](http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2/)
+[官方参考文档](http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2/)
