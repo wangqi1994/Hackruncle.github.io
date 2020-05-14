@@ -60,7 +60,6 @@ cmp(var a, var b) {
 ```
 修改完成后，只需要在front-matter中设置需要置顶文章的top值，将会根据top值大小来选择置顶顺序
 top值越大越靠前。需要注意的是，这个文件不是主题的一部分，也不是Git管理的，备份的时候比较容易忽略。
-在git push 之前将 .gitignore文件中的node_modules/ 去掉，即可将配置文件上传，在另一台电脑clone时，可以将配置完美下载
 
 以下是最终的generator.js内容
 ```bash
