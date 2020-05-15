@@ -4,6 +4,7 @@ catalog: true
 toc_nav_num: true
 date: 2020-04-20 12:00:00
 subtitle: "若泽数据第一次早课作业-4.20"
+article_type: 0 # 0 原创，1 转载
 tags:
 - [ruozedata]
 categories:
@@ -14,13 +15,13 @@ top: 0  #置顶
 
 ### 1.查看当前目录命令
 
-```bash
+```shell
 pwd
 ```
 ### 2.隐藏文件文件夹什么开始，怎样查看
 
 以.开头
-```bash
+```shell
 ls -a
 ```
 
@@ -30,7 +31,7 @@ mkdir dir1 dir2 dir3 并
 mkdir -p dir4/dir5/dir6  串 级联创建-p
 
 ### 4.创建空文件-注意
-```bash
+```shell
 cat /dev/null > 1.log
 echo "">1.log #非空集合
 true>1.log

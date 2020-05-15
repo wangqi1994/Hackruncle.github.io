@@ -4,6 +4,7 @@ catalog: true
 toc_nav_num: true
 date: 2020-04-27 12:00:00
 subtitle: "若泽数据第四次早课作业-4.27"
+article_type: 0 # 0 原创，1 转载
 tags:
 - [ruozedata]
 categories:
@@ -38,14 +39,14 @@ kill -9 $(pgrep -f xxx) #全局杀死进程 （记住，慎重）
 
 ### 6.全局模糊搜索  名称含有  xxx 的文件、文件夹 - 复习
 
-```bash
+```shell
 find / -name '*xxx*' #全局模糊搜索
 find /home/hadoop/ -name '*xxx*' #指定文件夹搜索
 ```
 
 ### 7.搜索 安装 卸载 rpm -复习
 
-```bash
+```shell
 rpm-qa | grep xxx # 搜索
 rpm -ql xxx # 搜索
 rpm -i xxx # 安装
@@ -113,7 +114,7 @@ load average: 0.01, 0.03, 0.05
 
 ### 19.tar命令的压缩 、解压的命令参数 ？
 
-```bash
+```shell
 tar -xzvf xxx.tar.gz # 解压
 tar -czvf xxx.tar.gz xxx/* # 压缩
 zip -r xxx.zip xxx/* # 压缩

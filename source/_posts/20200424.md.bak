@@ -4,6 +4,7 @@ catalog: true
 toc_nav_num: true
 date: 2020-04-24 12:00:00
 subtitle: "若泽数据第三次早课作业-4.24"
+article_type: 0 # 0 原创，1 转载
 tags:
 - [ruozedata]
 categories:
@@ -14,26 +15,26 @@ top: 0  #置顶
 
 ### 1.强制删除文件夹
 
-```bash
+```shell
 rm -rf 文件夹
 ```
 
 ### 2.个人环境变量文件，默认在哪里？推荐使用哪个呢？怎样生效？生效完成后，习惯做一件事是执行什么命令？
 
 个人: 默认用户家目录下隐藏文件
-&emsp;&emsp;&emsp; ~/.bash_profile   只能是设置命令的当前用户使用  其他不能使用
-&emsp;&emsp;&emsp; ~/.bashrc [设置个人环境变量主要修改这个文件]**推荐**      
+&emsp;&emsp;&emsp; ~/.shell_profile   只能是设置命令的当前用户使用  其他不能使用
+&emsp;&emsp;&emsp; ~/.shellrc [设置个人环境变量主要修改这个文件]**推荐**      
 &emsp;&emsp;&emsp; 场景: 使用ssh 远程执行B机器 +命令
 &emsp;&emsp;&emsp; 提示找不到命令    java command not found 
 &emsp;&emsp;&emsp; 但是直接登录B机器 命令是找到的   which java有的 
 
 生效文件:修改后需要操作之后才会生效
-```bash
+```shell
     source /etc/profile
-    source ~/.bash_profile
-    source ~/.bashrc
+    source ~/.shell_profile
+    source ~/.shellrc
     cd 进家目录
-    .空格.bashrc  
+    .空格.shellrc  
 ```
 想在配置后，全局生效，需要新开窗口，老窗口可看作静态窗口
 生效完成后习惯上的which一下，看看是否成功
@@ -47,7 +48,7 @@ history -c 清空历史 ，不想让人知道自己的操作，把尾巴擦干�
 
 ### 4.用户的文件是哪个？
 
-```bash
+```shell
 [root@hadoop001 ~]# ll /usr/sbin/user* #用户命令
 -rwxr-x---. 1 root root 114056 Mar  6  2015 /usr/sbin/useradd
 -rwxr-x---. 1 root root  80352 Mar  6  2015 /usr/sbin/userdel
@@ -59,7 +60,7 @@ history -c 清空历史 ，不想让人知道自己的操作，把尾巴擦干�
 
 ### 5.用户组的文件是哪个？
 
-```bash
+```shell
 [root@hadoop001 ~]# ll /usr/sbin/group* #用户组命令
 -rwxr-x---. 1 root root 61336 Mar  6  2015 /usr/sbin/groupadd
 -rwxr-x---. 1 root root 56992 Mar  6  2015 /usr/sbin/groupdel
@@ -73,11 +74,11 @@ history -c 清空历史 ，不想让人知道自己的操作，把尾巴擦干�
 /etc/passwd文件中权限sbin/nologin
 会出现无法切换用户的现象，报错无法登录
 权限设为/usr/bin/false，无法登录，但是无报错
-需要修改为/bin/bash
+需要修改为/bin/shell
 
 ### 7.修改一个用户 usermod命令，指定主组 和 附加组，会吗？
 
-```bash
+```shell
 [root@hadoop001 ~]# groupadd bigdata
 [root@hadoop001 ~]# usermod -a -G bigdata ruoze #将bigdata附加到ruoze的groups中
 [root@hadoop001 ~]# id ruoze
@@ -95,7 +96,7 @@ uid=1002(ruoze) gid=1003(bigdata) groups=1003(bigdata),1002(ruoze)
 
 在root用户下，可输入passwd +用户名， 修改对应用户的密码
 在对应用户下，可输入passwd修改该用户的密码
-```bash
+```shell
 [root@hadoop001 ~]# passwd
 Changing password for user root.
 New password: 
@@ -110,7 +111,7 @@ passwd: all authentication tokens updated successfully.
 
 ### 10.一个普通用户，想要瞬间临时获取root的最大权限，请问在哪个配置文件修改什么内容？博客写了吗？  在执行命令时，sudo命令加在前面？
 
-```bash
+```shell
 vi /etc/sudoers #找到allow设置root权限
 ruoze   ALL=(root)      NOPASSWD:ALL
 [ruoze@hadoop001 ~]$ cat /root/rz.log
@@ -158,7 +159,7 @@ wq回车-保存退出
 
 a.vi命令行模式：dd光标到第一行第一个字母，dG删除当前光标以下所有内容
 b.文件操作
-```bash
+```shell
 cat /dev/null > 1.log
 echo  "" > 2.log
 true > 1.log #也是清空文件内容 0字节
@@ -178,7 +179,7 @@ ps -ef打印所有进程
 &emsp;&emsp;PID是计算分配ID,PPID是上级ID，即由PID调用PPID
 &emsp;&emsp;PID 1是系统ID，从根目录开始的
 ps -ef | grep http 
-```bash
+```shell
 [root@hadoop001 ~]# yum install -y net-tools.x86_64
 [root@hadoop001 ~]# netstat -nlp| grep 18670 
 tcp6       0      0 :::80                   :::*                    LISTEN      18670/httpd         

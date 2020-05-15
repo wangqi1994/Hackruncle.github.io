@@ -4,6 +4,7 @@ catalog: true
 toc_nav_num: true
 date: 2020-04-23 12:00:00
 subtitle: "若泽数据第二次早课作业-4.23"
+article_type: 0 # 0 原创，1 转载
 tags:
 - [ruozedata]
 categories:
@@ -14,14 +15,14 @@ top: 0  #置顶
 
 ### 1.查看当前目录
 
-```bash
+```shell
 pwd
 ```
 
 ### 2.隐藏文件、文件夹以什么开始，怎样查看
 
 以.开头
-```bash
+```shell
 ls -a
 ```
 
@@ -114,7 +115,7 @@ tail 实时查看文件最新内容
 ### 17.谈谈你对  如何定位ERROR的 理解？
 
 a.当文件内容超多时  需要定位ERROR 信息
-```bash
+```shell
 cat xxx.log | grep ERROR        #提取当前行
 cat xxx.log | grep -A 5 ERROR   #提取关键字出现的后5行
 cat xxx.log | grep -B 5 ERROR   #提取关键字出现的前5行
@@ -124,7 +125,7 @@ cat xxx.log | grep -C 5 ERROR   #提取关键字出现的前后各5行
 | 管道符   前面命令的结果是接下来的输入数据
 grep 过滤
 比如 xxx.log ERROR 很多  上万个 可以导出到单独文件查看
-```bash
+```shell
 cat xxx.log | grep -C 5 ERROR > 20200418error.log
 more 20200418error.log  
 ```
@@ -152,35 +153,35 @@ alias key = 'value'
 想在配置后，全局生效，需要新开窗口，老窗口可看作静态窗口
 
 生效文件:设置完变量之后需要进行生效操作source，三种方式
-```bash
+```shell
     source /etc/profile
-    source ~/.bash_profile
-    source ~/.bashrc
+    source ~/.shell_profile
+    source ~/.shellrc
     cd 进家目录
-    .空格.bashrc  
+    .空格.shellrc  
 ```
 
 ### 20.全局环境变量文件在哪？ 个人环境变量文件(推荐哪个)在哪？如何生效？
 
 全局 : /etc/profile    所有用户都可以使用  
 个人: 
-&emsp;&emsp;&emsp; ~/.bash_profile   只能是设置命令的当前用户使用  其他不能使用
-&emsp;&emsp;&emsp; ~/.bashrc [设置个人别名主要修改这个文件]      
+&emsp;&emsp;&emsp; ~/.shell_profile   只能是设置命令的当前用户使用  其他不能使用
+&emsp;&emsp;&emsp; ~/.shellrc [设置个人别名主要修改这个文件]      
 &emsp;&emsp;&emsp; 场景: 使用ssh 远程执行B机器 +命令
 &emsp;&emsp;&emsp; 提示找不到命令    java command not found 
 &emsp;&emsp;&emsp; 但是直接登录B机器 命令是找到的   which java有的 
 
-       命令的环境变量配置在.bash_profile  是不正确的。
-       应该配置在.bashrc文件
+       命令的环境变量配置在.shell_profile  是不正确的。
+       应该配置在.shellrc文件
 
 
 想在配置后，全局生效，需要新开窗口，老窗口可看作静态窗口
 
 生效文件:修改后需要操作之后才会生效
-```bash
+```shell
     source /etc/profile
-    source ~/.bash_profile
-    source ~/.bashrc
+    source ~/.shell_profile
+    source ~/.shellrc
     cd 进家目录
-    .空格.bashrc  
+    .空格.shellrc  
 ```

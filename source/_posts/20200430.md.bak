@@ -4,6 +4,7 @@ catalog: true
 toc_nav_num: true
 date: 2020-04-30 12:00:00
 subtitle: "若泽数据第一次早课作业-4.20"
+article_type: 0 # 0 原创，1 转载
 tags:
 - [ruozedata]
 categories:
@@ -37,7 +38,7 @@ chmod 755 xxx.sh
 
 #### 7.crontab 编辑和查看参数是什么?  五个 * ，分别代表什么 -复习
 
-```bash
+```shell
 crontab -l #-e是查看 
 crontab -e #-e是编辑 ， crontab命令可以当一个文本编辑框用
 五个星号分别代表
@@ -86,12 +87,12 @@ flush privileges;  刷权限
 #### 13.创建用户和设置密码，那句sql会背吗？-复习
 
 **创建用户**
-```bash
+```shell
 useradd -u 515 -g dba -G root -d /usr/local/mysql mysqladmin
 #-u uid -g 主组 -G 次组 -d 家目录设置 
 ```
 **设置密码**
-```bash
+```shell
 mysql> alter user root@localhost identified by 'hadoop001' # 记住以分号;结束命令，修改密码
     -> ;
 Query OK, 0 rows affected (0.00 sec)
@@ -123,7 +124,7 @@ chown -R 用户:用户组  文件或文件夹
 
 #### 17.一个log文件很大，1G，找ERROR怎么办
 
-```bash
+```shell
 cat xxx.log | grep ERROR        #提取当前行
 cat xxx.log | grep -A 5 ERROR   #提取关键字出现的后5行
 cat xxx.log | grep -B 5 ERROR   #提取关键字出现的前5行
@@ -131,7 +132,7 @@ cat xxx.log | grep -C 5 ERROR   #提取关键字出现的前后各5行
 ```
 如果没有-A-B-C则只会打出错误行，最好前后打印15.20行的数据
 如果 xxx.log ERROR 很多  上万个 可以导出到单独文件查看
-```bash
+```shell
 cat xxx.log | grep -C 5 ERROR > 20200418error.log
 more 20200418error.log  
 ```
@@ -144,25 +145,25 @@ notepad++
 全局 : /etc/profile    所有用户都可以使用  
 
 个人: 
-&emsp;&emsp;&emsp; ~/.bash_profile   只能是设置命令的当前用户使用  其他不能使用
-&emsp;&emsp;&emsp; ~/.bashrc [设置个人别名主要修改这个文件]      
+&emsp;&emsp;&emsp; ~/.shell_profile   只能是设置命令的当前用户使用  其他不能使用
+&emsp;&emsp;&emsp; ~/.shellrc [设置个人别名主要修改这个文件]      
 &emsp;&emsp;&emsp; 场景: 使用ssh 远程执行B机器 +命令
 &emsp;&emsp;&emsp; 提示找不到命令    java command not found 
 &emsp;&emsp;&emsp; 但是直接登录B机器 命令是找到的   which java有的 
 
-       命令的环境变量配置在.bash_profile  是不正确的。
-       应该配置在.bashrc文件
+       命令的环境变量配置在.shell_profile  是不正确的。
+       应该配置在.shellrc文件
 
 
 想在配置后，全局生效，需要新开窗口，老窗口可看作静态窗口
 
 生效文件:修改后需要操作之后才会生效
-```bash
+```shell
     source /etc/profile
-    source ~/.bash_profile
-    source ~/.bashrc
+    source ~/.shell_profile
+    source ~/.shellrc
     cd 进家目录
-    .空格.bashrc  
+    .空格.shellrc  
 ```
 
 #### 19.su - 做什么事
@@ -171,7 +172,7 @@ notepad++
 
 #### 20.三种方式切换用户的家目录
 
-```bash
+```shell
 cd ~
 cd /home/xxx # xxx用户家目录
 cd 空格
@@ -179,7 +180,7 @@ cd 空格
 
 #### 21.一个文件差不多1W行，我要去vi编辑一个参数xxx，但是我不知道在多少行，怎么快速找到?
 
-```bash
+```shell
 vi yyy.log
 shift+:  
 /xxx       #代表搜索的语法，之后输入需要寻找的对象
