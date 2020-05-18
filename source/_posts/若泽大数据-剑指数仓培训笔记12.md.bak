@@ -1,0 +1,133 @@
+---
+title: "数仓培训第十二天"
+catalog: true
+toc_nav_num: true
+date: 2020-05-17 12:00:00
+subtitle: "mapreduce和yarn架构设计"
+article_type: 0 # 0 原创，1 转载
+tags:
+- [ruozedata]
+- [Hadoop]
+categories:
+- [ruozedata]
+- [Hadoop]
+updateDate: 2020-05-17 12:00:00
+top: 0  #置顶
+---
+
+
+
+### 1.MapReduce
+
+分布式计算框架 ，
+生产开发复杂累赘 基本不用 
+一般都用Hivesql Spark Flink
+
+map 映射
+    将一组数据按照规则 映射为一组
+    数据条数不会发生变化
+```sql
+id name
+1   a
+2   b
+3   c
+4   a
+
+select * from t;
+
+select id,name+'1' from t;
+1  a1
+2  b1
+3  c1
+4  a1
+```
+
+reduce  归约 汇总,相同项进行归纳
+	数据条数会发生变化	
+```sql
+select
+name,count(name) 
+from
+(select id,name+'1' as name from table)  t
+group name;
+
+
+a1 2
+b1 1
+c1 1
+```
+
+shuffle  洗牌  
+数据根据key进行网络传输??? 规整到一起，按规则计算
+
+a机器 1  a 一百万条   #key就是名称，计算是根据名称计算的  a
+      2  b 10万条
+
+b机器 1  a  1万条
+      3  c  10万条
+
+**业界有句话，能不shuffle的就不要shuffle，shuffle会拉长计算的时间**
+
+作业 job 应用 任务 工作流 基本就认为是一个东西
+生产上：
+存储 HDFS hive/hbase cassandra kudu #前三个用的多
+计算 mapreduce --》hive sql/spark/flink 
+资源和作业调度  yarn 
+
+### 2.MapReduce2.x 架构设计 
+
+[MapReduce2.x的架构设计](https://wangqi1994.github.io/2020/05/17/MapReduce2.x的架构设计/)
+
+
+### 3.wordcount
+
+split个数==map task个数
+![](/img/Hadoop/wordcount.png)
+Deer Bear River 将每一行的数据 进行按空格 拆分
+Deer,1
+Bear,1
+River,1
+
+car,1 1
+car,1 1+1=2
+car,1 2+1=3 
+
+      int sum = 0;
+      for (IntWritable val : values) {
+        sum += val.get();
+      }
+      result.set(sum);
+      context.write(key, result);
+
+
+
+http://blog.itpub.net/30089851/viewspace-2095837/ 读读
+
+#好好理解
+在进行map计算之前，
+mapreduce会根据输入文件计算输入分片（input split），
+每个输入分片（input split）针对一个map任务，
+输入分片（input split）存储的并非数据本身，
+而是一个分片长度和一个记录数据的位置的数组，
+输入分片（input split）往往和hdfs的block（块）关系很密切，
+
+
+假如我们设定hdfs的块的大小是64mb，
+如果我们输入有三个文件，大小分别是3mb、65mb和127mb，
+那么mapreduce会把3mb文件分为一个输入分片（input split），
+65mb则是两个输入分片（input split）而127mb也是两个输入分片
+（input split），
+
+5个分片  5个maptask
+
+块大小有关 还和文件个数有关
+
+换句话说我们如果在map计算前做输入分片调整，
+例如不合并小文件，那么就会有5个map任务将执行，
+而且每个map执行的数据大小不均，
+这个也是mapreduce优化计算的一个关键点。
+
+文件格式和压缩算法，支持分片最好
+
+注意点： 文本格式
+

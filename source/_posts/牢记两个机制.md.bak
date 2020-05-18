@@ -1,0 +1,25 @@
+---
+title: "LInux系统需要牢牢记住的两个机制"
+catalog: true
+toc_nav_num: true
+date: 2020-05-17 12:00:00
+subtitle: "oom-kill和tmp自动删除"
+article_type: 0 # 0 原创，1 转载
+tags:
+- [ruozedata]
+- [Linux]
+categories:
+- [ruozedata]
+- [Linux]
+updateDate: 2020-05-17 12:00:00
+top: 0  #置顶
+---
+
+基于Linux系统进行作业时，需要牢记两个Linux的自身机制，否则容易出现各种花式问题
+
+1.tmp目录自动清理
+https://wangqi1994.github.io/2020/05/11/Centos%207.2%20tmp%E7%9B%AE%E5%BD%95%E8%87%AA%E5%8A%A8%E6%B8%85%E7%90%86%E6%80%BB%E7%BB%93/
+2.oom-kill机制
+当Linux服务器某个进程使用内存超标 Linux机器为了保护自己，
+主动杀死你的进程，释放内存。
+
