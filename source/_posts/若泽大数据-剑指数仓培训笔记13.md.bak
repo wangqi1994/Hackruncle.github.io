@@ -1,0 +1,38 @@
+---
+title: "数仓培训第十三天"
+catalog: true
+toc_nav_num: true
+date: 2020-05-18 12:00:00
+subtitle: "mapreduce和yarn架构设计"
+article_type: 0 # 0 原创，1 转载
+tags:
+- [ruozedata]
+- [Hadoop]
+categories:
+- [ruozedata]
+- [Hadoop]
+updateDate: 2020-05-18 12:00:00
+top: 0  #置顶
+---
+
+### 1.Container 
+关于Yarn的调优 就是调container  
+首先明确一个container容器的概念，这是一个虚拟的概念，其实是一组memory+cpu vcore资源的组合,
+是用来运行task任务的
+
+[](https://wangqi1994.github.io/2020/05/18/yarn调优-container/)
+
+
+### 2.
+bin/hadoop jar \
+share/hadoop/mapreduce/hadoop-mapreduce-examples-2.6.0-cdh5.16.2.jar \
+grep /wordcount/input /wordcount/output2 'dfs[a-z.]+'
+
+
+
+### 3.调度器
+FIFO Scheduler  先进先出
+Capacity Scheduler 计算
+FairScheduler   公平   生产一般用这个
+
+[三种调度器](https://wangqi1994.github.io/2020/05/18/调度器/)
