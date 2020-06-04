@@ -183,15 +183,15 @@ Retype new UNIX password:
 passwd: all authentication tokens updated successfully.
 ## if user mysqladmin is existing,please execute the following command of usermod.
 #[root@hadoop001 local]# usermod -u 514 -g dba -G root -d /usr/local/mysql mysqladmin
- ```
+```
 ### 5.copy 环境变量配置文件至mysqladmin用户的home目录中,为了以下步骤配置个人环境变量
 ```bash
 [root@hadoop001 local]# cp /etc/skel/.* /usr/local/mysql  ###important
 ```
 ### 6.配置环境变量
 ```
-[root@hadoop001 local]# vi mysql/.bashrc
-# .bashrc
+[root@hadoop001 local]# vi mysql/.bash_profile
+# .bash_profile
 # Get the aliases and functions
 
 if [ -f ~/.bashrc ]; then
@@ -212,6 +212,8 @@ PS1=`uname -n`":"'$USER'":"'$PWD'":>"; export PS1
 
 ## end
 ```
+建议修改.bashrc文件,如上内容不一致。
+
 PS1后边是设置中括号内包含路径，可以省略pwd操作
 
 ### 7.赋权限和用户组，切换用户mysqladmin，安装
