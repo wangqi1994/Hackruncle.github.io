@@ -30,7 +30,7 @@ RAID0：RAID0又称为条带模式，是将多个磁盘并列起来，成为一�
 RAID 0具有的特点，使其特别适用于对性能要求较高，而对数据安全不太在乎的领域，如图形工作站等。对于个人用户，RAID 0也是提高硬盘存储性能的绝佳选择。
 
 RAID0逻辑结构如下所示：
-![](/img/linux/raid0.jpg)
+![](https://i.loli.net/2020/06/11/DMgLpWFs4SJzXZu.jpg)
 
 
 
@@ -46,7 +46,7 @@ RAID1：RAID1也成为镜像，其将一个磁盘上的数据完全复制到另�
 Mirror虽不能提高存储性能，但由于其具有的高数据安全性，使其尤其适用于存放重要数据，如服务器和数据库存储等领域。
 
 RAID逻辑结构如下所示：
-![](/img/linux/raid1.jpg)
+![](https://i.loli.net/2020/06/11/37k4rweFdu58PGy.jpg)
 
 
 
@@ -60,7 +60,7 @@ RAID5：RAID5也被叫做带分布式奇偶位的条带，每个条带上都有�
 磁盘阵列方案。
 
 RAID5逻辑结构如下所示：
-![](/img/linux/raid5.jpg)
+![](https://i.loli.net/2020/06/11/HmU4gu3V6XiCjvK.jpg)
 
 
 

@@ -20,7 +20,7 @@ top: 0  #置顶
  jps是jdk提供的一个查看当前java进程的小工具， 可以看做是JavaVirtual Machine Process Status Tool的缩写。非常简单实用。
 
        命令格式：jps [options ] [ hostid ] 
-
+    
        [options]选项 ：
 -q：仅输出VM标识符，不包括classname,jar name,arguments in main method 
 -m：输出main method的参数 
@@ -38,22 +38,22 @@ lvmid [ [ classname| JARfilename | "Unknown"] [ arg* ] [ jvmarg* ] ]
 
 1）jps
 
-![](/img/jps/jps.png)
+![](https://i.loli.net/2020/06/11/6K4XEeMA3HZLTFb.png)
 
 2）jps –l:输出主类或者jar的完全路径名
 
-![](/img/jps/jps-l.png)
+![](https://i.loli.net/2020/06/11/Jpd42S6BDq185EM.png)
 
 3）jps –v :输出jvm参数
 
-![](/img/jps/jps-v.png)
+![](https://i.loli.net/2020/06/11/YEd812H4GDmlCNS.png)
 
 4）jps –q ：仅仅显示java进程号
 
-![](/img/jps/jps-q.png)
+![](https://i.loli.net/2020/06/11/4UmLBtcKxyJp7ra.png)
 
 5)jps -mlv10.134.68.173
 
-![](/img/jps/jps-mlv.png)
+![](https://i.loli.net/2020/06/11/zvRTtiWUxps51S6.png)
 
        注意：如果需要查看其他机器上的jvm进程，需要在待查看机器上启动jstatd。

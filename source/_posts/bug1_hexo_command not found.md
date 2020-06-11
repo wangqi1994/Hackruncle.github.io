@@ -21,7 +21,7 @@ top: 0 #置顶
 
 1.本着能解决问题就不重装的原则，首先检查 nodejs 和 npm 是否正常，依次输入命令 node -v 和 npm -v 看看是否有相关版本信息
 
-![](/img/bug/bash_q.png)
+![](https://i.loli.net/2020/06/11/XdtAwjygFB6JHD8.png)
 
 出现了版本信息就证明 nodejs 和 npm 是没有问题的，那么就应该是环境变量的配置问题了，在【此电脑】右键【属性】，依次选择【高级系统设置】-【环境变量】，选择系统变量 Path，将 node_modules 下的 .bin 文件路径添加到 Path 里面
 

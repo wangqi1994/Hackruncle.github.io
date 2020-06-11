@@ -23,7 +23,7 @@ using builtin-java classes where applicable
 ruozedata
 [hadoop@hadoop001 ~]$ 
 ```
-![HDFS读流程图](/img/Hadoop/HDFS读流程.png)
+![HDFS读流程图](https://i.loli.net/2020/06/11/p1KSzxMDJFPBQab.png)
 
 读取流程对用户操作是无感知的 
 
