@@ -49,7 +49,7 @@ total 198980
 -rw-rw-r--. 1 hadoop hadoop       205 May 11 15:32 VERSION
 [hadoop@hadoop001 current]$ 
 ```
-![](/img/Hadoop/SNN.png)
+![](https://i.loli.net/2020/06/12/Ig9TzY4vrbwXSUQ.png)
 
 1.SNN将NN的日志文件edits475-476（图中487-488） 和镜像文件fsimage474（图中486） 接收
 

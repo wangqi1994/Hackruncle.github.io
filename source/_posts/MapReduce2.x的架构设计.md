@@ -29,7 +29,7 @@ YARN 会为每个任务分配一个 Container，且该任务只能使用该 Cont
 容器是一个动态划分资源。
 
 在内存够的情况下，适当增加cpu vcore带来计算效率的提升
-![](/img/Hadoop/container.png)
+![](https://i.loli.net/2020/06/12/yiZfK8cUYVDCugO.png)
 
 #### 2 架构
 mapreduce也是主从架构
@@ -41,7 +41,7 @@ Resourcemanager是主，简称 rm ，包含：
 NodeManager是从，简称nm
 
 工作流程
-![](/img/Hadoop/MR架构设计.png)
+![](https://i.loli.net/2020/06/12/19ecKGMCEdkL7RA.png)
 
 1.client向rm提交应用程序（jar） 其中已经包含ApplicationMaster主程序和启动命令
 2.ApplicationsManager  会为job分配第一个container，并与对应的nodemanager通信，要求他
@@ -54,10 +54,12 @@ NodeManager是从，简称nm
 启动任务task
 7.各个任务task通过【RPC】协议向app master汇报自己的进度和状态，以此让app master随时掌握task的运行状态。
 当task运行失败，会在另外一个container容器中重启任务。
+
 8.当所有task运行完成后，app master向 apps manager申请注销和关闭作业
 ---------------------
 
 这时可以在web页面查看任务状态，包含两种状态：
 * 是不是完成的   
 * 完成的是成功还是失败的
+
 ---------------------

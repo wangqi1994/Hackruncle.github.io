@@ -15,7 +15,7 @@ updateDate: 2020-05-11 12:00:00
 top: 0  #置顶
 ---
 
-![机架](/img/Hadoop/rack.jpg)
+![机架](https://i.loli.net/2020/06/12/dcyqj9agiGWkRHf.jpg)
 机架 rack1 5   rack2 5
 
 
