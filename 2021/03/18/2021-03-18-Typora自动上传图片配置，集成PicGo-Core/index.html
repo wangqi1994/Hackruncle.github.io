@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    HDFS副本放置策略 |  
+    Typora自动上传图片配置，集成PicGo-Core |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -43,7 +43,7 @@
   <div id="app">
     <main class="content on">
       <section class="outer">
-  <article id="post-HDFS副本放置策略" class="article article-type-post" itemscope
+  <article id="post-2021-03-18-Typora自动上传图片配置，集成PicGo-Core" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -51,7 +51,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  HDFS副本放置策略
+  Typora自动上传图片配置，集成PicGo-Core
 </h1>
  
 
@@ -68,12 +68,12 @@
 
 
 
-<a href="/2020/05/11/HDFS%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5/" class="article-date">
-  <time datetime="2020-05-11T04:00:00.000Z" itemprop="datePublished">2020-05-11</time>
+<a href="/2021/03/18/2021-03-18-Typora%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E9%85%8D%E7%BD%AE%EF%BC%8C%E9%9B%86%E6%88%90PicGo-Core/" class="article-date">
+  <time datetime="2021-03-18T04:00:00.000Z" itemprop="datePublished">2021-03-18</time>
 </a>
       
   <div class="article-category">
-    <a class="article-category-link" href="/categories/HDFS/">HDFS</a> / <a class="article-category-link" href="/categories/Hadoop/">Hadoop</a>
+    <a class="article-category-link" href="/categories/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/">软件配置</a>
   </div>
 
       
@@ -83,17 +83,17 @@
         <span class="article-type" style="
           color: white;
           font-size: 14px;
-          background: #bf59f3;
+          background: #8BC34A;
           padding: 0 5px 1px 5px;
           margin-right: 5px;
-          border-radius: 2px;">原创</span>
+          border-radius: 2px;">转载</span>
       
     
     <span class="post-time">
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text" style="font-size: 15px;color: _black">  字数统计: </span>
-        <span class="post-count" style="font-size: 14px;color: _black">160</span>
+        <span class="post-count" style="font-size: 14px;color: _black">838</span>
       </span>
     </span>
     
@@ -102,7 +102,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text" style="font-size: 15px;color: _black">  阅读时长: </span>
-        <span class="post-count" style="font-size: 14px;color: _black">1分</span>
+        <span class="post-count" style="font-size: 14px;color: _black">3分</span>
       </span>
     </span>
 </div>
@@ -113,6 +113,8 @@
 
     
     
+    <div class="tocbot"></div>
+
 
 
 
@@ -125,13 +127,58 @@
       
 
       
-      <p><img src="https://i.loli.net/2020/06/12/dcyqj9agiGWkRHf.jpg" alt="机架"><br>机架 rack1 5   rack2 5</p>
-<p>生产上读写操作 尽量选择 某个DN节点<br>第一个副本：<br>放置在上传的DN节点； (nn和dn放一个副本中，有利于提升速度)<br>假如是非DN节点，就随机挑选一个磁盘不太慢，cpu不太忙的节点；</p>
-<p>第二个副本：<br>放置在第一个副本不同的机架上的某个DN节点。</p>
-<p>第三个副本:<br>与第二个副本相同机架的不同节点上。</p>
-<p>如果副本数设置更多，就随机放。</p>
-<p>机架安装考虑用电和机架的安装能力</p>
-<p>生产上一般不配置</p>
+      <p>​         由于markdown上传图片默认是在本地，在其他地方打开时，看不了图片，所以对Typora进行PicGo-Core配置，从而自动上传图片至网络上。</p>
+<p>集成步骤如下：</p>
+<h3 id="一、下载PicGo-Core"><a href="#一、下载PicGo-Core" class="headerlink" title="一、下载PicGo-Core"></a><strong>一、下载PicGo-Core</strong></h3><p><img src="https://i.loli.net/2021/03/18/eaqURYSsPMXHcby.png" alt="img"></p>
+<p><img src="https://i.loli.net/2021/03/18/ZfxmwJOlIFMvP79.png" alt="img"></p>
+<p><img src="https://i.loli.net/2021/03/18/7IfuQbh5zjYaqEM.png" alt="img"></p>
+<p><img src="https://i.loli.net/2021/03/18/DiI58xT6NXgLtlb.png" alt="img"></p>
+<p><img src="https://i.loli.net/2021/03/18/XKPFyvr5TAMwunU.png" alt="img"></p>
+<h3 id="二、配置PicGo-Core的图床"><a href="#二、配置PicGo-Core的图床" class="headerlink" title="二、配置PicGo-Core的图床"></a><strong>二、配置PicGo-Core的图床</strong></h3><p><img src="https://i.loli.net/2021/03/18/jrm4RsouKwyt1kP.png" alt="img"></p>
+<p><strong>注意：</strong>图片中“对网络位置的图片应用上述规则”这个选项。</p>
+<p><strong>如果不勾选</strong>，从其他网站复制的图片，就不会上传至你配置的图床，md文档中会直接显示对应网站图片链接；</p>
+<p><strong>如果勾选了</strong>，就会在本地生成upload文件夹，自动下载图片后，再上传至你配置的图床。</p>
+<p><strong>无论是否勾选</strong>，对于QQ截屏的图片，也会在本地生成upload文件夹，保存图片后，再上传至你配置的图床。</p>
+<p>具体配置依赖于你选择用什么图床（就是存储到哪里）</p>
+<p><strong>如果准备用gitee作为图床，跳过此步，直接看下方的gitee配置步骤</strong></p>
+<p>配置参考文档：<a href="https://picgo.github.io/PicGo-Core-Doc/zh/guide/config.html" target="_blank" rel="noopener">https://picgo.github.io/PicGo-Core-Doc/zh/guide/config.html</a></p>
+<p><img src="https://i.loli.net/2021/03/18/7GFDfuV5JPNLiEa.png" alt="img"></p>
+<h3 id="三、验证功能"><a href="#三、验证功能" class="headerlink" title="三、验证功能"></a><strong>三、验证功能</strong></h3><p>上述配置完成后，可以验证下</p>
+<p><img src="https://i.loli.net/2021/03/18/uypWdGhqFKUHjoR.png" alt="img"></p>
+<p><img src="https://i.loli.net/2021/03/18/DW5NsXb7FGm1OcE.png" alt="img"></p>
+<h3 id="四、gitee配置步骤"><a href="#四、gitee配置步骤" class="headerlink" title="四、gitee配置步骤"></a><strong>四、gitee配置步骤</strong></h3><h4 id="1、gitee账号配置"><a href="#1、gitee账号配置" class="headerlink" title="1、gitee账号配置"></a>1、gitee账号配置</h4><p>先有一个gitee账号，官网：<a href="https://gitee.com/" target="_blank" rel="noopener">https://gitee.com/</a></p>
+<p>创建一个<strong>公有仓库</strong>，用于存储图片</p>
+<p>生成一个token用于PicGo操作你的仓库（<strong>生成后的token务必自己保存下，防止丢失</strong>）</p>
+<p>访问：<a href="https://gitee.com/profile/personal_access_tokens" target="_blank" rel="noopener">https://gitee.com/profile/personal_access_tokens</a></p>
+<p><img src="https://i.loli.net/2021/03/18/3Kz8XRc9TALoSx4.png" alt="img"></p>
+<h4 id="2、安装nodejs"><a href="#2、安装nodejs" class="headerlink" title="2、安装nodejs"></a>2、安装nodejs</h4><p>因为使用gitee作为图床，需要下载gitee-uploader插件，而下载插件又需要nodejs的运行时环境</p>
+<p>下载地址：<a href="https://nodejs.org/en/" target="_blank" rel="noopener">https://nodejs.org/en/</a></p>
+<p>安装node-v12.16.2-x64.msi文件，一路next就可以了</p>
+<h4 id="3、下载插件"><a href="#3、下载插件" class="headerlink" title="3、下载插件"></a>3、下载插件</h4><p>需要下载两个插件</p>
+<p>gitee-uploader（用于使用gitee作为图床）</p>
+<p>super-prefix（用于上传图片时能自动使用时间戳重命名）</p>
+<p> 1.查询之前安装的PicGo执行路径</p>
+<p><img src="https://i.loli.net/2021/03/18/uypWdGhqFKUHjoR.png" alt="img"></p>
+<p><img src="https://i.loli.net/2021/03/18/3w91x4ciSHdpYNI.png" alt="img"></p>
+<p> 2.拷贝路径后进入cmd操作</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cd C:\Users\aji\AppData\Roaming\Typora\picgo\win64</span><br><span class="line">.\picgo.exe install gitee-uploader</span><br><span class="line">.\picgo.exe install super-prefix</span><br></pre></td></tr></table></figure>
+
+
+<p>均下载成功即可（如果执行报错 NPM is not installed，请检查上 #四.2步中的 nodejs 是否已安装成功），如：</p>
+<p><img src="https://i.loli.net/2021/03/18/HnXSo1g9vc7wstb.png" alt="img"></p>
+<p><img src="https://i.loli.net/2021/03/18/d7KJ2XtADWbQmeE.png" alt="img"></p>
+<h4 id="4、修改配置文件"><a href="#4、修改配置文件" class="headerlink" title="4、修改配置文件"></a>4、修改配置文件</h4><p>修改为如下内容：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">&quot;picBed&quot;: &#123;</span><br><span class="line">    &quot;uploader&quot;: &quot;gitee&quot;, &#x2F;&#x2F; 代表当前的上传图床</span><br><span class="line">    &quot;gitee&quot;: &#123;</span><br><span class="line">      &quot;repo&quot;: &quot;&quot;, &#x2F;&#x2F; 仓库名，格式是 username&#x2F;reponame 必填</span><br><span class="line">      &quot;token&quot;: &quot;&quot;, &#x2F;&#x2F; gitee 私人令牌 必填</span><br><span class="line">      &quot;path&quot;: &quot;&quot;, &#x2F;&#x2F; 自定义存储路径，比如 img&#x2F; 建议填</span><br><span class="line">      &quot;customUrl&quot;: &quot;&quot;, &#x2F;&#x2F; 没有自己的域名的话，可以默认为空就行； 如果自定义域名，注意要加http:&#x2F;&#x2F;或者https:&#x2F;&#x2F;，</span><br><span class="line">      &quot;branch&quot;: &quot;&quot; &#x2F;&#x2F; 分支名，默认是 master</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;picgoPlugins&quot;: &#123;</span><br><span class="line">    &quot;picgo-plugin-gitee-uploader&quot;: true,</span><br><span class="line">    &quot;picgo-plugin-super-prefix&quot;: true</span><br><span class="line">  &#125;, &#x2F;&#x2F; 为插件预留</span><br><span class="line">  &quot;picgo-plugin-super-prefix&quot;: &#123;</span><br><span class="line">    &quot;fileFormat&quot;: &quot;YYYYMMDDHHmmss&quot;</span><br><span class="line">  &#125; &#x2F;&#x2F;super-prefix插件配置</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>5、配置完成后验证</p>
+<p><img src="https://i.loli.net/2021/03/18/uypWdGhqFKUHjoR.png" alt="img"></p>
+<p><img src="https://i.loli.net/2021/03/18/DW5NsXb7FGm1OcE.png" alt="img"></p>
+<hr>
+<p>如果图片上传成功并可以访问，自动上传图片的配置就结束了</p>
+<p>参考文档<br><a href="https://support.typora.io/Upload-Image/#install-prebuilt-binary-of-picgo-core-linux--windows" target="_blank" rel="noopener">https://support.typora.io/Upload-Image/#install-prebuilt-binary-of-picgo-core-linux--windows</a></p>
+<p><a href="https://blog.csdn.net/jaymie1023/article/details/105361168/" target="_blank" rel="noopener">https://blog.csdn.net/jaymie1023/article/details/105361168/</a></p>
+<p><a href="https://github.com/PicGo/PicGo-Core">https://github.com/PicGo/PicGo-Core</a></p>
+<p><a href="https://picgo.github.io/PicGo-Core-Doc/zh/guide/config.html#%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" target="_blank" rel="noopener">https://picgo.github.io/PicGo-Core-Doc/zh/guide/config.html#%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6</a></p>
 
       
       <!-- reward -->
@@ -196,14 +243,14 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2020/05/11/HDFS%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2021/03/18/2021-03-18-Typora%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E9%85%8D%E7%BD%AE%EF%BC%8C%E9%9B%86%E6%88%90PicGo-Core/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HDFS/" rel="tag">HDFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
 
 
     </footer>
@@ -214,19 +261,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/05/11/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            HDFS读流程
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/05/11/Linux%E7%B3%BB%E7%BB%9Ftmp%E7%9B%AE%E5%BD%95%E8%87%AA%E5%8A%A8%E6%B8%85%E7%90%86%E6%80%BB%E7%BB%93/" class="article-nav-link">
+      <a href="/2020/08/14/oracle%E4%B8%AD%E6%96%87%E8%BD%AC%E6%8B%BC%E9%9F%B3%E5%87%BD%E6%95%B0/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">Linux系统tmp目录自动清理总结</div>
+        <div class="article-nav-title">oracle中文转拼音函数</div>
       </a>
     
   </nav>
