@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="记录学习的每一天" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    数仓培训第九天 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+  <article id="post-若泽大数据-剑指数仓培训笔记9" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  数仓培训第九天
+</h1>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+
+
+<a href="/2020/05/10/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B09/" class="article-date">
+  <time datetime="2020-05-10T04:00:00.000Z" itemprop="datePublished">2020-05-10</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/HDFS/">HDFS</a> / <a class="article-category-link" href="/categories/Hadoop/">Hadoop</a>
+  </div>
+
+      
+      <div style="margin-top:10px;margin-bottom:-15px;">
+    
+      
+        <span class="article-type" style="
+          color: white;
+          font-size: 14px;
+          background: #bf59f3;
+          padding: 0 5px 1px 5px;
+          margin-right: 5px;
+          border-radius: 2px;">原创</span>
+      
+    
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  字数统计: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">2.9k</span>
+      </span>
+    </span>
+    
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  阅读时长: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">15分</span>
+      </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="1-YARN部署"><a href="#1-YARN部署" class="headerlink" title="1.YARN部署"></a>1.YARN部署</h3><p><a href="https://hadoop.apache.org/docs/r2.10.0/hadoop-project-dist/hadoop-common/SingleCluster.html" target="_blank" rel="noopener">官网文档</a></p>
+<p><strong>修改对应配置文档:</strong></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop001 hadoop]$ su - hadoop</span><br><span class="line">[hadoop@hadoop001 hadoop]$ <span class="built_in">cd</span> app/hadoop/etc/hadoop/</span><br><span class="line">[hadoop@hadoop001 hadoop]$ mv mapred-site.xml.template mapred-site.xml </span><br><span class="line"><span class="comment">#没有mapred文件，将tempele文件复制改名</span></span><br><span class="line">[hadoop@hadoop001 hadoop]$ vi mapred-site.xml </span><br><span class="line"><span class="comment">#该文件不要随意删除第一行数据，这是表明是一个xml文件</span></span><br><span class="line"></span><br><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;mapreduce.framework.name&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;yarn&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br><span class="line"></span><br><span class="line">[hadoop@hadoop001 hadoop]$ vi yarn-site.xml</span><br><span class="line"></span><br><span class="line">&lt;configuration&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- Site specific YARN configuration properties --&gt; <span class="comment">#这之内的是可以删除的注释</span></span><br><span class="line">&lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;mapreduce_shuffle&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.resourcemanager.webapp.address&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;hadoop001:18808&lt;/value&gt; <span class="comment"># 主机名改为自己的机器名字。端口号修改一下，范围1-65535</span></span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<p>yarn默认你端口号8088.<br>8088端口暴露外网，会被病毒感染 植入挖矿程序  用来计算比特币<br>8088内网不用怕，外网可加安全验证</p>
+<p><strong>Start ResourceManager daemon and NodeManager daemon:</strong> 启动yarn进程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ <span class="built_in">pwd</span></span><br><span class="line">/home/hadoop/app/hadoop/etc/hadoop</span><br><span class="line">[hadoop@hadoop001 hadoop]$ <span class="built_in">cd</span> ../../</span><br><span class="line">[hadoop@hadoop001 hadoop]$ <span class="built_in">pwd</span></span><br><span class="line">/home/hadoop/app/hadoop</span><br><span class="line">[hadoop@hadoop001 hadoop]$ sbin/start-yarn.sh</span><br><span class="line">starting yarn daemons</span><br><span class="line">starting resourcemanager, logging to /home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs/yarn-hadoop-resourcemanager-hadoop001.out</span><br><span class="line">hadoop001: starting nodemanager, logging to /home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs/yarn-hadoop-nodemanager-hadoop001.out</span><br><span class="line">[hadoop@hadoop001 hadoop]$</span><br></pre></td></tr></table></figure>
+
+<p><strong>open web:</strong><br><a href="http://192.168.111.131:18808/cluster" target="_blank" rel="noopener">http://192.168.111.131:18808/cluster</a> # ip:port/cluster<br><img src="https://i.loli.net/2020/06/11/tAuIfvnXxTcVoke.png" alt=""></p>
+<h3 id="2-词频统计"><a href="#2-词频统计" class="headerlink" title="2.词频统计"></a>2.词频统计</h3><p>提前为hdfs配置环境变量 etc/profile</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> HADOOP_HOME=/home/hadoop/app/hadoop</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$HADOOP_HOME</span>/bin:<span class="variable">$HADOOP_HOME</span>/sbin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+
+<p>否则只能在/app/hadoop文件夹下使用bin/hdfs dfs -ls / 进行对应操作</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 data]$ hdfs dfs -mkdir  /wordcount2  </span><br><span class="line"><span class="comment">#创建input文件夹，output文件夹会自动生成,output文件不能提前存在，否则报错</span></span><br><span class="line">[hadoop@hadoop001 data]$ hdfs dfs -mkdir  /wordcount2/input/</span><br><span class="line"><span class="comment">#将所在文件夹所有数据上传</span></span><br><span class="line">[hadoop@hadoop001 word]$ hdfs dfs -put * /wordcount2/input <span class="comment">#-put是将linux放到hdfs中</span></span><br><span class="line">20/05/11 16:14:43 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... </span><br><span class="line">using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">[hadoop@hadoop001 word]$ hdfs dfs -ls /wordcount2/input</span><br><span class="line">20/05/11 16:14:57 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... </span><br><span class="line">using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">Found 2 items</span><br><span class="line">-rw-r--r--   1 hadoop supergroup         29 2020-05-11 16:14 /wordcount2/input/1.log</span><br><span class="line">-rw-r--r--   1 hadoop supergroup         47 2020-05-11 16:14 /wordcount2/input/2.log</span><br><span class="line"></span><br><span class="line">[hadoop@hadoop001 hadoop]$ hadoop jar \</span><br><span class="line">./share/hadoop/mapreduce2/hadoop-mapreduce-examples-2.6.0-cdh5.16.2.jar \</span><br><span class="line">wordcount /wordcount2/input/ /wordcount2/output/</span><br><span class="line"></span><br><span class="line">20/05/11 16:19:25 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... </span><br><span class="line">using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">20/05/11 16:19:26 INFO client.RMProxy: Connecting to ResourceManager at /0.0.0.0:8032</span><br><span class="line">20/05/11 16:19:29 INFO input.FileInputFormat: Total input paths to process : 2</span><br><span class="line"></span><br><span class="line">20/05/11 16:19:29 INFO mapreduce.JobSubmitter: number of splits:2</span><br><span class="line"><span class="comment"># 思考: mapreduce的split=map的个数 是什么影响的</span></span><br><span class="line">  <span class="comment">#1) 文件的大小。</span></span><br><span class="line">  <span class="comment">#2) 文件的个数。</span></span><br><span class="line">  <span class="comment">#3) splitsize的大小。</span></span><br><span class="line"></span><br><span class="line">20/05/11 16:19:29 INFO mapreduce.JobSubmitter: Submitting tokens <span class="keyword">for</span> job: job_1589182412203_0001</span><br><span class="line">20/05/11 16:19:30 INFO impl.YarnClientImpl: Submitted application application_1589182412203_0001</span><br><span class="line">20/05/11 16:19:30 INFO mapreduce.Job: The url to track the job: </span><br><span class="line">http://hadoop001:18808/proxy/application_1589182412203_0001/</span><br><span class="line">20/05/11 16:19:30 INFO mapreduce.Job: Running job: job_1589182412203_0001</span><br><span class="line">20/05/11 16:19:45 INFO mapreduce.Job: Job job_1589182412203_0001 running <span class="keyword">in</span> uber mode : <span class="literal">false</span></span><br><span class="line">20/05/11 16:19:45 INFO mapreduce.Job:  map 0% reduce 0%</span><br><span class="line">20/05/11 16:19:55 INFO mapreduce.Job:  map 50% reduce 0%</span><br><span class="line">20/05/11 16:19:57 INFO mapreduce.Job:  map 100% reduce 0%</span><br><span class="line">20/05/11 16:20:02 INFO mapreduce.Job:  map 100% reduce 100%</span><br><span class="line">20/05/11 16:20:02 INFO mapreduce.Job: Job job_1589182412203_0001 completed successfully</span><br><span class="line">20/05/11 16:20:02 INFO mapreduce.Job: Counters: 49</span><br><span class="line">	File System Counters</span><br><span class="line">		FILE: Number of bytes <span class="built_in">read</span>=122</span><br><span class="line">		FILE: Number of bytes written=429243</span><br><span class="line">		FILE: Number of <span class="built_in">read</span> operations=0</span><br><span class="line">		FILE: Number of large <span class="built_in">read</span> operations=0</span><br><span class="line">		FILE: Number of write operations=0</span><br><span class="line">		HDFS: Number of bytes <span class="built_in">read</span>=294</span><br><span class="line">		HDFS: Number of bytes written=43</span><br><span class="line">		HDFS: Number of <span class="built_in">read</span> operations=9</span><br><span class="line">		HDFS: Number of large <span class="built_in">read</span> operations=0</span><br><span class="line">		HDFS: Number of write operations=2</span><br><span class="line">	Job Counters </span><br><span class="line">		Launched map tasks=2</span><br><span class="line">		Launched reduce tasks=1</span><br><span class="line">		Data-local map tasks=2</span><br><span class="line">		Total time spent by all maps <span class="keyword">in</span> occupied slots (ms)=17984</span><br><span class="line">		Total time spent by all reduces <span class="keyword">in</span> occupied slots (ms)=4063</span><br><span class="line">		Total time spent by all map tasks (ms)=17984</span><br><span class="line">		Total time spent by all reduce tasks (ms)=4063</span><br><span class="line">		Total vcore-milliseconds taken by all map tasks=17984</span><br><span class="line">		Total vcore-milliseconds taken by all reduce tasks=4063</span><br><span class="line">		Total megabyte-milliseconds taken by all map tasks=18415616</span><br><span class="line">		Total megabyte-milliseconds taken by all reduce tasks=4160512</span><br><span class="line">	Map-Reduce Framework</span><br><span class="line">		Map input records=25</span><br><span class="line">		Map output records=19</span><br><span class="line">		Map output bytes=139</span><br><span class="line">		Map output materialized bytes=128</span><br><span class="line">		Input split bytes=218</span><br><span class="line">		Combine input records=19</span><br><span class="line">		Combine output records=12</span><br><span class="line">		Reduce input groups=8</span><br><span class="line">		Reduce shuffle bytes=128</span><br><span class="line">		Reduce input records=12</span><br><span class="line">		Reduce output records=8</span><br><span class="line">		Spilled Records=24</span><br><span class="line">		Shuffled Maps =2</span><br><span class="line">		Failed Shuffles=0</span><br><span class="line">		Merged Map outputs=2</span><br><span class="line">		GC time elapsed (ms)=286</span><br><span class="line">		CPU time spent (ms)=1590</span><br><span class="line">		Physical memory (bytes) snapshot=480874496</span><br><span class="line">		Virtual memory (bytes) snapshot=8181796864</span><br><span class="line">		Total committed heap usage (bytes)=307437568</span><br><span class="line">	Shuffle Errors</span><br><span class="line">		BAD_ID=0</span><br><span class="line">		CONNECTION=0</span><br><span class="line">		IO_ERROR=0</span><br><span class="line">		WRONG_LENGTH=0</span><br><span class="line">		WRONG_MAP=0</span><br><span class="line">		WRONG_REDUCE=0</span><br><span class="line">	File Input Format Counters </span><br><span class="line">		Bytes Read=76</span><br><span class="line">	File Output Format Counters </span><br><span class="line">		Bytes Written=43</span><br><span class="line"></span><br><span class="line">[hadoop@hadoop001 hadoop]$ hdfs dfs -ls /wordcount2/output/</span><br><span class="line">20/05/11 16:35:51 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... </span><br><span class="line">using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">Found 2 items</span><br><span class="line">-rw-r--r--   1 hadoop supergroup          0 2020-05-11 16:20 /wordcount2/output/_SUCCESS</span><br><span class="line">-rw-r--r--   1 hadoop supergroup         43 2020-05-11 16:20 /wordcount2/output/part-r-00000</span><br><span class="line"></span><br><span class="line"><span class="comment"># mapreduce跑完结束，文件的个数=reduce分区函数由什么决定，当前是1 由配置参数控制，使用过多的Reduce任务则意味着复杂的shuffle，并使输出文件的数量激增</span></span><br><span class="line"></span><br><span class="line">[hadoop@hadoop001 hadoop]$ hdfs dfs -get /wordcount2/output/* </span><br><span class="line">[hadoop@hadoop001 hadoop]$ cat part-r-00000 </span><br><span class="line">a	1</span><br><span class="line">b	7</span><br><span class="line">bb	1</span><br><span class="line">c	1</span><br><span class="line">qi	1</span><br><span class="line">ruoze	2</span><br><span class="line">shi	3</span><br><span class="line">wang	3</span><br><span class="line">[hadoop@hadoop001 hadoop]$</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-jps命令"><a href="#3-jps命令" class="headerlink" title="3.jps命令"></a>3.jps命令</h3><p><a href="https://wangqi1994.github.io/2020/05/08/Jps命令—使用详解/" target="_blank" rel="noopener">Jps命令—使用详解</a></p>
+<h4 id="3-1-位置"><a href="#3-1-位置" class="headerlink" title="3.1 位置"></a>3.1 位置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ <span class="built_in">which</span> jps</span><br><span class="line">/usr/java/jdk1.8.0_181/bin/jps</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-使用"><a href="#3-2-使用" class="headerlink" title="3.2 使用"></a>3.2 使用</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ jps</span><br><span class="line">28256 ResourceManager</span><br><span class="line">15617 FsShell</span><br><span class="line">60210 FsShell</span><br><span class="line">60386 Jps</span><br><span class="line">27363 NameNode</span><br><span class="line">59604 FsShell</span><br><span class="line">27591 DataNode</span><br><span class="line">28364 NodeManager</span><br><span class="line">27967 SecondaryNameNode</span><br><span class="line">[hadoop@hadoop001 hadoop]$</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-3-对应的进程标识文件存储在哪"><a href="#3-3-对应的进程标识文件存储在哪" class="headerlink" title="3.3 对应的进程标识文件存储在哪"></a>3.3 对应的进程标识文件存储在哪</h4><p>/tmp/hsperfdata_hadoop</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 tmp]$ <span class="built_in">cd</span> hsperfdata_hadoop</span><br><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$ ll</span><br><span class="line">total 256</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 16:13 15617</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 17:11 27363</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 17:11 27591</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 17:11 27967</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 17:11 28256</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 17:11 28364</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 16:02 59604</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 16:09 60210</span><br><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$ mv 27591 27591.bak</span><br><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$ ps -ef |grep DataNode</span><br><span class="line">hadoop   27591     1  3 15:32 ?        00:03:15 /usr/java/jdk1.8.0_181/bin/java -Dproc_datanode \</span><br><span class="line">-Xmx1000m -Djava.net.preferIPv4Stack=<span class="literal">true</span> -Dhadoop.log.dir=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs \</span><br><span class="line">-Dhadoop.log.file=hadoop.log -Dhadoop.home.dir=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2 \</span><br><span class="line">-Dhadoop.id.str=hadoop -Dhadoop.root.logger=INFO,console \</span><br><span class="line">-Djava.library.path=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2/lib/native \</span><br><span class="line">-Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=<span class="literal">true</span> \</span><br><span class="line">-Djava.net.preferIPv4Stack=<span class="literal">true</span> -Djava.net.preferIPv4Stack=<span class="literal">true</span> \</span><br><span class="line">-Dhadoop.log.dir=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs \</span><br><span class="line">-Dhadoop.log.file=hadoop-hadoop-datanode-hadoop001.log \</span><br><span class="line">-Dhadoop.home.dir=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2 \</span><br><span class="line">-Dhadoop.id.str=hadoop -Dhadoop.root.logger=INFO,RFA \</span><br><span class="line">-Djava.library.path=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2/lib/native \</span><br><span class="line">-Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=<span class="literal">true</span> -server \</span><br><span class="line">-Dhadoop.security.logger=ERROR,RFAS -Dhadoop.security.logger=ERROR,RFAS \</span><br><span class="line">-Dhadoop.security.logger=ERROR,RFAS \</span><br><span class="line">-Dhadoop.security.logger=INFO,RFAS org.apache.hadoop.hdfs.server.datanode.DataNode</span><br><span class="line">hadoop   60662 59557  0 17:13 pts/0    00:00:00 grep --color=auto DataNode</span><br><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$ jps</span><br><span class="line">28256 ResourceManager</span><br><span class="line">15617 FsShell</span><br><span class="line">60210 FsShell</span><br><span class="line">27363 NameNode</span><br><span class="line">59604 FsShell</span><br><span class="line">60663 Jps</span><br><span class="line">28364 NodeManager</span><br><span class="line">27967 SecondaryNameNode</span><br><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$ <span class="comment">#jps查不到时，看看ps -ef</span></span><br><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$ mv 27591.bak 27591</span><br><span class="line">mv: cannot <span class="built_in">stat</span> ‘27591.bak’: No such file or directory</span><br><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$ ll</span><br><span class="line">total 224</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 16:13 15617</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 17:16 27363</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 17:16 27967</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 17:16 28256</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 17:16 28364</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 16:02 59604</span><br><span class="line">-rw-------. 1 hadoop hadoop 32768 May 11 16:09 60210 </span><br><span class="line"><span class="comment"># mv命令重命名文件.bak改回来之后会把文件搞没了,移动之后在移动回来无影响</span></span><br><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-4-当出现-–-process-information-unavailable进程"><a href="#3-4-当出现-–-process-information-unavailable进程" class="headerlink" title="3.4 当出现 – process information unavailable进程"></a>3.4 当出现 – process information unavailable进程</h4><p>不能代表是存在 或者 不存在，要当心，尤其是使用jps检测状态的<br>ps -ef|grep xxx 命令是去查看进程的真正手段！！！<br>用root用户kill进程，进程不存在，jps会显示没有进程信息</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$ jps</span><br><span class="line">28256 ResourceManager</span><br><span class="line">15617 FsShell</span><br><span class="line">60210 FsShell</span><br><span class="line">27363 NameNode</span><br><span class="line">59604 FsShell</span><br><span class="line">27591 -- process information unavailable</span><br><span class="line">28364 NodeManager</span><br><span class="line">60878 Jps</span><br><span class="line">27967 SecondaryNameNode</span><br><span class="line">[hadoop@hadoop001 hsperfdata_hadoop]$ ps -ef |grep 27591</span><br><span class="line">hadoop   27591     1  3 15:32 ?        00:03:15 /usr/java/jdk1.8.0_181/bin/java \</span><br><span class="line">-Dproc_datanode -Xmx1000m -Djava.net.preferIPv4Stack=<span class="literal">true</span> \</span><br><span class="line">-Dhadoop.log.dir=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs \</span><br><span class="line">-Dhadoop.log.file=hadoop.log -Dhadoop.home.dir=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2 \</span><br><span class="line">-Dhadoop.id.str=hadoop -Dhadoop.root.logger=INFO,console \</span><br><span class="line">-Djava.library.path=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2/lib/native \</span><br><span class="line">-Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=<span class="literal">true</span> \</span><br><span class="line">-Djava.net.preferIPv4Stack=<span class="literal">true</span> -Djava.net.preferIPv4Stack=<span class="literal">true</span> \</span><br><span class="line">-Dhadoop.log.dir=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs \</span><br><span class="line">-Dhadoop.log.file=hadoop-hadoop-datanode-hadoop001.log \</span><br><span class="line">-Dhadoop.home.dir=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2 \</span><br><span class="line">-Dhadoop.id.str=hadoop -Dhadoop.root.logger=INFO,RFA \</span><br><span class="line">-Djava.library.path=/home/hadoop/app/hadoop-2.6.0-cdh5.16.2/lib/native \</span><br><span class="line">-Dhadoop.policy.file=hadoop-policy.xml -Djava.net.preferIPv4Stack=<span class="literal">true</span> -server \</span><br><span class="line">-Dhadoop.security.logger=ERROR,RFAS -Dhadoop.security.logger=ERROR,RFAS \</span><br><span class="line">-Dhadoop.security.logger=ERROR,RFAS \</span><br><span class="line">-Dhadoop.security.logger=INFO,RFAS org.apache.hadoop.hdfs.server.datanode.DataNode</span><br><span class="line">hadoop   60889 59557  0 17:20 pts/0    00:00:00 grep --color=auto 27591\</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-5-文件被删除，不影响进程的重启！！"><a href="#3-5-文件被删除，不影响进程的重启！！" class="headerlink" title="3.5 文件被删除，不影响进程的重启！！"></a>3.5 文件被删除，不影响进程的重启！！</h4><p>jps并不会影响进程的启动和停止，但是要去看看文件是否清理干净，否则会造成误导</p>
+<h3 id="4-pid文件"><a href="#4-pid文件" class="headerlink" title="4.pid文件"></a>4.pid文件</h3><h4 id="4-1存储位置-tmp"><a href="#4-1存储位置-tmp" class="headerlink" title="4.1存储位置 /tmp"></a>4.1存储位置 /tmp</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 tmp]$ ll</span><br><span class="line">total 7904</span><br><span class="line">-rw-rw-r--. 1 hadoop    hadoop          6 May 11 15:32 hadoop-hadoop-datanode.pid</span><br><span class="line">-rw-rw-r--. 1 hadoop    hadoop          6 May 11 15:32 hadoop-hadoop-namenode.pid</span><br><span class="line">-rw-rw-r--. 1 hadoop    hadoop          6 May 11 15:32 hadoop-hadoop-secondarynamenode.pid</span><br></pre></td></tr></table></figure>
+<h4 id="4-2-维护进程的pid-写死的"><a href="#4-2-维护进程的pid-写死的" class="headerlink" title="4.2 维护进程的pid 写死的"></a>4.2 维护进程的pid 写死的</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 tmp]$ cat hadoop-hadoop-datanode.pid </span><br><span class="line">27591</span><br><span class="line">[hadoop@hadoop001 tmp]$</span><br></pre></td></tr></table></figure>
+<p>kill是通过找已经写死的pid的文件找到进程<br>kill -9 $(pgrep -f xxx) 通过xxx杀了所有</p>
+<h4 id="4-3-文件被删除，影响进程的重启！！"><a href="#4-3-文件被删除，影响进程的重启！！" class="headerlink" title="4.3 文件被删除，影响进程的重启！！"></a>4.3 文件被删除，影响进程的重启！！</h4><p>进程启动，pid文件写入进程的pid数字<br>进程关闭时，从pid文件读出pid数字，然后kill -9 pid</p>
+<h4 id="4-4-生产上-pid文件真的可以放心的丢在-tmp维护吗？"><a href="#4-4-生产上-pid文件真的可以放心的丢在-tmp维护吗？" class="headerlink" title="4.4 生产上  pid文件真的可以放心的丢在/tmp维护吗？"></a>4.4 生产上  pid文件真的可以放心的丢在/tmp维护吗？</h4><p>Linux的/tmp 会有30天的默认删除机制 </p>
+<h4 id="4-5-如何修改"><a href="#4-5-如何修改" class="headerlink" title="4.5 如何修改"></a>4.5 如何修改</h4><p>修改pid<br>在app/hadoop/etc/hadoop/hadoop-env.sh脚本<br>目标/home/hadoop/tmp/中</p>
+<p>export HADOOP_PID_DIR=/home/hadoop/tmp/</p>
+<p>修改之后最好确认一下原来部分文件是否存在，否则可能会出现问题</p>
+<p><strong>总结</strong>：<br>pid文件生产不要丢在/tmp目录<br>      要知道是影响进程的启动停止 </p>
+<h3 id="5-块-block介绍及生产经验"><a href="#5-块-block介绍及生产经验" class="headerlink" title="5.块 block介绍及生产经验"></a>5.块 block介绍及生产经验</h3><p>HDFS 存储大文件是利好，存储小文件是损害自己的<br>     适合存储大文件 不适合小文件，不代表不能存储小文件</p>
+<p>例如：<br>一个260m 的 mv文件，上传到hdfs,会把文件切割成3块 （dfs.blocksize 134217728 =128M）<br>分别为（128m、128m、4m）</p>
+<p>伪分布式节点（单节点） 1节点 副本数 dfs.replication 1 （副本数即为服务器数，备份数）<br>生产上HDFS集群的 DN肯定大于&gt;=3台   dfs.replication=3</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DN1          DN2   DN5  DN10</span><br><span class="line">128m b1            b1   b1</span><br><span class="line">128m b2      b2         b2</span><br><span class="line">4m           b3    b3   b3</span><br></pre></td></tr></table></figure>
+<p>通过设置副本数 来让文件存储在大数据HDFS平台上有容错保障</p>
+<p>dfs.blocksize为什么由64M变为128M，为了减少分块的数量，降低nn的负担<br><strong>生产上可以提高blocksize，减少块的数量，取决于你的文件能否达到size</strong></p>
+<p>副本数3：存储实际大小=文件大小<em>3=260</em>3=780m 存储空间 </p>
+<p>5个块的元数据信息维护 是不是 比3个块的元数据的信息维护要多，<br>维护重  累–》namenode</p>
+<p>所以nn是不喜欢 小文件的 </p>
+<p> 1亿个10kb文件  3亿个block<br> 1亿个10kb文件压缩成1KW个文件100m   3KW的block </p>
+<p><strong>如何规避 小文件</strong><br>1.数据传输到hdfs之前 就合并<br>2.数据已经在hdfs上，就定时去合并不常用文件 -冷文件-读写不太频繁，在业务低谷时，晚上合并，或者合并前三十天的数据<br>                 /2020/10/10<br>         /2020/10/11<br>         /2020/10/12  当前时间在用，可能有问题 </p>
+<p>例如：<br>20号 合并14号的文件<br>21号 合并15号的文件</p>
+<p>一天卡一天的合并</p>
+<p>经验值：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">10m一下的文件  都是小文件</span><br><span class="line"></span><br><span class="line">128m的就合并到120m文件</span><br><span class="line"></span><br><span class="line">代码设置成128m，真正合并时可能会超，变成129m，就是两个块， 因为有些文件不可切割</span><br></pre></td></tr></table></figure>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong>
+              本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2020/05/10/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B09/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HDFS/" rel="tag">HDFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/05/10/hdfs%20command%20not%20found/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            解决bash: hdfs: command not found
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/05/10/%E8%A7%A3%E5%86%B3Git%E6%8F%90%E7%A4%BAPermission%20denied%20(publickey)/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">解决Git提示Permission denied (publickey)</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+<div class="gitalk" id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+
+<script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '58c59a1104624dc5c5f6',
+    clientSecret: 'c53c5169c12ee81c76693613def121b04dbf01b4',
+    repo: 'blog-commit',
+    owner: 'wangqi1994',
+    admin: ['wangqi1994'],
+    // id: location.pathname,      // Ensure uniqueness and length less than 50
+    id: md5(location.pathname),
+    distractionFreeMode: false,  // Facebook-like distraction free mode
+    pagerDirection: 'last'
+  })
+
+  gitalk.render('gitalk-container')
+</script>
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2021
+        <i class="ri-heart-fill heart_icon"></i> WANG Qi
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278882064'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1278882064%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/gougou.png" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+<!-- 复制 -->
+
+  
+<link rel="stylesheet" href="/css/clipboard.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=22707008&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>

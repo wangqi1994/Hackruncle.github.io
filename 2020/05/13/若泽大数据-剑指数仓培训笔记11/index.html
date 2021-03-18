@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="记录学习的每一天" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    数仓培训第十一天 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+  <article id="post-若泽大数据-剑指数仓培训笔记11" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  数仓培训第十一天
+</h1>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+
+
+<a href="/2020/05/13/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B011/" class="article-date">
+  <time datetime="2020-05-13T04:00:00.000Z" itemprop="datePublished">2020-05-13</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/HDFS/">HDFS</a> / <a class="article-category-link" href="/categories/Hadoop/">Hadoop</a>
+  </div>
+
+      
+      <div style="margin-top:10px;margin-bottom:-15px;">
+    
+      
+        <span class="article-type" style="
+          color: white;
+          font-size: 14px;
+          background: #bf59f3;
+          padding: 0 5px 1px 5px;
+          margin-right: 5px;
+          border-radius: 2px;">原创</span>
+      
+    
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  字数统计: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">2.3k</span>
+      </span>
+    </span>
+    
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  阅读时长: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">11分</span>
+      </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="1-SNN的流程"><a href="#1-SNN的流程" class="headerlink" title="1.SNN的流程"></a>1.SNN的流程</h3><p><a href="https://wangqi1994.github.io/2020/05/13/SNN流程/" target="_blank" rel="noopener">SNN流程</a></p>
+<h3 id="2-HDFS命令"><a href="#2-HDFS命令" class="headerlink" title="2.HDFS命令"></a>2.HDFS命令</h3><p>大数据中配置文件一般为<br>/etc<br>/conf<br>/config</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ ll</span><br><span class="line">total 164</span><br><span class="line">drwxr-xr-x.  2 hadoop hadoop  4096 Jun  3  2019 bin    <span class="comment">#可执行脚本  命令</span></span><br><span class="line">drwxr-xr-x.  2 hadoop hadoop  4096 Jun  3  2019 bin-mapreduce1</span><br><span class="line">drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 cloudera</span><br><span class="line">drwxr-xr-x.  6 hadoop hadoop  4096 Jun  3  2019 etc     <span class="comment">#配置文件夹 conf/config</span></span><br><span class="line">drwxr-xr-x.  5 hadoop hadoop  4096 Jun  3  2019 examples  <span class="comment">#例子</span></span><br><span class="line">drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 examples-mapreduce1</span><br><span class="line">drwxr-xr-x.  2 hadoop hadoop  4096 Jun  3  2019 include</span><br><span class="line">drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 lib  <span class="comment">#lib目录 jar包</span></span><br><span class="line">drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 libexec</span><br><span class="line">-rw-r--r--.  1 hadoop hadoop 85063 Jun  3  2019 LICENSE.txt</span><br><span class="line">drwxrwxr-x.  3 hadoop hadoop  4096 May 11 15:33 logs  <span class="comment">#日志文件</span></span><br><span class="line">-rw-r--r--.  1 hadoop hadoop 14978 Jun  3  2019 NOTICE.txt</span><br><span class="line">drwxrwxr-x.  2 hadoop hadoop  4096 May 11 16:53 output </span><br><span class="line">-rw-r--r--.  1 hadoop hadoop    43 May 11 17:00 part-r-00000</span><br><span class="line">-rw-r--r--.  1 hadoop hadoop  1366 Jun  3  2019 README.txt</span><br><span class="line">drwxr-xr-x.  3 hadoop hadoop  4096 Jun  3  2019 sbin    <span class="comment">#启动 停止 重启脚本</span></span><br><span class="line">drwxr-xr-x.  4 hadoop hadoop  4096 Jun  3  2019 share  <span class="comment">#共享的</span></span><br><span class="line">drwxr-xr-x. 18 hadoop hadoop  4096 Jun  3  2019 src   <span class="comment">#源代码</span></span><br><span class="line">-rw-r--r--.  1 hadoop hadoop     0 May 11 17:00 _SUCCESS</span><br><span class="line">[hadoop@hadoop001 hadoop]$ <span class="built_in">cd</span> bin</span><br><span class="line">[hadoop@hadoop001 bin]$ ll</span><br><span class="line">total 92</span><br><span class="line">-rwxr-xr-x. 1 hadoop hadoop  5701 Jun  3  2019 hadoop</span><br><span class="line">-rwxr-xr-x. 1 hadoop hadoop  8443 Jun  3  2019 hadoop.cmd</span><br><span class="line">-rwxr-xr-x. 1 hadoop hadoop 12356 Jun  3  2019 hdfs</span><br><span class="line">-rwxr-xr-x. 1 hadoop hadoop  6915 Jun  3  2019 hdfs.cmd</span><br><span class="line">-rwxr-xr-x. 1 hadoop hadoop  5463 Jun  3  2019 mapred</span><br><span class="line">-rwxr-xr-x. 1 hadoop hadoop  5949 Jun  3  2019 mapred.cmd</span><br><span class="line">-rwxr-xr-x. 1 hadoop hadoop  1776 Jun  3  2019 rcc</span><br><span class="line">-rwxr-xr-x. 1 hadoop hadoop 12476 Jun  3  2019 yarn</span><br><span class="line">-rwxr-xr-x. 1 hadoop hadoop 10895 Jun  3  2019 yarn.cmd</span><br><span class="line">[hadoop@hadoop001 bin]$ </span><br><span class="line"><span class="comment"># cmd是windows的脚本</span></span><br></pre></td></tr></table></figure>
+<p>生产上主要看三个目录<br>lib<br>bin<br>etc<br>生产上用的最多的命令是a,c,d,e</p>
+<h4 id="a-查看ls"><a href="#a-查看ls" class="headerlink" title="a.查看ls"></a>a.查看ls</h4><p>从shell文件查看可知 hadoop fs -ls=  hdfs dfs -ls</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">hadoop fs -ls /</span><br><span class="line"> if [ "$COMMAND" = "fs" ] ; then</span><br><span class="line">      CLASS=org.apache.hadoop.fs.FsShell</span><br><span class="line"></span><br><span class="line">hdfs dfs -ls /</span><br><span class="line"> elif [ "$COMMAND" = "dfs" ] ; then</span><br><span class="line">      CLASS=org.apache.hadoop.fs.FsShell</span><br></pre></td></tr></table></figure>
+<h4 id="b-上传下载"><a href="#b-上传下载" class="headerlink" title="b.上传下载:"></a>b.上传下载:</h4><p>-get上传 -put 下载<br>-copyToLocal 上传  -copyFromLocal 下载</p>
+<h4 id="c-创建文件夹"><a href="#c-创建文件夹" class="headerlink" title="c.创建文件夹"></a>c.创建文件夹</h4><p>hdfs dfs -mkdir 目录名</p>
+<h4 id="d-移动-拷贝"><a href="#d-移动-拷贝" class="headerlink" title="d.移动 拷贝"></a>d.移动 拷贝</h4><p>hdfs dfs -mv 原位置 目标位置<br>hdfs dfs -cp 源文件 目标文件位置、</p>
+<p><strong>生产上保险起见用拷贝，不咋用移动</strong><br>拷贝之后校验，如果不出问题，则返回删除原来的文件</p>
+<h4 id="e-删除"><a href="#e-删除" class="headerlink" title="e.删除"></a>e.删除</h4><p>-rm [-f] [-r|-R] [-skipTrash] <src> …]</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">回收站设置 core-site.xml</span></span><br><span class="line">  &lt;property&gt;</span><br><span class="line">        &lt;name&gt;fs.trash.interval&lt;/name&gt; #设置回收站保留有效期</span><br><span class="line">        &lt;value&gt;10080&lt;/value&gt;</span><br><span class="line">  &lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<p>在core-site.xml文件设置回收站保留时间，生产上设置10080=7天<br><strong>设置完之后，重启hdfs</strong></p>
+<p><strong>1.生产上一定开启回收站！+回收站的有效期至少7天！！</strong><br><strong>2.-skipTrash 是删除不经过回收站，慎用-skipTrash 不要加！！！</strong></p>
+<p>使用CDH/HDP 要去检查是否开启 开启周期</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ hdfs dfs -rm /1.log</span><br><span class="line">20/05/13 11:46:49 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... </span><br><span class="line">using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">20/05/13 11:46:51 INFO fs.TrashPolicyDefault: Moved: <span class="string">'hdfs://hadoop001:9000/1.log'</span> to trash at: </span><br><span class="line">hdfs://hadoop001:9000/user/hadoop/.Trash/Current/1.log   <span class="comment">#进入回收站</span></span><br><span class="line">[hadoop@hadoop001 ~]$ hdfs dfs -ls /user/hadoop/.Trash/Current</span><br><span class="line">20/05/13 11:50:18 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">Found 1 items</span><br><span class="line">-rw-r--r--   1 hadoop supergroup         10 2020-05-12 09:40 /user/hadoop/.Trash/Current/1.log</span><br><span class="line">[hadoop@hadoop001 ~]$  hdfs dfs -rm -skipTrash /1.log</span><br><span class="line">20/05/13 13:48:24 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">Deleted /1.log  <span class="comment">#直接删除</span></span><br><span class="line">[hadoop@hadoop001 ~]$</span><br></pre></td></tr></table></figure>
+
+<h4 id="f-权限"><a href="#f-权限" class="headerlink" title="f.权限"></a>f.权限</h4><p>-chmod<br>-chown </p>
+<h4 id="g-checknative"><a href="#g-checknative" class="headerlink" title="g.checknative"></a>g.checknative</h4><p>hadoop checknative 列出来不支持的压缩方式<br>需要的话，只能自己编译，编译一般在国外环境下进行</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 ~]$ hadoop checknative</span><br><span class="line">20/05/13 13:53:11 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">Native library checking:</span><br><span class="line">hadoop:  <span class="literal">false</span> </span><br><span class="line">zlib:    <span class="literal">false</span> </span><br><span class="line">snappy:  <span class="literal">false</span> </span><br><span class="line">lz4:     <span class="literal">false</span> </span><br><span class="line">bzip2:   <span class="literal">false</span> </span><br><span class="line">openssl: <span class="literal">false</span> </span><br><span class="line">20/05/13 13:53:11 INFO util.ExitUtil: Exiting with status 1</span><br><span class="line">[hadoop@hadoop001 ~]$</span><br></pre></td></tr></table></figure>
+
+<h4 id="h-safemode安全模式"><a href="#h-safemode安全模式" class="headerlink" title="h.safemode安全模式"></a>h.safemode安全模式</h4><p>利用dfsadmin 管理员的权限 进行设置</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfsadmin -report <span class="comment">#查看报告，可以设置进行监控+</span></span><br><span class="line"></span><br><span class="line">[-safemode &lt;enter | leave | get | <span class="built_in">wait</span>&gt;]</span><br><span class="line"><span class="comment">#安全模式-自我保护-不能写只能读</span></span><br><span class="line">hdfs dfsadmin -safemode enter <span class="comment">#进入</span></span><br><span class="line">hdfs dfsadmin -safemode leave <span class="comment">#离开</span></span><br></pre></td></tr></table></figure>
+
+<p>错误： Name node is in safe mode.</p>
+<p>什么时候会安全模式：<br>1.hdfs故障  nn 查看log日志<br>根据错误去看看尝试能不能解决，和尝试先手动让他离开安全模式<br>2.业务场景<br><img src="https://i.loli.net/2020/06/11/6iOS9HWYD1kzbU5.png" alt=""><br>离线抽取sqoop  datax kettle<br>实时抽取 flume canal/maxwell<br>进入安全模式之后要发邮件说明窗口期多长<br>生产上要最小化的窗口维护<br>注意：生产上不要频繁启动关闭hdfs，可能会出现起不来的情况</p>
+<h3 id="3-数据平衡"><a href="#3-数据平衡" class="headerlink" title="3.数据平衡"></a>3.数据平衡</h3><h4 id="各个DN节点的数据平衡"><a href="#各个DN节点的数据平衡" class="headerlink" title="各个DN节点的数据平衡"></a>各个DN节点的数据平衡</h4><p>sbin/start-balancer.sh的sh文件如下，使用这个sh文件调用bin”/hdfs start balancer命令</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Start balancer daemon.</span></span><br><span class="line"></span><br><span class="line"><span class="string">"<span class="variable">$HADOOP_PREFIX</span>"</span>/sbin/hadoop-daemon.sh --config <span class="variable">$HADOOP_CONF_DIR</span> --script <span class="string">"<span class="variable">$bin</span>"</span>/hdfs start balancer <span class="variable">$@</span></span><br><span class="line"></span><br><span class="line">[hadoop@hadoop001 hadoop]$ sbin/start-balancer.sh </span><br><span class="line">starting balancer, logging to /home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-hadoop-balancer-hadoop001.out</span><br><span class="line">Time Stamp               Iteration<span class="comment">#  Bytes Already Moved  Bytes Left To Move  Bytes Being Moved</span></span><br><span class="line">[hadoop@hadoop001 hadoop]$ sbin/start-balancer.sh -threshold 10.0   <span class="comment"># 默认是10  threshold = 10.0</span></span><br><span class="line">starting balancer, logging to /home/hadoop/app/hadoop-2.6.0-cdh5.16.2/logs/hadoop-hadoop-balancer-hadoop001.out</span><br><span class="line">Time Stamp               Iteration<span class="comment">#  Bytes Already Moved  Bytes Left To Move  Bytes Being Moved</span></span><br><span class="line">[hadoop@hadoop001 hadoop]$</span><br></pre></td></tr></table></figure>
+
+<p>每个节点的磁盘使用率-平均的磁盘使用率&lt; 10%</p>
+<p><strong>建议</strong>：<br>生产上 从现在开始，每天进行./start-balancer.sh -threshold 10.0 操作，并且要放到业务低谷比如凌晨，<br>每天定时的去做平衡操作，做平衡操作时，需要算一下能不能承载</p>
+<p>如果传输量太大，可以调节平衡操作的网络带宽设置参数<br>在hdfs-site.xml文件中添加</p>
+<pre><code>&lt;property&gt;
+    &lt;name&gt;dfs.datanode.balance.bandwidthPerSec&lt;/name&gt;
+    &lt;value&gt;50&lt;/value&gt;
+&lt;/property&gt;</code></pre><p>dfs.datanode.balance.bandwidthPerSec<br>默认是10m/s<br>10m/s–&gt;50m/s</p>
+<h4 id="单个DN的多块磁盘的数据均衡"><a href="#单个DN的多块磁盘的数据均衡" class="headerlink" title="单个DN的多块磁盘的数据均衡"></a>单个DN的多块磁盘的数据均衡</h4><p>a.在投产前规划  (这个DN机器上 10块磁盘  2T 不做raid==》20T  大数据不用raid)<br>配置多个磁盘<br>在hdfs-site.xml文件中添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">      &lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;</span><br><span class="line">      &lt;value&gt;/data01,/data02,/data03&lt;/value&gt;<span class="comment">#配置多块磁盘，中间以逗号分割</span></span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<p> <strong>为什么要用多块物理磁盘 ？</strong><br> 多个磁盘的 IO是叠加的 </p>
+<p><strong>建议</strong>：<br>规划时，和领导说明，磁盘不值钱，要规划两年的存储空间</p>
+<p>服务器上面的硬盘不是越大越好</p>
+<p>生产上2.5英寸 一万转 2T的性价比最高 </p>
+<p> b.在投产后<br> 第一个月 1个磁盘 500G 已经使用480G<br> 第二个月 新增一个磁盘：<br> 如果第二个比第一个大的多的话就直接移动，然后做软连接回连<br> 如果一样大就做磁盘均衡数据操作</p>
+<p><strong>如何多个磁盘 均衡数据？</strong></p>
+<p>hadoop-2.6.0-cdh5.16.2  dfs.disk.balancer.enabled #cdh包大了很多补丁，版本相当于打补丁=高版本<br>apache hadoop 3.x  dfs.disk.balancer.enabled<br>apache hadoop 2.10 找不到 </p>
+<p>生产上Apache环境 只有3.x版本才支持，但是大部分公司是2.x<br>所以这个特性用不了！！！</p>
+<p>在hdfs-site.xml文件中添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">      &lt;name&gt;dfs.disk.balancer.enabled&lt;&#x2F;name&gt;</span><br><span class="line">      &lt;value&gt;true&lt;&#x2F;value&gt;</span><br><span class="line">&lt;&#x2F;property&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="a-生成计划"><a href="#a-生成计划" class="headerlink" title="a.生成计划"></a>a.生成计划</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ hdfs diskbalancer  -plan hadoop001</span><br><span class="line">20/05/13 16:23:03 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">20/05/13 16:23:06 INFO planner.GreedyPlanner: Starting plan <span class="keyword">for</span> Node : hadoop001:50020</span><br><span class="line">20/05/13 16:23:06 INFO planner.GreedyPlanner: Compute Plan <span class="keyword">for</span> Node : hadoop001:50020 took 7 ms </span><br><span class="line">20/05/13 16:23:08 INFO command.Command: No plan generated. DiskBalancing not needed <span class="keyword">for</span> node: hadoop001 threshold used: 10.0</span><br><span class="line">[hadoop@hadoop001 hadoop]$ </span><br><span class="line"><span class="comment">#生成 hadoop001.plan.json 文件</span></span><br></pre></td></tr></table></figure>
+<h5 id="b-执行计划"><a href="#b-执行计划" class="headerlink" title="b.执行计划"></a>b.执行计划</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ hdfs diskbalancer -execute hadoop001.plan.json</span><br><span class="line">20/05/13 16:26:14 INFO command.Command: Executing <span class="string">"execute plan"</span> <span class="built_in">command</span></span><br><span class="line">20/05/13 16:26:14 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">20/05/13 16:26:15 ERROR tools.DiskBalancerCLI: java.io.FileNotFoundException: File does not exist: /user/hadoop/hadoop001.plan.json</span><br><span class="line">	at org.apache.hadoop.hdfs.server.namenode.INodeFile.valueOf(INodeFile.java:66)</span><br><span class="line">	at org.apache.hadoop.hdfs.server.namenode.INodeFile.valueOf(INodeFile.java:56)</span><br><span class="line">	at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getBlockLocationsInt(FSNamesystem.java:2157)</span><br><span class="line">	at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getBlockLocations(FSNamesystem.java:2127)</span><br><span class="line">	at org.apache.hadoop.hdfs.server.namenode.FSNamesystem.getBlockLocations(FSNamesystem.java:2040)</span><br><span class="line">	at org.apache.hadoop.hdfs.server.namenode.NameNodeRpcServer.getBlockLocations(NameNodeRpcServer.java:583)</span><br><span class="line">	at org.apache.hadoop.hdfs.server.namenode.AuthorizationProviderProxyClientProtocol.getBlockLocations(AuthorizationProviderProxyClientProtocol.java:94)</span><br><span class="line">	at org.apache.hadoop.hdfs.protocolPB.ClientNamenodeProtocolServerSideTranslatorPB.getBlockLocations(ClientNamenodeProtocolServerSideTranslatorPB.java:377)</span><br><span class="line">	at org.apache.hadoop.hdfs.protocol.proto.ClientNamenodeProtocolProtos<span class="variable">$ClientNamenodeProtocol</span><span class="variable">$2</span>.callBlockingMethod(ClientNamenodeProtocolProtos.java)</span><br><span class="line">	at org.apache.hadoop.ipc.ProtobufRpcEngine<span class="variable">$Server</span><span class="variable">$ProtoBufRpcInvoker</span>.call(ProtobufRpcEngine.java:617)</span><br><span class="line">	at org.apache.hadoop.ipc.RPC<span class="variable">$Server</span>.call(RPC.java:1073)</span><br><span class="line">	at org.apache.hadoop.ipc.Server<span class="variable">$Handler</span><span class="variable">$1</span>.run(Server.java:2278)</span><br><span class="line">	at org.apache.hadoop.ipc.Server<span class="variable">$Handler</span><span class="variable">$1</span>.run(Server.java:2274)</span><br><span class="line">	at java.security.AccessController.doPrivileged(Native Method)</span><br><span class="line">	at javax.security.auth.Subject.doAs(Subject.java:422)</span><br><span class="line">	at org.apache.hadoop.security.UserGroupInformation.doAs(UserGroupInformation.java:1924)</span><br><span class="line">	at org.apache.hadoop.ipc.Server<span class="variable">$Handler</span>.run(Server.java:2272)</span><br><span class="line"></span><br><span class="line">[hadoop@hadoop001 hadoop]$ <span class="comment">#没有json计划文件</span></span><br></pre></td></tr></table></figure>
+<h5 id="c-查看状态"><a href="#c-查看状态" class="headerlink" title="c.查看状态"></a>c.查看状态</h5><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ hdfs diskbalancer  -query hadoop001 </span><br><span class="line">20/05/13 16:24:26 INFO command.Command: Executing <span class="string">"query plan"</span> <span class="built_in">command</span>.</span><br><span class="line">20/05/13 16:24:26 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">Plan File: </span><br><span class="line">Plan ID: </span><br><span class="line">Result: NO_PLAN</span><br></pre></td></tr></table></figure>
+
+<p>生产上发现磁盘不均衡时，不需要每天做磁盘均衡，半个月一次即可</p>
+<p><a href="http://archive.cloudera.com/cdh5/cdh/5/hadoop-2.6.0-cdh5.16.2/" target="_blank" rel="noopener">官方参考文档</a></p>
+<p>基础扩展：</p>
+<p>合并小文件可以使用<br>spark coalesce<br>hdfs</p>
+<p>hbase没有小文件，会自动合并</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong>
+              本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2020/05/13/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B011/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HDFS/" rel="tag">HDFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/05/13/SNN%E6%B5%81%E7%A8%8B/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            SNN流程
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/05/11/HDFS%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">HDFS副本放置策略</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+<div class="gitalk" id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+
+<script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '58c59a1104624dc5c5f6',
+    clientSecret: 'c53c5169c12ee81c76693613def121b04dbf01b4',
+    repo: 'blog-commit',
+    owner: 'wangqi1994',
+    admin: ['wangqi1994'],
+    // id: location.pathname,      // Ensure uniqueness and length less than 50
+    id: md5(location.pathname),
+    distractionFreeMode: false,  // Facebook-like distraction free mode
+    pagerDirection: 'last'
+  })
+
+  gitalk.render('gitalk-container')
+</script>
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2021
+        <i class="ri-heart-fill heart_icon"></i> WANG Qi
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278882064'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1278882064%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/gougou.png" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+<!-- 复制 -->
+
+  
+<link rel="stylesheet" href="/css/clipboard.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=22707008&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>

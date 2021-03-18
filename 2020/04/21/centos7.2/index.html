@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="记录学习的每一天" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    Centos7.2安装部署（图文教程） |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+  <article id="post-centos7.2" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Centos7.2安装部署（图文教程）
+</h1>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+
+
+<a href="/2020/04/21/centos7.2/" class="article-date">
+  <time datetime="2020-04-21T04:00:00.000Z" itemprop="datePublished">2020-04-21</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ruozedata/">ruozedata</a> / <a class="article-category-link" href="/categories/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/">系统配置</a>
+  </div>
+
+      
+      <div style="margin-top:10px;margin-bottom:-15px;">
+    
+      
+        <span class="article-type" style="
+          color: white;
+          font-size: 14px;
+          background: #bf59f3;
+          padding: 0 5px 1px 5px;
+          margin-right: 5px;
+          border-radius: 2px;">原创</span>
+      
+    
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  字数统计: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">864</span>
+      </span>
+    </span>
+    
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  阅读时长: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">3分</span>
+      </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>Centos7.2安装部署（图文教程）</p>
+<p>描述：记录VMware中centos安装部署步骤，包括安装流程和参数配置</p>
+<h3 id="一、下载CentOSer6-5镜像文件。"><a href="#一、下载CentOSer6-5镜像文件。" class="headerlink" title="一、下载CentOSer6.5镜像文件。"></a>一、下载CentOSer6.5镜像文件。</h3><p>=============================</p>
+<p><a href="http://vault.centos.org/7.2.1511/isos/x86_64/" target="_blank" rel="noopener">http://vault.centos.org/7.2.1511/isos/x86_64/</a></p>
+<h3 id="二．虚拟机创建流程-（本次安装使用的VMware版本是15-5）"><a href="#二．虚拟机创建流程-（本次安装使用的VMware版本是15-5）" class="headerlink" title="二．虚拟机创建流程:（本次安装使用的VMware版本是15.5）"></a>二．虚拟机创建流程:（本次安装使用的VMware版本是15.5）</h3><p>=====================================================</p>
+<p><img src="https://i.loli.net/2020/06/11/uZ9XJpS6r4vwAMI.png" alt=""></p>
+<p>点击新建虚拟机，弹出如下窗口，选择自定义，点击下一步</p>
+<p><img src="https://i.loli.net/2020/06/11/OKgeS4n1ycDlCm3.png" alt=""></p>
+<p>选择workstations 10.x，点击下一步</p>
+<p><img src="https://i.loli.net/2020/06/11/C69zR8mHrp7xBDs.png" alt=""></p>
+<p>选择稍后安装操作系统，下一步</p>
+<p><img src="https://i.loli.net/2020/06/11/6YEDstWnmOVvx31.png" alt=""></p>
+<p>选择Linux之后，选择安装版本，此次选择Centos7 64位，点击下一步</p>
+<p><img src="https://i.loli.net/2020/06/11/4ZXrEqLOpQseuoy.png" alt=""></p>
+<p>设置虚拟机的名称以及安装位置，（名称根据个人喜好设置），点击下一步</p>
+<p><img src="https://i.loli.net/2020/06/11/SdiwrIVGJzxn2yP.png" alt=""></p>
+<p>处理器配置，在不影响电脑流畅度条件下，随意设置</p>
+<p><img src="https://i.loli.net/2020/06/11/Va5dg9DlXYCy7zt.png" alt=""></p>
+<p>配置内存，建议2G以上</p>
+<p><img src="https://i.loli.net/2020/06/11/5QSTY7MFqp8LwE6.png" alt=""></p>
+<p>网络类型选择默认使用网络地址转换（NAT）</p>
+<p><img src="https://i.loli.net/2020/06/11/9t1I2XHKdrbMAQi.png" alt=""></p>
+<p>I/O控制器类型默认选择LSI Logic（L）</p>
+<p><img src="https://i.loli.net/2020/06/11/UaELSvOze5xuqX1.png" alt=""></p>
+<p>磁盘类型默认选择SCIS</p>
+<p><img src="https://i.loli.net/2020/06/11/ZQikyJDp8q7sMf9.png" alt=""></p>
+<p>选择磁盘使用，默认选择创建新虚拟磁盘</p>
+<p><img src="https://i.loli.net/2020/06/11/QdiBONYKrm9h13U.png" alt=""></p>
+<p>指定磁盘容量，在不影响电脑使用情况下，合理分配内存，建议40G以上</p>
+<p><img src="https://i.loli.net/2020/06/11/xUdcXn4azQjoGiS.png" alt=""></p>
+<p>磁盘文件命名，默认即可，点击下一步</p>
+<p><img src="https://i.loli.net/2020/06/11/eBVv16rcTxy9onX.png" alt=""></p>
+<p>点击完成，完成创建，或者选择自定义硬件，编辑相关属性。</p>
+<p><img src="https://i.loli.net/2020/06/11/io8HZ9T16cY5fye.png" alt=""></p>
+<p>选中新创建的虚拟机，点击编辑虚拟机设置</p>
+<p><img src="https://i.loli.net/2020/06/11/d2pJltWKPmMX16u.png" alt=""></p>
+<p>选择CD/DVD（IDE）后选择使用镜像文件安装，选中提前下载好的镜像文件，点击确定</p>
+<p><img src="https://i.loli.net/2020/06/11/OiqweyvNFPM9suJ.png" alt=""></p>
+<h3 id="三、系统安装配置"><a href="#三、系统安装配置" class="headerlink" title="三、系统安装配置"></a>三、系统安装配置</h3><p>================</p>
+<p>点击开启此虚拟机进行系统安装，选择Install Centos 7,直接回车，开始安装</p>
+<p><img src="https://i.loli.net/2020/06/11/qfs3FOugXCkWZK7.png" alt=""></p>
+<p>进入配置参数界面，建议选择英文系统，当然选择中文系统也可，看个人喜好。</p>
+<p><img src="https://i.loli.net/2020/06/11/wySMI5LmaJrXxTg.png" alt=""></p>
+<p>点击继续，进入具体设置配置界面</p>
+<p><img src="https://i.loli.net/2020/06/11/TlkNRtEPDM1jUah.png" alt=""></p>
+<p>设置系统时间和时区，选择Asia/Shanghai，注意具体时间可能会差9小时，可以自己进行手动设置。</p>
+<p><img src="https://i.loli.net/2020/06/11/NC9mr3AencalF2q.png" alt=""></p>
+<p>至于键盘和辅助语言选择根据个人喜好设置，个人建议英文</p>
+<p>选择设置安装software软件，选中software<br>selection进行自己的定制安装，默认选中最小化安装。</p>
+<p><img src="https://i.loli.net/2020/06/11/4XKmdb91NVWfwoE.png" alt=""></p>
+<p>此次选择安装桌面版GNOME桌面，右侧可以选择想要安装的软件包。</p>
+<p><img src="https://i.loli.net/2020/06/11/v2AcPLE1COihm5y.png" alt=""></p>
+<p>接下来，最重要的是设置installation destination，选中配置的磁盘（两次点击）</p>
+<p><img src="https://i.loli.net/2020/06/11/auF7Jt2HNEYxTf5.png" alt=""></p>
+<p>选择自定义，进行磁盘分配。然后选择Done确定进入磁盘分配</p>
+<p><img src="https://i.loli.net/2020/06/11/EG6ngOSKJvulH8w.png" alt=""></p>
+<p>选择标准分区后，选择添加按钮进行磁盘分配</p>
+<p><img src="https://i.loli.net/2020/06/11/mS5FqJxOa9V13Wp.png" alt=""></p>
+<p>记得文件系统选择ex4，swap分区最好设置2G往上，设置好boot和swap分区之后，剩余所有磁盘分配给根目录/。点击确认退出磁盘分配</p>
+<p><img src="https://i.loli.net/2020/06/11/shiamTeWKDRMb4A.png" alt=""></p>
+<p>关于KDUMP，建议关闭，报错文件看不懂，可以勾选</p>
+<p>关于网络和主机名，建议选择打开网络并根据需要自行修改主机名。</p>
+<p>配置完成之后点击开始安装。</p>
+<p>安装过程中，可以设置root用户和普通用户账号和密码，设置完成之后，等待安装完成。</p>
+<p><img src="https://i.loli.net/2020/06/11/cuk8XrjGs1p2K5h.png" alt=""></p>
+<p>安装完成后，点击reboot重启</p>
+<p><img src="https://i.loli.net/2020/06/11/JFzbrXdSLuIwYxq.png" alt=""></p>
+<p>会弹出用户协议选择界面，依此输入1-2-c-c即为同意协议</p>
+<p>完成安装</p>
+<p>输入密码之后，进入欢迎界面，可选择设置系统语言和键盘分布，还有google等用户可选择登录，可以选择跳过。</p>
+<p><img src="https://i.loli.net/2020/06/11/2XnILJ3FDp7izfv.png" alt=""></p>
+<p>最后，进入Centos 7 桌面。</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong>
+              本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2020/04/21/centos7.2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ruozedata/" rel="tag">ruozedata</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE/" rel="tag">系统配置</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/04/21/centos6.5%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP%E5%92%8C%E5%8F%AF%E8%AE%BF%E9%97%AE%E5%A4%96%E7%BD%91/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            CentOS6.5配置静态IP和可访问外网
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/20/20200420/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">早课1</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+<div class="gitalk" id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+
+<script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '58c59a1104624dc5c5f6',
+    clientSecret: 'c53c5169c12ee81c76693613def121b04dbf01b4',
+    repo: 'blog-commit',
+    owner: 'wangqi1994',
+    admin: ['wangqi1994'],
+    // id: location.pathname,      // Ensure uniqueness and length less than 50
+    id: md5(location.pathname),
+    distractionFreeMode: false,  // Facebook-like distraction free mode
+    pagerDirection: 'last'
+  })
+
+  gitalk.render('gitalk-container')
+</script>
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2021
+        <i class="ri-heart-fill heart_icon"></i> WANG Qi
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278882064'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1278882064%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/gougou.png" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+<!-- 复制 -->
+
+  
+<link rel="stylesheet" href="/css/clipboard.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=22707008&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>

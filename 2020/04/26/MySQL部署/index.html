@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="记录学习的每一天" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    MySQL部署 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+  <article id="post-MySQL部署" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  MySQL部署
+</h1>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+
+
+<a href="/2020/04/26/MySQL%E9%83%A8%E7%BD%B2/" class="article-date">
+  <time datetime="2020-04-26T04:00:00.000Z" itemprop="datePublished">2020-04-26</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a> / <a class="article-category-link" href="/categories/MySQL/">MySQL</a> / <a class="article-category-link" href="/categories/ruozedata/">ruozedata</a>
+  </div>
+
+      
+      <div style="margin-top:10px;margin-bottom:-15px;">
+    
+      
+        <span class="article-type" style="
+          color: white;
+          font-size: 14px;
+          background: #bf59f3;
+          padding: 0 5px 1px 5px;
+          margin-right: 5px;
+          border-radius: 2px;">原创</span>
+      
+    
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  字数统计: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">1.5k</span>
+      </span>
+    </span>
+    
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  阅读时长: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">7分</span>
+      </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="环境："><a href="#环境：" class="headerlink" title="环境："></a>环境：</h3><p>OS：CentOS7.2 （虚拟机）<br>MySQL安装包版本mysql-5.7.11-linux-glibc2.5-x86_64.tar.gz</p>
+<h3 id="1-安装准备"><a href="#1-安装准备" class="headerlink" title="1.安装准备"></a>1.安装准备</h3><p>windows下载安装包，通过rz上传到Linux系统中<br><a href="https://dev.mysql.com/downloads/mysql/" target="_blank" rel="noopener">下载mysql安装包地址</a></p>
+<h3 id="2-解压及创建目录"><a href="#2-解压及创建目录" class="headerlink" title="2.解压及创建目录"></a>2.解压及创建目录</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop001 ~]<span class="comment"># mv mysql-5.7.11-linux-glibc2.5-x86_64.tar.gz /usr/local #移动</span></span><br><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># tar -xzvf mysql-5.7.11-linux-glibc2.5-x86_64.tar.gz#解压</span></span><br><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># mv mysql-5.7.11-linux-glibc2.5-x86_64 mysql #改名字</span></span><br><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># mkdir mysql/arch mysql/data mysql/tmp #创建目录</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-创建my-cnf文件"><a href="#3-创建my-cnf文件" class="headerlink" title="3.创建my.cnf文件"></a>3.创建my.cnf文件</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># vi /etc/my.cnf</span></span><br><span class="line"></span><br><span class="line">[client]</span><br><span class="line">port            = 3306</span><br><span class="line">socket          = /usr/<span class="built_in">local</span>/mysql/data/mysql.sock</span><br><span class="line">default-character-set=utf8mb4</span><br><span class="line"></span><br><span class="line">[mysqld]</span><br><span class="line">port            = 3306</span><br><span class="line">socket          = /usr/<span class="built_in">local</span>/mysql/data/mysql.sock</span><br><span class="line"></span><br><span class="line">skip-slave-start</span><br><span class="line"></span><br><span class="line">skip-external-locking</span><br><span class="line">key_buffer_size = 256M</span><br><span class="line">sort_buffer_size = 2M</span><br><span class="line">read_buffer_size = 2M</span><br><span class="line">read_rnd_buffer_size = 4M</span><br><span class="line">query_cache_size= 32M</span><br><span class="line">max_allowed_packet = 16M</span><br><span class="line">myisam_sort_buffer_size=128M</span><br><span class="line">tmp_table_size=32M</span><br><span class="line"></span><br><span class="line">table_open_cache = 512</span><br><span class="line">thread_cache_size = 8</span><br><span class="line">wait_timeout = 86400</span><br><span class="line">interactive_timeout = 86400</span><br><span class="line">max_connections = 600</span><br><span class="line"></span><br><span class="line"><span class="comment"># Try number of CPU's*2 for thread_concurrency</span></span><br><span class="line"><span class="comment">#thread_concurrency = 32 </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#isolation level and default engine </span></span><br><span class="line">default-storage-engine = INNODB</span><br><span class="line">transaction-isolation = READ-COMMITTED</span><br><span class="line"></span><br><span class="line">server-id  = 1739</span><br><span class="line">basedir     = /usr/<span class="built_in">local</span>/mysql</span><br><span class="line">datadir     = /usr/<span class="built_in">local</span>/mysql/data</span><br><span class="line">pid-file     = /usr/<span class="built_in">local</span>/mysql/data/hostname.pid</span><br><span class="line"></span><br><span class="line"><span class="comment">#open performance schema</span></span><br><span class="line"><span class="built_in">log</span>-warnings</span><br><span class="line">sysdate-is-now</span><br><span class="line"></span><br><span class="line">binlog_format = ROW</span><br><span class="line">log_bin_trust_function_creators=1</span><br><span class="line"><span class="built_in">log</span>-error  = /usr/<span class="built_in">local</span>/mysql/data/hostname.err</span><br><span class="line"><span class="built_in">log</span>-bin = /usr/<span class="built_in">local</span>/mysql/arch/mysql-bin</span><br><span class="line">expire_logs_days = 7</span><br><span class="line"></span><br><span class="line">innodb_write_io_threads=16</span><br><span class="line"></span><br><span class="line">relay-log  = /usr/<span class="built_in">local</span>/mysql/relay_log/relay-log</span><br><span class="line">relay-log-index = /usr/<span class="built_in">local</span>/mysql/relay_log/relay-log.index</span><br><span class="line">relay_log_info_file= /usr/<span class="built_in">local</span>/mysql/relay_log/relay-log.info</span><br><span class="line"></span><br><span class="line">log_slave_updates=1</span><br><span class="line">gtid_mode=OFF</span><br><span class="line">enforce_gtid_consistency=OFF</span><br><span class="line"></span><br><span class="line"><span class="comment"># slave</span></span><br><span class="line">slave-parallel-type=LOGICAL_CLOCK</span><br><span class="line">slave-parallel-workers=4</span><br><span class="line">master_info_repository=TABLE</span><br><span class="line">relay_log_info_repository=TABLE</span><br><span class="line">relay_log_recovery=ON</span><br><span class="line"></span><br><span class="line"><span class="comment">#other logs</span></span><br><span class="line"><span class="comment">#general_log =1</span></span><br><span class="line"><span class="comment">#general_log_file  = /usr/local/mysql/data/general_log.err</span></span><br><span class="line"><span class="comment">#slow_query_log=1</span></span><br><span class="line"><span class="comment">#slow_query_log_file=/usr/local/mysql/data/slow_log.err</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#for replication slave</span></span><br><span class="line">sync_binlog = 500</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#for innodb options </span></span><br><span class="line">innodb_data_home_dir = /usr/<span class="built_in">local</span>/mysql/data/</span><br><span class="line">innodb_data_file_path = ibdata1:1G;ibdata2:1G:autoextend</span><br><span class="line"></span><br><span class="line">innodb_log_group_home_dir = /usr/<span class="built_in">local</span>/mysql/arch</span><br><span class="line">innodb_log_files_in_group = 4</span><br><span class="line">innodb_log_file_size = 1G</span><br><span class="line">innodb_log_buffer_size = 200M</span><br><span class="line"></span><br><span class="line"><span class="comment">#根据生产需要，调整pool size </span></span><br><span class="line">innodb_buffer_pool_size = 2G</span><br><span class="line"><span class="comment">#innodb_additional_mem_pool_size = 50M #deprecated in 5.6</span></span><br><span class="line">tmpdir = /usr/<span class="built_in">local</span>/mysql/tmp</span><br><span class="line"></span><br><span class="line">innodb_lock_wait_timeout = 1000</span><br><span class="line"><span class="comment">#innodb_thread_concurrency = 0</span></span><br><span class="line">innodb_flush_log_at_trx_commit = 2</span><br><span class="line"></span><br><span class="line">innodb_locks_unsafe_for_binlog=1</span><br><span class="line"></span><br><span class="line"><span class="comment">#innodb io features: add for mysql5.5.8</span></span><br><span class="line">performance_schema</span><br><span class="line">innodb_read_io_threads=4</span><br><span class="line">innodb-write-io-threads=4</span><br><span class="line">innodb-io-capacity=200</span><br><span class="line"><span class="comment">#purge threads change default(0) to 1 for purge</span></span><br><span class="line">innodb_purge_threads=1</span><br><span class="line">innodb_use_native_aio=on</span><br><span class="line"></span><br><span class="line"><span class="comment">#case-sensitive file names and separate tablespace</span></span><br><span class="line">innodb_file_per_table = 1</span><br><span class="line">lower_case_table_names=1</span><br><span class="line"></span><br><span class="line">[mysqldump]</span><br><span class="line">quick</span><br><span class="line">max_allowed_packet = 128M</span><br><span class="line"></span><br><span class="line">[mysql]</span><br><span class="line">no-auto-rehash</span><br><span class="line">default-character-set=utf8mb4</span><br><span class="line"></span><br><span class="line">[mysqlhotcopy]</span><br><span class="line">interactive-timeout</span><br><span class="line"></span><br><span class="line">[myisamchk]</span><br><span class="line">key_buffer_size = 256M</span><br><span class="line">sort_buffer_size = 256M</span><br><span class="line">read_buffer = 2M</span><br><span class="line">write_buffer = 2M</span><br></pre></td></tr></table></figure>
+<p>根据生产需要，调整pool size<br>生产一般8G 结合实际情况设置</p>
+<h3 id="4-创建用户组及用户"><a href="#4-创建用户组及用户" class="headerlink" title="4.创建用户组及用户"></a>4.创建用户组及用户</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># groupadd -g 101 dba</span></span><br><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># useradd -u 515 -g dba -G root -d /usr/local/mysql mysqladmin</span></span><br><span class="line"><span class="comment">#-u uid -g 主组 -G 次组 -d 家目录设置 </span></span><br><span class="line">[mysqladmin@hadoop001 ~]$ id</span><br><span class="line">uid=515(mysqladmin) gid=101(dba) groups=101(dba),0(root) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023</span><br><span class="line"></span><br><span class="line"><span class="comment">## 一般不需要设置mysqladmin的密码，直接从root或者LDAP用户sudo切换</span></span><br><span class="line"><span class="comment">#[root@hadoop001 local]# passwd mysqladmin</span></span><br><span class="line">Changing password <span class="keyword">for</span> user mysqladmin.</span><br><span class="line">New UNIX password: </span><br><span class="line">BAD PASSWORD: it is too simplistic/systematic</span><br><span class="line">Retype new UNIX password: </span><br><span class="line">passwd: all authentication tokens updated successfully.</span><br><span class="line"><span class="comment">## if user mysqladmin is existing,please execute the following command of usermod.</span></span><br><span class="line"><span class="comment">#[root@hadoop001 local]# usermod -u 514 -g dba -G root -d /usr/local/mysql mysqladmin</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-copy-环境变量配置文件至mysqladmin用户的home目录中-为了以下步骤配置个人环境变量"><a href="#5-copy-环境变量配置文件至mysqladmin用户的home目录中-为了以下步骤配置个人环境变量" class="headerlink" title="5.copy 环境变量配置文件至mysqladmin用户的home目录中,为了以下步骤配置个人环境变量"></a>5.copy 环境变量配置文件至mysqladmin用户的home目录中,为了以下步骤配置个人环境变量</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># cp /etc/skel/.* /usr/local/mysql  ###important</span></span><br></pre></td></tr></table></figure>
+<h3 id="6-配置环境变量"><a href="#6-配置环境变量" class="headerlink" title="6.配置环境变量"></a>6.配置环境变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop001 local]# vi mysql&#x2F;.bash_profile</span><br><span class="line"># .bash_profile</span><br><span class="line"># Get the aliases and functions</span><br><span class="line"></span><br><span class="line">if [ -f ~&#x2F;.bashrc ]; then</span><br><span class="line">        . ~&#x2F;.bashrc</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"># User specific environment and startup programs</span><br><span class="line">export MYSQL_BASE&#x3D;&#x2F;usr&#x2F;local&#x2F;mysql</span><br><span class="line">export PATH&#x3D;$&#123;MYSQL_BASE&#125;&#x2F;bin:$PATH</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">unset USERNAME</span><br><span class="line"></span><br><span class="line">#stty erase ^H</span><br><span class="line">set umask to 022</span><br><span class="line">umask 022</span><br><span class="line">PS1&#x3D;&#96;uname -n&#96;&quot;:&quot;&#39;$USER&#39;&quot;:&quot;&#39;$PWD&#39;&quot;:&gt;&quot;; export PS1</span><br><span class="line"></span><br><span class="line">## end</span><br></pre></td></tr></table></figure>
+<p>建议修改.bashrc文件,如上内容不一致。</p>
+<p>PS1后边是设置中括号内包含路径，可以省略pwd操作</p>
+<h3 id="7-赋权限和用户组，切换用户mysqladmin，安装"><a href="#7-赋权限和用户组，切换用户mysqladmin，安装" class="headerlink" title="7.赋权限和用户组，切换用户mysqladmin，安装"></a>7.赋权限和用户组，切换用户mysqladmin，安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># chown  mysqladmin:dba /etc/my.cnf </span></span><br><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># chmod  640 /etc/my.cnf  </span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># chown -R mysqladmin:dba /usr/local/mysql</span></span><br><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># chmod -R 755 /usr/local/mysql</span></span><br></pre></td></tr></table></figure>
+<h3 id="8-配置服务及开机自启动"><a href="#8-配置服务及开机自启动" class="headerlink" title="8.配置服务及开机自启动"></a>8.配置服务及开机自启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop001 <span class="built_in">local</span>]<span class="comment"># cd /usr/local/mysql</span></span><br><span class="line"><span class="comment">#将服务文件拷贝到init.d下，并重命名为mysql</span></span><br><span class="line">[root@hadoop001 mysql]<span class="comment"># cp support-files/mysql.server /etc/rc.d/init.d/mysql </span></span><br><span class="line"><span class="comment">#赋予可执行权限</span></span><br><span class="line">[root@hadoop001 mysql]<span class="comment"># chmod +x /etc/rc.d/init.d/mysql</span></span><br><span class="line"><span class="comment">#删除服务</span></span><br><span class="line">[root@hadoop001 mysql]<span class="comment"># chkconfig --del mysql</span></span><br><span class="line"><span class="comment">#添加服务</span></span><br><span class="line">[root@hadoop001 mysql]<span class="comment"># chkconfig --add mysql</span></span><br><span class="line">[root@hadoop001 mysql]<span class="comment"># chkconfig --level 345 mysql on</span></span><br><span class="line">[root@hadoop001 mysql]<span class="comment"># vi /etc/rc.local</span></span><br><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># THIS FILE IS ADDED FOR COMPATIBILITY PURPOSES</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># It is highly advisable to create own systemd services or udev rules</span></span><br><span class="line"><span class="comment"># to run scripts during boot instead of using this file.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># In contrast to previous versions due to parallel execution during boot</span></span><br><span class="line"><span class="comment"># this script will NOT be run after all other services.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Please note that you must run 'chmod +x /etc/rc.d/rc.local' to ensure</span></span><br><span class="line"><span class="comment"># that this script will be executed during boot.</span></span><br><span class="line"></span><br><span class="line">touch /var/lock/subsys/<span class="built_in">local</span></span><br><span class="line"></span><br><span class="line">su - mysqladmin -c <span class="string">"/etc/init.d/mysql start --federated"</span></span><br></pre></td></tr></table></figure>
+<h3 id="9-安装libaio及安装mysql的初始db"><a href="#9-安装libaio及安装mysql的初始db" class="headerlink" title="9.安装libaio及安装mysql的初始db"></a>9.安装libaio及安装mysql的初始db</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop001 mysql]<span class="comment"># yum -y install libaio</span></span><br><span class="line">Loaded plugins: fastestmirror, langpacks</span><br><span class="line">base                                                                                                 | 3.6 kB  00:00:00     </span><br><span class="line">extras                                                                                               | 2.9 kB  00:00:00     </span><br><span class="line">updates                                                                                              | 2.9 kB  00:00:00     </span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line"> * base: mirrors.cn99.com</span><br><span class="line"> * extras: mirrors.163.com</span><br><span class="line"> * updates: mirrors.cn99.com</span><br><span class="line">Package libaio-0.3.109-13.el7.x86_64 already installed and latest version</span><br><span class="line">[root@hadoop001 mysql]<span class="comment"># sudo su - mysqladmin</span></span><br><span class="line"></span><br><span class="line">hadoop001:mysqladmin:/usr/<span class="built_in">local</span>/mysql:&gt;bin/mysqld \</span><br><span class="line">--defaults-file=/etc/my.cnf \</span><br><span class="line">--user=mysqladmin \</span><br><span class="line">--basedir=/usr/<span class="built_in">local</span>/mysql/ \</span><br><span class="line">--datadir=/usr/<span class="built_in">local</span>/mysql/data/ \</span><br><span class="line">--initialize</span><br><span class="line"></span><br><span class="line"><span class="comment">#在初始化时如果加上 –initial-insecure，则会创建空密码的 root@localhost 账号，否则会创建带密码的 root@localhost 账号，密码直接写在 log-error 日志文件中</span></span><br><span class="line"><span class="comment">#（在5.6版本中是放在 ~/.mysql_secret 文件里，更加隐蔽，不熟悉的话可能会无所适从）</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="10-查看临时密码"><a href="#10-查看临时密码" class="headerlink" title="10.查看临时密码"></a>10.查看临时密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hadoop001:mysqladmin:/usr/<span class="built_in">local</span>/mysql/data:&gt;cat hostname.err |grep password</span><br><span class="line">2020-04-27T05:06:23.348090Z 1 [Note] A temporary password is generated <span class="keyword">for</span> root@localhost: VqS1<span class="comment">#h8HgWxl</span></span><br></pre></td></tr></table></figure>
+<h3 id="11-启动"><a href="#11-启动" class="headerlink" title="11.启动"></a>11.启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/<span class="built_in">local</span>/mysql/bin/mysqld_safe --defaults-file=/etc/my.cnf &amp;</span><br></pre></td></tr></table></figure>
+<h3 id="12-登录及修改用户密码"><a href="#12-登录及修改用户密码" class="headerlink" title="12.登录及修改用户密码"></a>12.登录及修改用户密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">hadoop001:mysqladmin:/usr/<span class="built_in">local</span>/mysql/data:&gt;mysql -uroot -p <span class="comment"># 尽量不要将密码写在命令行中</span></span><br><span class="line">Enter password: </span><br><span class="line">Welcome to the MySQL monitor.  Commands end with ; or \g.</span><br><span class="line">Your MySQL connection id is 2</span><br><span class="line">Server version: 5.7.11-log</span><br><span class="line"></span><br><span class="line">Copyright (c) 2000, 2016, Oracle and/or its affiliates. All rights reserved.</span><br><span class="line"></span><br><span class="line">Oracle is a registered trademark of Oracle Corporation and/or its</span><br><span class="line">affiliates. Other names may be trademarks of their respective</span><br><span class="line">owners.</span><br><span class="line"></span><br><span class="line">Type <span class="string">'help;'</span> or <span class="string">'\h'</span> <span class="keyword">for</span> <span class="built_in">help</span>. Type <span class="string">'\c'</span> to clear the current input statement.</span><br><span class="line"></span><br><span class="line">mysql&gt; alter user root@localhost identified by <span class="string">'hadoop001'</span> <span class="comment"># 记住以分号;结束命令，修改密码</span></span><br><span class="line">    -&gt; ;</span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; GRANT ALL PRIVILEGES ON *.* TO <span class="string">'root'</span>@<span class="string">'%'</span> IDENTIFIED BY <span class="string">'hadoop001'</span> ;<span class="comment"># 一般是公司DBA进行操作</span></span><br><span class="line">Query OK, 0 rows affected, 1 warning (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; flush privileges; <span class="comment"># 刷新权限</span></span><br><span class="line">Query OK, 0 rows affected (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; <span class="built_in">exit</span></span><br><span class="line">Bye</span><br></pre></td></tr></table></figure>
+<h3 id="13-重启"><a href="#13-重启" class="headerlink" title="13.重启"></a>13.重启</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">hadoop001:mysqladmin:/usr/<span class="built_in">local</span>/mysql:&gt;service mysql restart</span><br><span class="line">Shutting down MySQL..2020-04-27T05:16:16.947024Z mysqld_safe mysqld from pid file /usr/<span class="built_in">local</span>/mysql/data/hostname.pid ended</span><br><span class="line"> SUCCESS! </span><br><span class="line">Starting MySQL.. SUCCESS! </span><br><span class="line">[1]+  Done                    /usr/<span class="built_in">local</span>/mysql/bin/mysqld_safe --defaults-file=/etc/my.cnf  (wd: ~/bin)</span><br><span class="line">(wd now: ~)</span><br><span class="line">hadoop001:mysqladmin:/usr/<span class="built_in">local</span>/mysql:&gt;mysql -uroot -p</span><br><span class="line">Enter password:</span><br></pre></td></tr></table></figure>
+<p>标准登录写法<br>mysql -u用户 -p密码 -h 机器 -P端口号 指定db（默认不加）</p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong>
+              本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2020/04/26/MySQL%E9%83%A8%E7%BD%B2/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/" rel="tag">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ruozedata/" rel="tag">ruozedata</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/04/26/JDK%E9%83%A8%E7%BD%B2/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            JDK部署
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/26/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B05/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">数仓培训第五天</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+<div class="gitalk" id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+
+<script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '58c59a1104624dc5c5f6',
+    clientSecret: 'c53c5169c12ee81c76693613def121b04dbf01b4',
+    repo: 'blog-commit',
+    owner: 'wangqi1994',
+    admin: ['wangqi1994'],
+    // id: location.pathname,      // Ensure uniqueness and length less than 50
+    id: md5(location.pathname),
+    distractionFreeMode: false,  // Facebook-like distraction free mode
+    pagerDirection: 'last'
+  })
+
+  gitalk.render('gitalk-container')
+</script>
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2021
+        <i class="ri-heart-fill heart_icon"></i> WANG Qi
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278882064'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1278882064%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/gougou.png" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+<!-- 复制 -->
+
+  
+<link rel="stylesheet" href="/css/clipboard.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=22707008&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>

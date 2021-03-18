@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="记录学习的每一天" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    作业-04.29+修改 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+  <article id="post-作业-04.29" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  作业-04.29+修改
+</h1>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+
+
+<a href="/2020/04/30/%E4%BD%9C%E4%B8%9A-04.29/" class="article-date">
+  <time datetime="2020-04-30T04:00:00.000Z" itemprop="datePublished">2020-04-30</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/MySQL/">MySQL</a> / <a class="article-category-link" href="/categories/ruozedata/">ruozedata</a>
+  </div>
+
+      
+      <div style="margin-top:10px;margin-bottom:-15px;">
+    
+      
+        <span class="article-type" style="
+          color: white;
+          font-size: 14px;
+          background: #bf59f3;
+          padding: 0 5px 1px 5px;
+          margin-right: 5px;
+          border-radius: 2px;">原创</span>
+      
+    
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  字数统计: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">1.3k</span>
+      </span>
+    </span>
+    
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  阅读时长: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">6分</span>
+      </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="建表"><a href="#建表" class="headerlink" title="建表"></a>建表</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">database</span> devoir;</span><br><span class="line"><span class="keyword">grant</span> <span class="keyword">all</span> <span class="keyword">privileges</span> <span class="keyword">on</span> devoir.* <span class="keyword">to</span> root@<span class="string">'%'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'123456'</span>;</span><br><span class="line"><span class="keyword">flush</span> <span class="keyword">privileges</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> devoir;</span><br><span class="line"></span><br><span class="line"><span class="comment">#--部门表</span></span><br><span class="line"><span class="comment">#dept部门表(deptno部门编号/dname部门名称/loc地点)</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> dept (</span><br><span class="line">    deptno <span class="built_in">numeric</span>(<span class="number">2</span>),</span><br><span class="line">    dname <span class="built_in">varchar</span>(<span class="number">14</span>),</span><br><span class="line">    loc <span class="built_in">varchar</span>(<span class="number">13</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span> (<span class="number">10</span>, <span class="string">'ACCOUNTING'</span>, <span class="string">'NEW YORK'</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span> (<span class="number">20</span>, <span class="string">'RESEARCH'</span>, <span class="string">'DALLAS'</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span> (<span class="number">30</span>, <span class="string">'SALES'</span>, <span class="string">'CHICAGO'</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> dept <span class="keyword">values</span> (<span class="number">40</span>, <span class="string">'OPERATIONS'</span>, <span class="string">'BOSTON'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">#--工资等级表</span></span><br><span class="line"><span class="comment">#salgrade工资等级表(grade 等级/losal此等级的最低/hisal此等级的最高)</span></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> salgrade (</span><br><span class="line">    grade <span class="built_in">numeric</span>,</span><br><span class="line">    losal <span class="built_in">numeric</span>,</span><br><span class="line">    hisal <span class="built_in">numeric</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> salgrade <span class="keyword">values</span> (<span class="number">1</span>, <span class="number">700</span>, <span class="number">1200</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> salgrade <span class="keyword">values</span> (<span class="number">2</span>, <span class="number">1201</span>, <span class="number">1400</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> salgrade <span class="keyword">values</span> (<span class="number">3</span>, <span class="number">1401</span>, <span class="number">2000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> salgrade <span class="keyword">values</span> (<span class="number">4</span>, <span class="number">2001</span>, <span class="number">3000</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> salgrade <span class="keyword">values</span> (<span class="number">5</span>, <span class="number">3001</span>, <span class="number">9999</span>);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#--员工表</span></span><br><span class="line"><span class="comment">#emp员工表(empno员工号/ename员工姓名/job工作/mgr上级编号/hiredate受雇日期/sal薪金/comm佣金/deptno部门编号)</span></span><br><span class="line"><span class="comment">#工资 ＝ 薪金 ＋ 佣金</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> emp (</span><br><span class="line">    empno <span class="built_in">numeric</span>(<span class="number">4</span>) <span class="keyword">not</span> <span class="literal">null</span>,</span><br><span class="line">    ename <span class="built_in">varchar</span>(<span class="number">10</span>),</span><br><span class="line">    job <span class="built_in">varchar</span>(<span class="number">9</span>),</span><br><span class="line">    mgr <span class="built_in">numeric</span>(<span class="number">4</span>),</span><br><span class="line">    hiredate datetime,</span><br><span class="line">    sal <span class="built_in">numeric</span>(<span class="number">7</span>, <span class="number">2</span>),</span><br><span class="line">    comm <span class="built_in">numeric</span>(<span class="number">7</span>, <span class="number">2</span>),</span><br><span class="line">    deptno <span class="built_in">numeric</span>(<span class="number">2</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7369</span>, <span class="string">'SMITH'</span>, <span class="string">'CLERK'</span>, <span class="number">7902</span>, <span class="string">'1980-12-17'</span>, <span class="number">800</span>, <span class="literal">null</span>, <span class="number">20</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7499</span>, <span class="string">'ALLEN'</span>, <span class="string">'SALESMAN'</span>, <span class="number">7698</span>, <span class="string">'1981-02-20'</span>, <span class="number">1600</span>, <span class="number">300</span>, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7521</span>, <span class="string">'WARD'</span>, <span class="string">'SALESMAN'</span>, <span class="number">7698</span>, <span class="string">'1981-02-22'</span>, <span class="number">1250</span>, <span class="number">500</span>, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7566</span>, <span class="string">'JONES'</span>, <span class="string">'MANAGER'</span>, <span class="number">7839</span>, <span class="string">'1981-04-02'</span>, <span class="number">2975</span>, <span class="literal">null</span>, <span class="number">20</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7654</span>, <span class="string">'MARTIN'</span>, <span class="string">'SALESMAN'</span>, <span class="number">7698</span>, <span class="string">'1981-09-28'</span>, <span class="number">1250</span>, <span class="number">1400</span>, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7698</span>, <span class="string">'BLAKE'</span>, <span class="string">'MANAGER'</span>, <span class="number">7839</span>, <span class="string">'1981-05-01'</span>, <span class="number">2850</span>, <span class="literal">null</span>, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7782</span>, <span class="string">'CLARK'</span>, <span class="string">'MANAGER'</span>, <span class="number">7839</span>, <span class="string">'1981-06-09'</span>, <span class="number">2450</span>, <span class="literal">null</span>, <span class="number">10</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7788</span>, <span class="string">'SCOTT'</span>, <span class="string">'ANALYST'</span>, <span class="number">7566</span>, <span class="string">'1982-12-09'</span>, <span class="number">3000</span>, <span class="literal">null</span>, <span class="number">20</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7839</span>, <span class="string">'KING'</span>, <span class="string">'PRESIDENT'</span>, <span class="literal">null</span>, <span class="string">'1981-11-17'</span>, <span class="number">5000</span>, <span class="literal">null</span>, <span class="number">10</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7844</span>, <span class="string">'TURNER'</span>, <span class="string">'SALESMAN'</span>, <span class="number">7698</span>, <span class="string">'1981-09-08'</span>, <span class="number">1500</span>, <span class="number">0</span>, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7876</span>, <span class="string">'ADAMS'</span>, <span class="string">'CLERK'</span>, <span class="number">7788</span>, <span class="string">'1983-01-12'</span>, <span class="number">1100</span>, <span class="literal">null</span>, <span class="number">20</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7900</span>, <span class="string">'JAMES'</span>, <span class="string">'CLERK'</span>, <span class="number">7698</span>, <span class="string">'1981-12-03'</span>, <span class="number">950</span>, <span class="literal">null</span>, <span class="number">30</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7902</span>, <span class="string">'FORD'</span>, <span class="string">'ANALYST'</span>, <span class="number">7566</span>, <span class="string">'1981-12-03'</span>, <span class="number">3000</span>, <span class="literal">null</span>, <span class="number">20</span>);</span><br><span class="line"><span class="keyword">insert</span> <span class="keyword">into</span> emp <span class="keyword">values</span> (<span class="number">7934</span>, <span class="string">'MILLER'</span>, <span class="string">'CLERK'</span>, <span class="number">7782</span>, <span class="string">'1982-01-23'</span>, <span class="number">1300</span>, <span class="literal">null</span>, <span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="作业"><a href="#作业" class="headerlink" title="作业:"></a>作业:</h3><h4 id="1-查询出部门编号为30的所有员工的编号和姓名"><a href="#1-查询出部门编号为30的所有员工的编号和姓名" class="headerlink" title="1.查询出部门编号为30的所有员工的编号和姓名"></a>1.查询出部门编号为30的所有员工的编号和姓名</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span></span><br><span class="line">empno,</span><br><span class="line">ename</span><br><span class="line"><span class="keyword">from</span> devoir.emp <span class="keyword">where</span> deptno=<span class="number">30</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-找出部门编号为10中所有经理，和部门编号为30中所有销售员的详细资料。"><a href="#2-找出部门编号为10中所有经理，和部门编号为30中所有销售员的详细资料。" class="headerlink" title="2.找出部门编号为10中所有经理，和部门编号为30中所有销售员的详细资料。"></a>2.找出部门编号为10中所有经理，和部门编号为30中所有销售员的详细资料。</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line">*</span><br><span class="line"><span class="keyword">from</span> devoir.emp <span class="keyword">where</span>(deptno=<span class="number">10</span> <span class="keyword">and</span> job = <span class="string">'MANAGER'</span>) </span><br><span class="line"><span class="keyword">or</span> (deptno=<span class="number">30</span> <span class="keyword">and</span> job =<span class="string">'SALESMAN'</span>)</span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> deptno;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-查询所有员工详细信息，用工资降序排序，如果工资相同使用入职日期升序排序"><a href="#3-查询所有员工详细信息，用工资降序排序，如果工资相同使用入职日期升序排序" class="headerlink" title="3.查询所有员工详细信息，用工资降序排序，如果工资相同使用入职日期升序排序"></a>3.查询所有员工详细信息，用工资降序排序，如果工资相同使用入职日期升序排序</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line">*,</span><br><span class="line">sal+<span class="keyword">ifnull</span>(comm,<span class="number">0</span>) <span class="keyword">as</span> money </span><br><span class="line"><span class="keyword">from</span> devoir.emp </span><br><span class="line"><span class="keyword">order</span> <span class="keyword">by</span> money <span class="keyword">desc</span>, hiredate <span class="keyword">asc</span>;</span><br></pre></td></tr></table></figure>
+<p>修改：工资只有sal</p>
+<h4 id="4-列出薪金大于1500的各种工作及从事此工作的员工人数。"><a href="#4-列出薪金大于1500的各种工作及从事此工作的员工人数。" class="headerlink" title="4.列出薪金大于1500的各种工作及从事此工作的员工人数。"></a>4.列出薪金大于1500的各种工作及从事此工作的员工人数。</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line">job,</span><br><span class="line"><span class="keyword">count</span>(job)</span><br><span class="line"><span class="keyword">from</span> devoir.emp e <span class="keyword">where</span> (sal+<span class="keyword">ifnull</span>(comm,<span class="number">0</span>)) &gt;<span class="number">1500</span></span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> job ;</span><br></pre></td></tr></table></figure>
+<p>修改：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> e.job,<span class="keyword">count</span>(*) <span class="keyword">as</span> 员工人数     <span class="comment"># count(*)和count(1)基本作用一致count(job)</span></span><br><span class="line"><span class="keyword">from</span> emp e </span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> job <span class="keyword">having</span> <span class="keyword">min</span>(sal)&gt;<span class="number">1500</span>;</span><br></pre></td></tr></table></figure>
+<p>聚合:  多行–&gt;多行或低于多行<br>各种工作及从事此工作的员工人数</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> e.job,<span class="keyword">count</span>(*) <span class="keyword">as</span> 员工人数,<span class="keyword">avg</span>(*) <span class="keyword">as</span> 平均数</span><br><span class="line"><span class="keyword">from</span> emp e </span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> job</span><br><span class="line"></span><br><span class="line"> <span class="keyword">select</span> e.job,<span class="keyword">count</span>(*) <span class="keyword">as</span> 员工人数 <span class="keyword">from</span> emp e  <span class="keyword">group</span> <span class="keyword">by</span> job <span class="keyword">having</span> <span class="keyword">count</span>(*)&gt;<span class="number">3</span>;</span><br><span class="line"> <span class="keyword">select</span> * <span class="keyword">from</span> (<span class="keyword">select</span> e.job,<span class="keyword">count</span>(*) <span class="keyword">as</span> 员工人数 <span class="keyword">from</span> emp e  <span class="keyword">group</span> <span class="keyword">by</span> job) a <span class="keyword">where</span> a.员工人数&gt;<span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<h4 id="5-列出在销售部工作的员工的姓名，假定不知道销售部的部门编号。"><a href="#5-列出在销售部工作的员工的姓名，假定不知道销售部的部门编号。" class="headerlink" title="5.列出在销售部工作的员工的姓名，假定不知道销售部的部门编号。"></a>5.列出在销售部工作的员工的姓名，假定不知道销售部的部门编号。</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line">devoir.emp.ename,</span><br><span class="line">devoir.dept.dname</span><br><span class="line"><span class="keyword">from</span> devoir.emp</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> devoir.dept <span class="keyword">on</span> devoir.emp.deptno=devoir.dept.deptno</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> emp.ename,dept.dname </span><br><span class="line"><span class="keyword">having</span> dname=<span class="string">'SALES'</span>;</span><br></pre></td></tr></table></figure>
+<p>修改：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> e.ename <span class="keyword">from</span> emp e</span><br><span class="line"><span class="keyword">where</span> e.deptno =(<span class="keyword">select</span> deptno <span class="keyword">from</span> dept <span class="keyword">where</span> dname=<span class="string">'SALES'</span>);</span><br></pre></td></tr></table></figure>
+<h4 id="6-查询姓名以S开头的-以S结尾-包含S字符-第二个字母为L"><a href="#6-查询姓名以S开头的-以S结尾-包含S字符-第二个字母为L" class="headerlink" title="6.查询姓名以S开头的\以S结尾\包含S字符\第二个字母为L  __"></a>6.查询姓名以S开头的\以S结尾\包含S字符\第二个字母为L  __</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#S开头</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">*</span><br><span class="line"><span class="keyword">from</span> devoir.emp <span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">'S%'</span>;</span><br><span class="line"><span class="comment">#S结尾</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">*</span><br><span class="line"><span class="keyword">from</span> devoir.emp <span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">'%S'</span>;</span><br><span class="line"><span class="comment"># 包含S</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">*</span><br><span class="line"><span class="keyword">from</span> devoir.emp <span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">'%S%'</span>;</span><br><span class="line"><span class="comment">#第二个字母L</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">*</span><br><span class="line"><span class="keyword">from</span> devoir.emp <span class="keyword">where</span> ename <span class="keyword">like</span> <span class="string">'_L%'</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-查询每种工作的最高工资、最低工资、人数"><a href="#7-查询每种工作的最高工资、最低工资、人数" class="headerlink" title="7.查询每种工作的最高工资、最低工资、人数"></a>7.查询每种工作的最高工资、最低工资、人数</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> </span><br><span class="line">job,</span><br><span class="line"><span class="keyword">max</span>(sal+<span class="keyword">ifnull</span>(comm,<span class="number">0</span>)),</span><br><span class="line"><span class="keyword">min</span>(sal+<span class="keyword">ifnull</span>(comm,<span class="number">0</span>)),</span><br><span class="line"><span class="keyword">count</span>(job)</span><br><span class="line"><span class="keyword">from</span> devoir.emp </span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> job;</span><br></pre></td></tr></table></figure>
+
+<h4 id="8-列出薪金-高于-公司平均薪金的所有员工号，员工姓名，所在部门名称，上级领导，工资，工资等级"><a href="#8-列出薪金-高于-公司平均薪金的所有员工号，员工姓名，所在部门名称，上级领导，工资，工资等级" class="headerlink" title="8.列出薪金 高于 公司平均薪金的所有员工号，员工姓名，所在部门名称，上级领导，工资，工资等级"></a>8.列出薪金 高于 公司平均薪金的所有员工号，员工姓名，所在部门名称，上级领导，工资，工资等级</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">create</span> <span class="keyword">view</span> gr</span><br><span class="line"><span class="keyword">as</span></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">emp.empno,</span><br><span class="line">emp.ename,</span><br><span class="line">dept.dname,</span><br><span class="line">emp.mgr,</span><br><span class="line">emp.sal+<span class="keyword">ifnull</span>(emp.comm,<span class="number">0</span>) <span class="keyword">as</span> money</span><br><span class="line"><span class="comment">#salgrade.grade #where money between losal and hisal</span></span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> dept <span class="keyword">on</span> emp.deptno=dept.deptno</span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> emp.empno,</span><br><span class="line">emp.ename,</span><br><span class="line">dept.dname,</span><br><span class="line">emp.mgr,</span><br><span class="line">emp.sal+<span class="keyword">ifnull</span>(emp.comm,<span class="number">0</span>);</span><br><span class="line"><span class="comment">#salgrade.grade;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">select</span> </span><br><span class="line">gr.empno,</span><br><span class="line">gr.ename,</span><br><span class="line">gr.dname,</span><br><span class="line">gr.mgr,</span><br><span class="line">gr.money,</span><br><span class="line">salgrade.grade <span class="comment">#where money between losal and hisal</span></span><br><span class="line"><span class="keyword">from</span> gr </span><br><span class="line"><span class="keyword">left</span> <span class="keyword">join</span> salgrade <span class="keyword">on</span> gr.money <span class="keyword">between</span> losal <span class="keyword">and</span> hisal </span><br><span class="line"><span class="keyword">group</span> <span class="keyword">by</span> <span class="comment"># group by 只要选择前面一个字段</span></span><br><span class="line">gr.empno,</span><br><span class="line">gr.ename,</span><br><span class="line">gr.dname,</span><br><span class="line">gr.mgr,</span><br><span class="line">gr.money,</span><br><span class="line">salgrade.grade</span><br><span class="line"><span class="keyword">having</span> gr.money&gt;(<span class="keyword">select</span> </span><br><span class="line"><span class="keyword">avg</span>(gr.money)</span><br><span class="line"><span class="keyword">from</span> gr) ;</span><br></pre></td></tr></table></figure>
+<p>修改：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> e.empno <span class="keyword">as</span> 工号,e.ename <span class="keyword">as</span> 姓名,</span><br><span class="line">d.dname <span class="keyword">as</span> 部门,</span><br><span class="line">m.ename <span class="keyword">as</span> 上级领导,</span><br><span class="line">(e.sal+<span class="keyword">ifnull</span>(e.comm,<span class="number">0</span>)) <span class="keyword">as</span> 工资,</span><br><span class="line">s.grade <span class="keyword">as</span> 薪水等级</span><br><span class="line"><span class="keyword">from</span> emp e </span><br><span class="line">  <span class="keyword">left</span> <span class="keyword">join</span> dept d <span class="keyword">on</span> e.deptno=d.deptno <span class="comment">#连续join</span></span><br><span class="line">  <span class="keyword">left</span> <span class="keyword">join</span> emp m <span class="keyword">on</span>  e.mgr=m.empno</span><br><span class="line">  <span class="keyword">left</span> <span class="keyword">join</span> salgrade s <span class="keyword">on</span> e.sal <span class="keyword">between</span> s.losal <span class="keyword">and</span> s.hisal</span><br><span class="line"><span class="keyword">where</span> (e.sal+<span class="keyword">ifnull</span>(e.comm,<span class="number">0</span>)) &gt; (<span class="keyword">select</span> <span class="keyword">avg</span>(sal+<span class="keyword">ifnull</span>(comm,<span class="number">0</span>)) <span class="keyword">from</span> emp);</span><br></pre></td></tr></table></figure>
+<h4 id="9-列出薪金-高于-在部门30工作的-所有-任何一个员工的薪金的员工姓名和薪金、部门名称。"><a href="#9-列出薪金-高于-在部门30工作的-所有-任何一个员工的薪金的员工姓名和薪金、部门名称。" class="headerlink" title="9.列出薪金  高于  在部门30工作的  所有/任何一个员工的薪金的员工姓名和薪金、部门名称。"></a>9.列出薪金  高于  在部门30工作的  所有/任何一个员工的薪金的员工姓名和薪金、部门名称。</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span></span><br><span class="line">gr.ename,</span><br><span class="line">gr.money,</span><br><span class="line">gr.dname </span><br><span class="line"><span class="keyword">from</span> gr <span class="keyword">where</span> gr.money &gt;</span><br><span class="line">(<span class="keyword">select</span> </span><br><span class="line"><span class="keyword">max</span>(sal+<span class="keyword">ifnull</span>(comm,<span class="number">0</span>))</span><br><span class="line"><span class="keyword">from</span> emp</span><br><span class="line"><span class="keyword">where</span> emp.deptno =<span class="number">30</span></span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>修改：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> e.ename, e.sal, d.dname</span><br><span class="line"><span class="keyword">from</span> emp e, dept d</span><br><span class="line"><span class="keyword">where</span> e.deptno=d.deptno <span class="keyword">and</span> sal &gt; <span class="keyword">all</span>(<span class="keyword">select</span> sal <span class="keyword">from</span> emp <span class="keyword">where</span> deptno=<span class="number">30</span>)</span><br><span class="line"><span class="comment"># all 是括号内所有的</span></span><br><span class="line"><span class="keyword">any</span>: <span class="comment"># any 是括号内任一个</span></span><br><span class="line"><span class="keyword">select</span> e.ename, e.sal, d.dname</span><br><span class="line"><span class="keyword">from</span> emp e, dept d</span><br><span class="line"><span class="keyword">where</span> e.deptno=d.deptno <span class="keyword">and</span> sal &gt; <span class="keyword">any</span>(<span class="keyword">select</span> sal <span class="keyword">from</span> emp <span class="keyword">where</span> deptno=<span class="number">30</span>);</span><br></pre></td></tr></table></figure>
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong>
+              本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2020/04/30/%E4%BD%9C%E4%B8%9A-04.29/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/" rel="tag">MySQL</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ruozedata/" rel="tag">ruozedata</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/04/30/20200430/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            早课5
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/04/30/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B07/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">数仓培训第七天</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+<div class="gitalk" id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+
+<script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '58c59a1104624dc5c5f6',
+    clientSecret: 'c53c5169c12ee81c76693613def121b04dbf01b4',
+    repo: 'blog-commit',
+    owner: 'wangqi1994',
+    admin: ['wangqi1994'],
+    // id: location.pathname,      // Ensure uniqueness and length less than 50
+    id: md5(location.pathname),
+    distractionFreeMode: false,  // Facebook-like distraction free mode
+    pagerDirection: 'last'
+  })
+
+  gitalk.render('gitalk-container')
+</script>
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2021
+        <i class="ri-heart-fill heart_icon"></i> WANG Qi
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278882064'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1278882064%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/gougou.png" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+<!-- 复制 -->
+
+  
+<link rel="stylesheet" href="/css/clipboard.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=22707008&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>

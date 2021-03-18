@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="记录学习的每一天" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    yarn调优-container |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+  <article id="post-yarn调优-container" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  yarn调优-container
+</h1>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+
+
+<a href="/2020/05/18/yarn%E8%B0%83%E4%BC%98-container/" class="article-date">
+  <time datetime="2020-05-18T04:00:00.000Z" itemprop="datePublished">2020-05-18</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Hadoop/">Hadoop</a> / <a class="article-category-link" href="/categories/ruozedata/">ruozedata</a>
+  </div>
+
+      
+      <div style="margin-top:10px;margin-bottom:-15px;">
+    
+      
+        <span class="article-type" style="
+          color: white;
+          font-size: 14px;
+          background: #bf59f3;
+          padding: 0 5px 1px 5px;
+          margin-right: 5px;
+          border-radius: 2px;">原创</span>
+      
+    
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  字数统计: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">2.1k</span>
+      </span>
+    </span>
+    
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  阅读时长: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">9分</span>
+      </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <p>关于Yarn的调优 就是调container<br>首先明确一个container容器的概念，这是一个虚拟的概念，其实是一组memory+cpu vcore资源的组合,是用来运行task任务的 </p>
+<p>生产如何调优container参数？</p>
+<p>假设128G  16物理core</p>
+<h4 id="1-1-系统装完之后，-内存消耗1G"><a href="#1-1-系统装完之后，-内存消耗1G" class="headerlink" title="1.1 系统装完之后， 内存消耗1G"></a>1.1 系统装完之后， 内存消耗1G</h4><h4 id="1-2-系统预留20-内存（包含1G）"><a href="#1-2-系统预留20-内存（包含1G）" class="headerlink" title="1.2 系统预留20%内存（包含1G）"></a>1.2 系统预留20%内存（包含1G）</h4><p>128G*20%=25.6G==26G</p>
+<p>为什么预留内存？<br>oom-kill机制<br>Linux系统防止夯住<br>给未来部署组件预留空间</p>
+<h4 id="1-3-假设只有DN-NM节点"><a href="#1-3-假设只有DN-NM节点" class="headerlink" title="1.3 假设只有DN NM节点"></a>1.3 假设只有DN NM节点</h4><p>生产上部署一般遵循存储技术一体，90%以上都是dn和nn放一起，<br>就是计算时发现本节点有数据不需要去其他节点拉取，节省网络io，这种一般叫做 数据本地化 </p>
+<p>DN=2G 在生产上一般设置2G即可<br>在实际中业务高峰时用了900M，<br>（由于是分布式存储，且存在多个dn节点，每秒一般没有1G的流量，况且还有一定的缓存在发挥作用）<br>当然在资源要求不是很严格且内存充足，不需要扣扣搜搜的时候，可以设置3G/4G</p>
+<p>NM=4G 生产上一般4G<br>一般资源比较紧缺时，就是在NM这里抠资源</p>
+<p>去除掉系统预留、dn和nm之外，剩余资源全部给真正干活的小弟container用</p>
+<p>128-26=102-2-4=96G </p>
+<h4 id="1-4-container内存设置，基于内存考虑"><a href="#1-4-container内存设置，基于内存考虑" class="headerlink" title="1.4 container内存设置，基于内存考虑"></a>1.4 container内存设置，基于内存考虑</h4><p>设置yarn-site.xml文件中的参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ pwd</span><br><span class="line">/home/hadoop/app/hadoop/etc/hadoop</span><br><span class="line">[hadoop@hadoop001 hadoop]$ vi yarn-site.xml </span><br><span class="line"></span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.resource.memory-mb&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;96&lt;/value&gt; # 该参数控制所有container内存之和,生产上需要调整，默认只有8G</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.scheduler.minimum-allocation-mb&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;1&lt;/value&gt; #container容器内存最小值，默认1G </span><br><span class="line">    &lt;/property&gt; #在极限情况下，会存在96个container，每个内存1G</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.scheduler.maximum-allocation-mb&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;96&lt;/value&gt; #container容器内存最大值，官方默认8G，应该改为上面参数的最大值 </span><br><span class="line">    &lt;/property&gt; #在极限情况下，会存在1个container，内存96G，这种情况少</span><br></pre></td></tr></table></figure>
+
+<p>container容器的内存会根据实际情况自动增加，默认1G递增<br>cdh中yarn配置的 但是一般不调整</p>
+<h4 id="1-5-container-vcore-基于cpu考虑"><a href="#1-5-container-vcore-基于cpu考虑" class="headerlink" title="1.5 container vcore 基于cpu考虑"></a>1.5 container vcore 基于cpu考虑</h4><p>目前的CPU被划分成虚拟CPU（CPU virtual Core），这里的虚拟CPU是YARN自己引入的概念，<br>初衷是，考虑到不同节点的CPU性能可能不同，每个CPU具有的计算能力也是不一样的，<br>比如某个物理CPU的计算能力可能是另外一个物理CPU的2倍，<br>这时候，你可以通过为第一个物理CPU多配置几个虚拟CPU弥补这种差异。<br>用户提交作业时，可以指定每个任务需要的虚拟CPU个数。在YARN中，CPU相关配置参数如下：<br>（1）yarn.nodemanager.resource.cpu-vcores<br>表示该节点上YARN可使用的虚拟CPU个数，默认是8，<br>注意，目前推荐将该值设值为与物理CPU核数数目相同。<br>如果你的节点CPU核数不够8个，则需要调减小这个值，而YARN不会智能的探测节点的物理CPU总数。<br>（2）yarn.scheduler.minimum-allocation-vcores<br>单个任务可申请的最小虚拟CPU个数，默认是1，如果一个任务申请的CPU个数少于该数，则该对应的值改为这个数。<br>（3）yarn.scheduler.maximum-allocation-vcores<br>单个任务可申请的最多虚拟CPU个数，默认是32。<br>默认情况下，YARN是不会对CPU资源进行调度的，你需要配置相应的资源调度器。</p>
+<p><strong>举例说明</strong>：<br>第一台机器 强悍     pcore:vcore=1:2  16core:32vcore<br>第二台机器 不强悍   pcore:vcore=1:1  16core:16core</p>
+<p>现在生产上基本上不考虑设置强悍程度<br>统一 设置 pcore:vcore=1:2</p>
+<p>为什么要设置 vcore 1:2呢？<br>container需要vcore<br>并发任务是靠vcore</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.resource.pcores-vcores-multiplier&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;2&lt;/value&gt;  # pcore:vcore=1:2</span><br><span class="line">&lt;/property&gt; </span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.resource.cpu-vcores&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;32&lt;/value&gt; # 可用虚拟vcore数</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.scheduler.minimum-allocation-vcores&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;1&lt;/value&gt; #可用虚拟vcore最小数，极限情况下 是32个</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.scheduler.maximum-allocation-vcores&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;32&lt;/value&gt; #可用虚拟vcore最大数，极限情况下 是1个</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-6-生产如何设置-基于生产经验"><a href="#1-6-生产如何设置-基于生产经验" class="headerlink" title="1.6 生产如何设置 基于生产经验"></a>1.6 生产如何设置 基于生产经验</h4><p>cloudera公司推荐，一个container的vcore最好不要超过5个，那么设置4</p>
+<p>yarn.scheduler.maximum-allocation-vcores 4 极限情况下，只有8个container </p>
+<h4 id="1-7-整合memory-cpu"><a href="#1-7-整合memory-cpu" class="headerlink" title="1.7 整合memory cpu"></a>1.7 整合memory cpu</h4><p>确定 4 vcore  8个container</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.resource.memory-mb&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;96&lt;/value&gt; # 该参数控制所有container内存之和,生产上需要调整，默认只有8G</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.scheduler.minimum-allocation-mb&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;1&lt;/value&gt; #container容器内存最小值，默认1G </span><br><span class="line">&lt;/property&gt; #在极限情况下，会存在96个container，每个内存1G</span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.scheduler.maximum-allocation-mb&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;12&lt;/value&gt; #container容器内存最大值，官方默认8G，应该改为上面参数的最大值 </span><br><span class="line">&lt;/property&gt; # 极限情况container 8个,所以设置为12G</span><br></pre></td></tr></table></figure>
+<p>但是spark计算时内存有些指标比较大，那么这个参数必然调大，<br>那么这种理想化，完美化的设置必然被打破，到时以memory为主，可以提升内存的量</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.resource.pcores-vcores-multiplier&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;2&lt;/value&gt;  # pcore:vcore=1:2</span><br><span class="line">&lt;/property&gt; </span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.nodemanager.resource.cpu-vcores&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;32&lt;/value&gt; # 可用虚拟vcore数</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.scheduler.minimum-allocation-vcores&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;1&lt;/value&gt; #可用虚拟vcore最小数，极限情况下 是32个</span><br><span class="line">&lt;/property&gt;</span><br><span class="line">&lt;property&gt;</span><br><span class="line">    &lt;name&gt;yarn.scheduler.maximum-allocation-vcores&lt;/name&gt;</span><br><span class="line">    &lt;value&gt;4&lt;/value&gt; #可用虚拟vcore最大数，极限情况下 是1个</span><br><span class="line">&lt;/property&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>生产上机器内存大小最好不要超过32G,调优参数不是越大越好</strong><br>30-32g比较神奇<br><a href="https://blog.csdn.net/weixin_44641024/article/details/103248842" target="_blank" rel="noopener">https://blog.csdn.net/weixin_44641024/article/details/103248842</a></p>
+<p>补充设置：<br>yarn.nodemanager.pmem-check-enabled  false #是否将对容器实施物理内存限制 一般关闭<br>yarn.nodemanager.vmem-check-enabled  false<br>yarn.nodemanager.vmem-pmem-ratio      2.1  就是有个虚拟内存的概念 一般不要 不要调整这个参数</p>
+<h4 id="1-7-笔试题"><a href="#1-7-笔试题" class="headerlink" title="1.7 笔试题"></a>1.7 笔试题</h4><p>假如该节点还有其他组件，比如HBase RS节点<br>256G内存<br>cpu物理core 32核</p>
+<p>DN<br>NM<br>HBase RS=30G </p>
+<p>请问以上6个参数如何设置？<br>预留256*20%=51.8G<br>暂定52G<br>dn=2G<br>nm=4G<br>HBase RS=30G<br>container 总内存256-52-2-4-30=168G<br>物理core32，设置pcore：vcore=1：2<br>vcore =64<br>一般设置vcore最大4，那么container有16个<br>所以每个内存最大是10G</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> cpu参数</span></span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.resource.pcores-vcores-multiplier&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;2&lt;/value&gt;  # pcore:vcore=1:2</span><br><span class="line">    &lt;/property&gt; </span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.resource.cpu-vcores&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;64&lt;/value&gt; # 可用虚拟vcore数</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.scheduler.minimum-allocation-vcores&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;1&lt;/value&gt; #可用虚拟vcore最小数，极限情况下 是32个</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.scheduler.maximum-allocation-vcores&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;4&lt;/value&gt;</span><br><span class="line">    &lt;/property&gt; </span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash">内存参数</span></span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.nodemanager.resource.memory-mb&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;168&lt;/value&gt; # 该参数控制所有container内存之和,生产上需要调整，默认只有8G</span><br><span class="line">    &lt;/property&gt;</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.scheduler.minimum-allocation-mb&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;1&lt;/value&gt; #container容器内存最小值，默认1G </span><br><span class="line">    &lt;/property&gt; #在极限情况下，会存在96个container，每个内存1G</span><br><span class="line">    &lt;property&gt;</span><br><span class="line">        &lt;name&gt;yarn.scheduler.maximum-allocation-mb&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;10&lt;/value&gt; #container容器内存最大值，官方默认8G，应该改为上面参数的最大值 </span><br><span class="line">    &lt;/property&gt; # 极限情况container 16个,所以设置为10G</span><br></pre></td></tr></table></figure>
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong>
+              本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2020/05/18/yarn%E8%B0%83%E4%BC%98-container/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ruozedata/" rel="tag">ruozedata</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/05/18/SLA%E6%9C%8D%E5%8A%A1/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            SLA服务可用性4个9是什么意思？怎么达到？
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/05/18/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B013/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">数仓培训第十三天</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+<div class="gitalk" id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+
+<script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '58c59a1104624dc5c5f6',
+    clientSecret: 'c53c5169c12ee81c76693613def121b04dbf01b4',
+    repo: 'blog-commit',
+    owner: 'wangqi1994',
+    admin: ['wangqi1994'],
+    // id: location.pathname,      // Ensure uniqueness and length less than 50
+    id: md5(location.pathname),
+    distractionFreeMode: false,  // Facebook-like distraction free mode
+    pagerDirection: 'last'
+  })
+
+  gitalk.render('gitalk-container')
+</script>
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2021
+        <i class="ri-heart-fill heart_icon"></i> WANG Qi
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278882064'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1278882064%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/gougou.png" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+<!-- 复制 -->
+
+  
+<link rel="stylesheet" href="/css/clipboard.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=22707008&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>

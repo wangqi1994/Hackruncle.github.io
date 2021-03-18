@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+
+
+<html lang="zh-CN">
+
+
+<head>
+  <meta charset="utf-8" />
+    
+  <meta name="description" content="记录学习的每一天" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>
+    数仓培训第十天 |  
+  </title>
+  <meta name="generator" content="hexo-theme-ayer">
+  
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  
+<link rel="stylesheet" href="/dist/main.css">
+
+  
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/css/remixicon.min.css">
+
+  
+<link rel="stylesheet" href="/css/custom.css">
+
+  
+  
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+  
+  
+
+  
+
+</head>
+
+</html>
+
+<body>
+  <div id="app">
+    <main class="content on">
+      <section class="outer">
+  <article id="post-若泽大数据-剑指数仓培训笔记10" class="article article-type-post" itemscope
+  itemprop="blogPost" data-scroll-reveal>
+
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  数仓培训第十天
+</h1>
+ 
+
+    </header>
+    
+
+    
+    <div class="article-meta">
+      
+        <!-- 不蒜子统计 -->
+        <span id="busuanzi_container_page_pv" style='display:none' class="article-date">
+              <i class="icon-smile icon"></i> 阅读数：<span id="busuanzi_value_page_pv"></span>次
+        </span>
+
+
+
+<a href="/2020/05/11/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B010/" class="article-date">
+  <time datetime="2020-05-11T04:00:00.000Z" itemprop="datePublished">2020-05-11</time>
+</a>
+      
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/HDFS/">HDFS</a> / <a class="article-category-link" href="/categories/Hadoop/">Hadoop</a>
+  </div>
+
+      
+      <div style="margin-top:10px;margin-bottom:-15px;">
+    
+      
+        <span class="article-type" style="
+          color: white;
+          font-size: 14px;
+          background: #bf59f3;
+          padding: 0 5px 1px 5px;
+          margin-right: 5px;
+          border-radius: 2px;">原创</span>
+      
+    
+    <span class="post-time">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-keyboard-o"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  字数统计: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">1.4k</span>
+      </span>
+    </span>
+    
+    <span class="post-time">
+      &nbsp; | &nbsp;
+      <span class="post-meta-item-icon">
+        <i class="fa fa-hourglass-half"></i>
+        <span class="post-meta-item-text" style="font-size: 15px;color: _black">  阅读时长: </span>
+        <span class="post-count" style="font-size: 14px;color: _black">7分</span>
+      </span>
+    </span>
+</div>
+
+      
+    </div>
+    
+
+    
+    
+    <div class="tocbot"></div>
+
+
+
+
+
+    
+
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      
+
+      
+      <h3 id="1-HDFS主从架构"><a href="#1-HDFS主从架构" class="headerlink" title="1.HDFS主从架构"></a>1.HDFS主从架构</h3><p>80%以上的大数据是主从结构-主管理从干活<br><img src="https://i.loli.net/2020/06/11/eZF2Uk9OIQgfPER.png" alt="HDFS主从架构官网图"><br>角色:</p>
+<h4 id="namenode-名称节点-nn"><a href="#namenode-名称节点-nn" class="headerlink" title="namenode  名称节点 nn"></a>namenode  名称节点 nn</h4><p>a.文件名称<br>b.文件的目录结构<br>c.文件的属性 权限 创建时间 副本数</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 hadoop]$ hdfs dfs -ls /wordcount2/input</span><br><span class="line">20/05/12 08:56:23 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform... </span><br><span class="line">using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">Found 2 items</span><br><span class="line">-rw-r--r--   1 hadoop supergroup         29 2020-05-11 16:14 /wordcount2/input/1.log</span><br><span class="line">-rw-r--r--   1 hadoop supergroup         47 2020-05-11 16:14 /wordcount2/input/2.log</span><br><span class="line">[hadoop@hadoop001 hadoop]$</span><br></pre></td></tr></table></figure>
+<p>d.一个文件被对应切割哪些数据块、副本数的块、数据块对应分布在哪些节点上<br>blockmap 块映射，nn节点不会持久化存储这种映射关系<br>是通过集群的启动和运行时，dn定期发送blockreport给nn，然后nn就在内存中动态维护这种映射关系</p>
+<p>作用:<br>管理文件系统的命名空间  其实就是维护文件系统树的文件和文件夹<br>这些形式是以两种文件来永久的保存在本地磁盘的<br>镜像文件 fsimage<br>编辑日志文件 editlogs</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 current]$ <span class="built_in">pwd</span></span><br><span class="line">/home/hadoop/tmp/dfs/name/current</span><br><span class="line">[hadoop@hadoop001 current]$ ll</span><br><span class="line">total 198880</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop 191753254 May 11 16:08 edits_0000000000000000003-0000000000001047334</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop  10755011 May 11 17:09 edits_0000000000001047335-0000000000001114386</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop       158 May 11 18:09 edits_0000000000001114387-0000000000001114390</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 19:09 edits_0000000000001114391-0000000000001114392</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 20:09 edits_0000000000001114393-0000000000001114394</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 21:09 edits_0000000000001114395-0000000000001114396</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 22:09 edits_0000000000001114397-0000000000001114398</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 23:09 edits_0000000000001114399-0000000000001114400</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 00:09 edits_0000000000001114401-0000000000001114402</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 01:09 edits_0000000000001114403-0000000000001114404</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 02:09 edits_0000000000001114405-0000000000001114406</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 03:09 edits_0000000000001114407-0000000000001114408</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 04:09 edits_0000000000001114409-0000000000001114410</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 05:09 edits_0000000000001114411-0000000000001114412</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 06:09 edits_0000000000001114413-0000000000001114414</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 07:09 edits_0000000000001114415-0000000000001114416</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 08:09 edits_0000000000001114417-0000000000001114418</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 09:09 edits_0000000000001114419-0000000000001114420</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop   1048576 May 12 09:09 edits_inprogress_0000000000001114421</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop      2299 May 12 08:09 fsimage_0000000000001114418</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        62 May 12 08:09 fsimage_0000000000001114418.md5</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop      2299 May 12 09:09 fsimage_0000000000001114420</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        62 May 12 09:09 fsimage_0000000000001114420.md5</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop         8 May 12 09:09 seen_txid</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop       205 May 11 15:32 VERSION</span><br></pre></td></tr></table></figure>
+
+<h4 id="secondary-namenode-第二名称节点-snn"><a href="#secondary-namenode-第二名称节点-snn" class="headerlink" title="secondary namenode  第二名称节点  snn"></a>secondary namenode  第二名称节点  snn</h4><p>a.将fsimage editlog定期拿过来合并 备份 推送</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 current]$ <span class="built_in">pwd</span></span><br><span class="line">/home/hadoop/tmp/dfs/namesecondary/current</span><br><span class="line">[hadoop@hadoop001 current]$ ll</span><br><span class="line">total 197848</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop 191753254 May 11 16:08 edits_0000000000000000003-0000000000001047334</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop  10755011 May 11 17:09 edits_0000000000001047335-0000000000001114386</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop       158 May 11 18:09 edits_0000000000001114387-0000000000001114390</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 19:09 edits_0000000000001114391-0000000000001114392</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 20:09 edits_0000000000001114393-0000000000001114394</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 21:09 edits_0000000000001114395-0000000000001114396</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 22:09 edits_0000000000001114397-0000000000001114398</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 11 23:09 edits_0000000000001114399-0000000000001114400</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 00:09 edits_0000000000001114401-0000000000001114402</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 01:09 edits_0000000000001114403-0000000000001114404</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 02:09 edits_0000000000001114405-0000000000001114406</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 03:09 edits_0000000000001114407-0000000000001114408</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 04:09 edits_0000000000001114409-0000000000001114410</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 05:09 edits_0000000000001114411-0000000000001114412</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 06:09 edits_0000000000001114413-0000000000001114414</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 07:09 edits_0000000000001114415-0000000000001114416</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 08:09 edits_0000000000001114417-0000000000001114418</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        42 May 12 09:09 edits_0000000000001114419-0000000000001114420</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop      2299 May 12 08:09 fsimage_0000000000001114418</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        62 May 12 08:09 fsimage_0000000000001114418.md5</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop      2299 May 12 09:09 fsimage_0000000000001114420</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop        62 May 12 09:09 fsimage_0000000000001114420.md5</span><br><span class="line">-rw-rw-r--. 1 hadoop hadoop       205 May 12 09:09 VERSION</span><br></pre></td></tr></table></figure>
+<p>snn将老大的  edits_0000000000001114419-0000000000001114420进行合并操作（检查点操作，checkpoint），合并为fsimage_0000000000001114420<br> 将这个文件推送给老大，那么新的数据写读的记录就存放在edits_inprogress_0000000000001114421日志文件<br>文件是变化的内容不断追加</p>
+<p>dfs.namenode.checkpoint.period  3600s 按时间备份<br>dfs.namenode.checkpoint.txns    1000000 如果数据读写量大，超过限制，会立即备份</p>
+<p>为了解决单点故障，nn只有一个对外的，后来新增一个snn，1小时的备份<br>虽然能够减轻单点故障带来的丢失风险，但是在生产上还是不允许使用snn<br>例如<br>11:00  snn 备份<br>11:30  数据一直写到这  突然nn节点 磁盘故障 无法恢复<br>拿snn的最新的一个fsimage文件恢复，那么只能恢复 11点的数据</p>
+<p><strong>在生产上是 不用snn，是启动另外一个NN进程(实时备份，实时准备替换nn，变为活动的nn)叫做HDFS HA</strong></p>
+<h4 id="datanode-数据节点-dn"><a href="#datanode-数据节点-dn" class="headerlink" title="datanode  数据节点  dn"></a>datanode  数据节点  dn</h4><p>a.存储数据块和数据块的校验和</p>
+<p>作用:<br>a.每隔3s发送心跳给nn,告诉nn说明dn还活着<br>dfs.heartbeat.interval  3s</p>
+<p>b.每隔一定的时间发生一次blockreport<br>dfs.blockreport.intervalMsec   21600000ms=6小时<br>dfs.datanode.directoryscan.interval  21600s=6小时</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 subdir99]$ <span class="built_in">pwd</span></span><br><span class="line">/home/hadoop/tmp/dfs/data/current/BP-512886540-192.168.111.131-1589182330952/current/finalized/subdir0/subdir99</span><br></pre></td></tr></table></figure>
+<p>补充:<br><a href="https://ruozedata.github.io/2019/06/06/%E7%94%9F%E4%BA%A7HDFS%20Block%E6%8D%9F%E5%9D%8F%E6%81%A2%E5%A4%8D%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5(%E5%90%AB%E6%80%9D%E8%80%83%E9%A2%98)/" target="_blank" rel="noopener">HDFS Block损坏恢复方法</a><br>如果生产上检测到块损坏,集群会自己修复<br>手动修复不一定成功，看人品<br>手动回复需要集群上有3个副本</p>
+<p><strong>注意：hdfs不要以为时间的参数单位是一样的，需要查看命令帮助确认</strong></p>
+<h3 id="2-HDFS写流程"><a href="#2-HDFS写流程" class="headerlink" title="2.HDFS写流程"></a>2.HDFS写流程</h3><p><a href="https://wangqi1994.github.io/2020/05/11/HDFS写流程/" target="_blank" rel="noopener">HDFS写流程</a></p>
+<h3 id="3-HDFS读流程"><a href="#3-HDFS读流程" class="headerlink" title="3.HDFS读流程"></a>3.HDFS读流程</h3><p><a href="https://wangqi1994.github.io/2020/05/11/HDFS读流程/" target="_blank" rel="noopener">HDFS读流程</a></p>
+<h3 id="4-HDFS副本放置策略"><a href="#4-HDFS副本放置策略" class="headerlink" title="4.HDFS副本放置策略"></a>4.HDFS副本放置策略</h3><p><a href="https://wangqi1994.github.io/2020/05/11/HDFS副本放置策略/" target="_blank" rel="noopener">HDFS副本放置策略</a></p>
+
+      
+      <!-- reward -->
+      
+    </div>
+    
+    
+      <!-- copyright -->
+      
+        <div class="declare">
+          <ul class="post-copyright">
+            <li>
+              <i class="ri-copyright-line"></i>
+              <strong>版权声明： </strong>
+              本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+            </li>
+          </ul>
+        </div>
+        
+    <footer class="article-footer">
+      
+          
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
+
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2020/05/11/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B010/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div id="share-mask"></div>
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HDFS/" rel="tag">HDFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li></ul>
+
+
+    </footer>
+
+  </div>
+
+  
+  
+  <nav class="article-nav">
+    
+      <a href="/2020/05/11/Linux%E7%B3%BB%E7%BB%9Ftmp%E7%9B%AE%E5%BD%95%E8%87%AA%E5%8A%A8%E6%B8%85%E7%90%86%E6%80%BB%E7%BB%93/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            Linux系统tmp目录自动清理总结
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2020/05/10/hdfs%20command%20not%20found/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">解决bash: hdfs: command not found</div>
+      </a>
+    
+  </nav>
+
+
+  
+
+  
+
+  
+  
+<div class="gitalk" id="gitalk-container"></div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.6.2/dist/gitalk.min.js"></script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.10.0/js/md5.min.js"></script>
+
+<script type="text/javascript">
+  var gitalk = new Gitalk({
+    clientID: '58c59a1104624dc5c5f6',
+    clientSecret: 'c53c5169c12ee81c76693613def121b04dbf01b4',
+    repo: 'blog-commit',
+    owner: 'wangqi1994',
+    admin: ['wangqi1994'],
+    // id: location.pathname,      // Ensure uniqueness and length less than 50
+    id: md5(location.pathname),
+    distractionFreeMode: false,  // Facebook-like distraction free mode
+    pagerDirection: 'last'
+  })
+
+  gitalk.render('gitalk-container')
+</script>
+
+  
+  
+  
+
+</article>
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2017-2021
+        <i class="ri-heart-fill heart_icon"></i> WANG Qi
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        
+        由 <a href="https://hexo.io" target="_blank">Hexo</a> 强力驱动
+        <span class="division">|</span>
+        主题 - <a href="https://github.com/Shen-Yu/hexo-theme-ayer" target="_blank">Ayer</a>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+        
+        <span>
+  <span><i class="ri-user-3-fill"></i>访问人数:<span id="busuanzi_value_site_uv"></span></s>
+  <span class="division">|</span>
+  <span><i class="ri-eye-fill"></i>浏览次数:<span id="busuanzi_value_page_pv"></span></span>
+</span>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+        <script type="text/javascript">document.write(unescape("%3Cspan id='cnzz_stat_icon_1278882064'%3E%3C/span%3E%3Cscript src='https://v1.cnzz.com/z_stat.php%3Fid%3D1278882064%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));</script>
+        
+      </li>
+    </ul>
+  </div>
+</footer>
+      <div class="float_btns">
+        <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+      </div>
+    </main>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/gougou.png" alt=""></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags/%E6%97%85%E8%A1%8C/">旅行</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/2019/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <script>
+      if (window.matchMedia("(max-width: 768px)").matches) {
+        document.querySelector('.content').classList.remove('on');
+        document.querySelector('.sidebar').classList.remove('on');
+      }
+    </script>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-2.0.3.min.js"></script>
+
+
+<script src="/js/lazyload.min.js"></script>
+
+
+<script>
+  try {
+    var typed = new Typed("#subtitle", {
+      strings: ['面朝大海，春暖花开', '愿你一生努力，一生被爱', '想要的都拥有，得不到的都释怀'],
+      startDelay: 0,
+      typeSpeed: 200,
+      loop: true,
+      backSpeed: 100,
+      showCursor: true
+    });
+  } catch (err) {
+  }
+
+</script>
+
+
+
+
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  // Tocbot_v4.7.0  http://tscanlin.github.io/tocbot/
+  tocbot.init({
+    tocSelector: '.tocbot',
+    contentSelector: '.article-entry',
+    headingSelector: 'h1, h2, h3, h4, h5, h6',
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: 'main',
+    positionFixedSelector: '.tocbot',
+    positionFixedClass: 'is-position-fixed',
+    fixedSidebarOffset: 'auto'
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jquery-modal@0.9.2/jquery.modal.min.css">
+<script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+
+
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css">
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script>
+
+
+
+
+
+<script src="/js/busuanzi-2.3.pure.min.js"></script>
+
+
+
+<script type="text/javascript" src="https://js.users.51.la/20544303.js"></script>
+
+
+<!-- 复制 -->
+
+  
+<link rel="stylesheet" href="/css/clipboard.css">
+
+  <script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+
+
+
+
+    
+    <div id="music">
+    
+    
+    
+    <iframe frameborder="no" border="1" marginwidth="0" marginheight="0" width="200" height="52"
+        src="//music.163.com/outchain/player?type=2&id=22707008&auto=1&height=32"></iframe>
+</div>
+
+<style>
+    #music {
+        position: fixed;
+        right: 15px;
+        bottom: 0;
+        z-index: 998;
+    }
+</style>
+    
+  </div>
+</body>
+
+</html>
