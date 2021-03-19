@@ -11,7 +11,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <title>
-    HDFS写流程 |  
+    hexo版本问题导致报错“lineno” |  
   </title>
   <meta name="generator" content="hexo-theme-ayer">
   
@@ -43,7 +43,7 @@
   <div id="app">
     <main class="content on">
       <section class="outer">
-  <article id="post-HDFS写流程" class="article article-type-post" itemscope
+  <article id="post-2021-03-19-hexo版本问题导致报错“lineno”" class="article article-type-post" itemscope
   itemprop="blogPost" data-scroll-reveal>
 
   <div class="article-inner">
@@ -51,7 +51,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  HDFS写流程
+  hexo版本问题导致报错“lineno”
 </h1>
  
 
@@ -68,12 +68,12 @@
 
 
 
-<a href="/2020/05/11/HDFS%E5%86%99%E6%B5%81%E7%A8%8B/" class="article-date">
-  <time datetime="2020-05-11T04:00:00.000Z" itemprop="datePublished">2020-05-11</time>
+<a href="/2021/03/19/2021-03-19-hexo%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98%E5%AF%BC%E8%87%B4%E6%8A%A5%E9%94%99%E2%80%9Clineno%E2%80%9D/" class="article-date">
+  <time datetime="2021-03-19T04:00:00.000Z" itemprop="datePublished">2021-03-19</time>
 </a>
       
   <div class="article-category">
-    <a class="article-category-link" href="/categories/HDFS/">HDFS</a> / <a class="article-category-link" href="/categories/Hadoop/">Hadoop</a>
+    <a class="article-category-link" href="/categories/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/">软件配置</a>
   </div>
 
       
@@ -83,17 +83,17 @@
         <span class="article-type" style="
           color: white;
           font-size: 14px;
-          background: #bf59f3;
+          background: #8BC34A;
           padding: 0 5px 1px 5px;
           margin-right: 5px;
-          border-radius: 2px;">原创</span>
+          border-radius: 2px;">转载</span>
       
     
     <span class="post-time">
       <span class="post-meta-item-icon">
         <i class="fa fa-keyboard-o"></i>
         <span class="post-meta-item-text" style="font-size: 15px;color: _black">  字数统计: </span>
-        <span class="post-count" style="font-size: 14px;color: _black">608</span>
+        <span class="post-count" style="font-size: 14px;color: _black">698</span>
       </span>
     </span>
     
@@ -102,7 +102,7 @@
       <span class="post-meta-item-icon">
         <i class="fa fa-hourglass-half"></i>
         <span class="post-meta-item-text" style="font-size: 15px;color: _black">  阅读时长: </span>
-        <span class="post-count" style="font-size: 14px;color: _black">2分</span>
+        <span class="post-count" style="font-size: 14px;color: _black">4分</span>
       </span>
     </span>
 </div>
@@ -125,17 +125,14 @@
       
 
       
-      <p><strong>HDFS写流程</strong></p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@hadoop001 ~]$ <span class="built_in">echo</span> <span class="string">'ruozedata'</span> &gt;1.log</span><br><span class="line">[hadoop@hadoop001 ~]$ hdfs dfs -put 1.log  /</span><br><span class="line">20/05/12 09:40:38 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform...\ </span><br><span class="line">using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">[hadoop@hadoop001 ~]$ hdfs dfs -ls /</span><br><span class="line">20/05/12 09:40:51 WARN util.NativeCodeLoader: Unable to load native-hadoop library <span class="keyword">for</span> your platform...\ </span><br><span class="line">using <span class="built_in">builtin</span>-java classes <span class="built_in">where</span> applicable</span><br><span class="line">Found 4 items</span><br><span class="line">-rw-r--r--   1 hadoop supergroup         10 2020-05-12 09:40 /1.log</span><br><span class="line">drwx------   - hadoop supergroup          0 2020-05-11 16:19 /tmp</span><br><span class="line">drwxr-xr-x   - hadoop supergroup          0 2020-05-11 15:35 /usr</span><br><span class="line">drwxr-xr-x   - hadoop supergroup          0 2020-05-11 16:57 /wordcount2</span><br></pre></td></tr></table></figure>
-<p><img src="https://i.loli.net/2020/06/12/uklR3BGMaJiqV6x.png" alt="HDFS写流程图"></p>
-<p>写入操作对用户操作是无感知的<br>流程：<br>1.HDFS Client（client外框是操作系统，操作机器）调用FileSystem.create(filePath)方法，去和NN进行【RPC】通信！<br>NN 会去check这个路径的文件是否已经存在，是否有权限能够创建这个文件！<br>假如都ok，就去创建一个新的文件，但是这时还没写数据，是不关联任何的block。<br>nn根据上传的文件大小，根据块大小+副本数参数，<br>计算要上传多少块和块存储在DN的位置。最终将这些信息返回给客户端，<br>作为【FSDataOutputStream】对象</p>
-<p>2.Client调用【FSDataOutputStream】对象的write方法，<br>将第一个块的第一个副本数写第一个DN节点，<br>写完去第二个副本写DN2；写完去第三个副本写DN3。<br>当第三个副本写完，就返回一个ack packet确定包给DN2节点，<br>当DN2节点收到这个ack packet确定包加上自己也是写完了，就返回一个ack packet确定包给<br>第一个DN1节点，当DN1节点收到这个ack packet确定包加上自己也是写完了，<br>将ack packet确定包返回给【FSDataOutputStream】对象，就标识第一个块的三个副本写完。，<br>其他块以此类推！</p>
-<p>3.当所有的块全部写完， client调用 【FSDataOutputStream】对象的close方法，<br>关闭输出流。关闭输出流之后刷缓存区的数据（可不做）<br>再次调用FileSystem.complete方法，告诉nn文件写成功！</p>
-<p>伪分布式 1台dn  副本数参数必然是设置1<br>dn挂了，肯定不能写入</p>
-<p>生产分布式 3台dn  副本数参数必然是设置3<br>dn挂了，肯定不能写入</p>
-<p>生产分布式 &gt;3台dn  副本数参数必然是设置3<br>dn挂了，能写入</p>
-<p>存活的alive dn节点数&gt;=副本数 就能写成功</p>
-<p>建议副本数为3，多余数据无太大用</p>
+      <p>hexo -v出现的问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">$ hexo -v</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;lineno&#39; of module exports inside circular dependency</span><br><span class="line">(Use &#96;node --trace-warnings ...&#96; to show where the warning was created)</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;column&#39; of module exports inside circular dependency</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;filename&#39; of module exports inside circular dependency</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;lineno&#39; of module exports inside circular dependency</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;column&#39; of module exports inside circular dependency</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;filename&#39; of module exports inside circular dependency</span><br><span class="line">hexo: 4.2.0</span><br><span class="line">hexo-cli: 3.1.0</span><br><span class="line">os: Windows_NT 10.0.18363 win32 x64</span><br><span class="line">node: 14.0.0</span><br><span class="line">v8: 8.1.307.30-node.30</span><br><span class="line">uv: 1.37.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.7</span><br><span class="line">ares: 1.16.0</span><br><span class="line">modules: 83</span><br><span class="line">nghttp2: 1.40.0</span><br><span class="line">napi: 6</span><br><span class="line">llhttp: 2.0.4</span><br><span class="line">openssl: 1.1.1f</span><br><span class="line">cldr: 36.1</span><br><span class="line">icu: 66.1</span><br><span class="line">tz: 2019c</span><br><span class="line">unicode: 13.0</span><br></pre></td></tr></table></figure>
+
+<p>hexo d -g 出现的问题</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">$ hexo d -g</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;lineno&#39; of module exports inside circular dependency</span><br><span class="line">(Use &#96;node --trace-warnings ...&#96; to show where the warning was created)</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;column&#39; of module exports inside circular dependency</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;filename&#39; of module exports inside circular dependency</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;lineno&#39; of module exports inside circular dependency</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;column&#39; of module exports inside circular dependency</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;filename&#39; of module exports inside circular dependency</span><br><span class="line">INFO  Start processing</span><br><span class="line">INFO  Files loaded in 94 ms</span><br><span class="line">INFO  0 files generated in 22 ms</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">FATAL Something&#39;s wrong. Maybe you can find the solution here: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;troubleshooting.html</span><br><span class="line">TypeError [ERR_INVALID_ARG_TYPE]: The &quot;mode&quot; argument must be integer. Received an instance of Object</span><br><span class="line">    at copyFile (fs.js:1890:10)</span><br><span class="line">    at tryCatcher (D:\Blog\node_modules\bluebird\js\release\util.js:16:23)</span><br><span class="line">    at ret (eval at makeNodePromisifiedEval (D:\Node\node_global\node_modules\hexo-cli\node_modules\bluebird\js\release\promisify.js:184:12), &lt;anonymous&gt;:13:39)</span><br><span class="line">    at D:\Blog\node_modules\hexo-fs\lib\fs.js:144:39</span><br><span class="line">    at tryCatcher (D:\Blog\node_modules\bluebird\js\release\util.js:16:23)</span><br><span class="line">    at Promise._settlePromiseFromHandler (D:\Blog\node_modules\bluebird\js\release\promise.js:547:31)</span><br><span class="line">    at Promise._settlePromise (D:\Blog\node_modules\bluebird\js\release\promise.js:604:18)</span><br><span class="line">    at Promise._settlePromise0 (D:\Blog\node_modules\bluebird\js\release\promise.js:649:10)</span><br><span class="line">    at Promise._settlePromises (D:\Blog\node_modules\bluebird\js\release\promise.js:729:18)</span><br><span class="line">    at Promise._fulfill (D:\Blog\node_modules\bluebird\js\release\promise.js:673:18)</span><br><span class="line">    at Promise._resolveCallback (D:\Blog\node_modules\bluebird\js\release\promise.js:466:57)</span><br><span class="line">    at Promise._settlePromiseFromHandler (D:\Blog\node_modules\bluebird\js\release\promise.js:559:17)</span><br><span class="line">    at Promise._settlePromise (D:\Blog\node_modules\bluebird\js\release\promise.js:604:18)</span><br><span class="line">    at Promise._settlePromise0 (D:\Blog\node_modules\bluebird\js\release\promise.js:649:10)</span><br><span class="line">    at Promise._settlePromises (D:\Blog\node_modules\bluebird\js\release\promise.js:729:18)</span><br><span class="line">    at Promise._fulfill (D:\Blog\node_modules\bluebird\js\release\promise.js:673:18)</span><br><span class="line">    at Promise._resolveCallback (D:\Blog\node_modules\bluebird\js\release\promise.js:466:57)</span><br><span class="line">    at Promise._settlePromiseFromHandler (D:\Blog\node_modules\bluebird\js\release\promise.js:559:17)</span><br><span class="line">    at Promise._settlePromise (D:\Blog\node_modules\bluebird\js\release\promise.js:604:18)</span><br><span class="line">    at Promise._settlePromise0 (D:\Blog\node_modules\bluebird\js\release\promise.js:649:10)</span><br><span class="line">    at Promise._settlePromises (D:\Blog\node_modules\bluebird\js\release\promise.js:729:18)</span><br><span class="line">    at Promise._fulfill (D:\Blog\node_modules\bluebird\js\release\promise.js:673:18)</span><br></pre></td></tr></table></figure>
+
+<p>出现这些是因为node版本太高，切换成低版本的node来安装Hexo就可以了</p>
+<p>原先安装了最新版node14.0，后来装了一个比较稳定的node12.14版本，这个问题就解决了</p>
 
       
       <!-- reward -->
@@ -200,14 +197,14 @@
     <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2020/05/11/HDFS%E5%86%99%E6%B5%81%E7%A8%8B/" alt="微信分享二维码">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.com/wangqi1994/wangqi1994.github.io/2021/03/19/2021-03-19-hexo%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98%E5%AF%BC%E8%87%B4%E6%8A%A5%E9%94%99%E2%80%9Clineno%E2%80%9D/" alt="微信分享二维码">
     </div>
 </div>
 
 <div id="share-mask"></div>
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/HDFS/" rel="tag">HDFS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Hadoop/" rel="tag">Hadoop</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6%E9%85%8D%E7%BD%AE/" rel="tag">软件配置</a></li></ul>
 
 
     </footer>
@@ -218,19 +215,10 @@
   
   <nav class="article-nav">
     
-      <a href="/2020/05/11/HDFS%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            HDFS副本放置策略
-          
-        </div>
-      </a>
     
-    
-      <a href="/2020/05/11/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B/" class="article-nav-link">
+      <a href="/2021/03/18/2021-03-18-Typora%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E9%85%8D%E7%BD%AE%EF%BC%8C%E9%9B%86%E6%88%90PicGo-Core/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">HDFS读流程</div>
+        <div class="article-nav-title">Typora自动上传图片配置，集成PicGo-Core</div>
       </a>
     
   </nav>

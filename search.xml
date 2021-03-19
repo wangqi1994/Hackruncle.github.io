@@ -130,6 +130,25 @@
       </tags>
   </entry>
   <entry>
+    <title>hexo版本问题导致报错“lineno”</title>
+    <url>/2021/03/19/2021-03-19-hexo%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98%E5%AF%BC%E8%87%B4%E6%8A%A5%E9%94%99%E2%80%9Clineno%E2%80%9D/</url>
+    <content><![CDATA[<p>hexo -v出现的问题</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo -v</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;lineno&#39; of module exports inside circular dependency</span><br><span class="line">(Use &#96;node --trace-warnings ...&#96; to show where the warning was created)</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;column&#39; of module exports inside circular dependency</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;filename&#39; of module exports inside circular dependency</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;lineno&#39; of module exports inside circular dependency</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;column&#39; of module exports inside circular dependency</span><br><span class="line">(node:9876) Warning: Accessing non-existent property &#39;filename&#39; of module exports inside circular dependency</span><br><span class="line">hexo: 4.2.0</span><br><span class="line">hexo-cli: 3.1.0</span><br><span class="line">os: Windows_NT 10.0.18363 win32 x64</span><br><span class="line">node: 14.0.0</span><br><span class="line">v8: 8.1.307.30-node.30</span><br><span class="line">uv: 1.37.0</span><br><span class="line">zlib: 1.2.11</span><br><span class="line">brotli: 1.0.7</span><br><span class="line">ares: 1.16.0</span><br><span class="line">modules: 83</span><br><span class="line">nghttp2: 1.40.0</span><br><span class="line">napi: 6</span><br><span class="line">llhttp: 2.0.4</span><br><span class="line">openssl: 1.1.1f</span><br><span class="line">cldr: 36.1</span><br><span class="line">icu: 66.1</span><br><span class="line">tz: 2019c</span><br><span class="line">unicode: 13.0</span><br></pre></td></tr></table></figure>
+
+<p>hexo d -g 出现的问题</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ hexo d -g</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;lineno&#39; of module exports inside circular dependency</span><br><span class="line">(Use &#96;node --trace-warnings ...&#96; to show where the warning was created)</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;column&#39; of module exports inside circular dependency</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;filename&#39; of module exports inside circular dependency</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;lineno&#39; of module exports inside circular dependency</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;column&#39; of module exports inside circular dependency</span><br><span class="line">(node:3908) Warning: Accessing non-existent property &#39;filename&#39; of module exports inside circular dependency</span><br><span class="line">INFO  Start processing</span><br><span class="line">INFO  Files loaded in 94 ms</span><br><span class="line">INFO  0 files generated in 22 ms</span><br><span class="line">INFO  Deploying: git</span><br><span class="line">INFO  Clearing .deploy_git folder...</span><br><span class="line">INFO  Copying files from public folder...</span><br><span class="line">FATAL Something&#39;s wrong. Maybe you can find the solution here: https:&#x2F;&#x2F;hexo.io&#x2F;docs&#x2F;troubleshooting.html</span><br><span class="line">TypeError [ERR_INVALID_ARG_TYPE]: The &quot;mode&quot; argument must be integer. Received an instance of Object</span><br><span class="line">    at copyFile (fs.js:1890:10)</span><br><span class="line">    at tryCatcher (D:\Blog\node_modules\bluebird\js\release\util.js:16:23)</span><br><span class="line">    at ret (eval at makeNodePromisifiedEval (D:\Node\node_global\node_modules\hexo-cli\node_modules\bluebird\js\release\promisify.js:184:12), &lt;anonymous&gt;:13:39)</span><br><span class="line">    at D:\Blog\node_modules\hexo-fs\lib\fs.js:144:39</span><br><span class="line">    at tryCatcher (D:\Blog\node_modules\bluebird\js\release\util.js:16:23)</span><br><span class="line">    at Promise._settlePromiseFromHandler (D:\Blog\node_modules\bluebird\js\release\promise.js:547:31)</span><br><span class="line">    at Promise._settlePromise (D:\Blog\node_modules\bluebird\js\release\promise.js:604:18)</span><br><span class="line">    at Promise._settlePromise0 (D:\Blog\node_modules\bluebird\js\release\promise.js:649:10)</span><br><span class="line">    at Promise._settlePromises (D:\Blog\node_modules\bluebird\js\release\promise.js:729:18)</span><br><span class="line">    at Promise._fulfill (D:\Blog\node_modules\bluebird\js\release\promise.js:673:18)</span><br><span class="line">    at Promise._resolveCallback (D:\Blog\node_modules\bluebird\js\release\promise.js:466:57)</span><br><span class="line">    at Promise._settlePromiseFromHandler (D:\Blog\node_modules\bluebird\js\release\promise.js:559:17)</span><br><span class="line">    at Promise._settlePromise (D:\Blog\node_modules\bluebird\js\release\promise.js:604:18)</span><br><span class="line">    at Promise._settlePromise0 (D:\Blog\node_modules\bluebird\js\release\promise.js:649:10)</span><br><span class="line">    at Promise._settlePromises (D:\Blog\node_modules\bluebird\js\release\promise.js:729:18)</span><br><span class="line">    at Promise._fulfill (D:\Blog\node_modules\bluebird\js\release\promise.js:673:18)</span><br><span class="line">    at Promise._resolveCallback (D:\Blog\node_modules\bluebird\js\release\promise.js:466:57)</span><br><span class="line">    at Promise._settlePromiseFromHandler (D:\Blog\node_modules\bluebird\js\release\promise.js:559:17)</span><br><span class="line">    at Promise._settlePromise (D:\Blog\node_modules\bluebird\js\release\promise.js:604:18)</span><br><span class="line">    at Promise._settlePromise0 (D:\Blog\node_modules\bluebird\js\release\promise.js:649:10)</span><br><span class="line">    at Promise._settlePromises (D:\Blog\node_modules\bluebird\js\release\promise.js:729:18)</span><br><span class="line">    at Promise._fulfill (D:\Blog\node_modules\bluebird\js\release\promise.js:673:18)</span><br></pre></td></tr></table></figure>
+
+<p>出现这些是因为node版本太高，切换成低版本的node来安装Hexo就可以了</p>
+<p>原先安装了最新版node14.0，后来装了一个比较稳定的node12.14版本，这个问题就解决了</p>
+]]></content>
+      <categories>
+        <category>软件配置</category>
+      </categories>
+      <tags>
+        <tag>软件配置</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Typora自动上传图片配置，集成PicGo-Core</title>
     <url>/2021/03/18/2021-03-18-Typora%E8%87%AA%E5%8A%A8%E4%B8%8A%E4%BC%A0%E5%9B%BE%E7%89%87%E9%85%8D%E7%BD%AE%EF%BC%8C%E9%9B%86%E6%88%90PicGo-Core/</url>
     <content><![CDATA[<p>​         由于markdown上传图片默认是在本地，在其他地方打开时，看不了图片，所以对Typora进行PicGo-Core配置，从而自动上传图片至网络上。</p>
@@ -553,6 +572,26 @@
       </tags>
   </entry>
   <entry>
+    <title>HDFS副本放置策略</title>
+    <url>/2020/05/11/HDFS%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5/</url>
+    <content><![CDATA[<p><img src="https://i.loli.net/2020/06/12/dcyqj9agiGWkRHf.jpg" alt="机架"><br>机架 rack1 5   rack2 5</p>
+<p>生产上读写操作 尽量选择 某个DN节点<br>第一个副本：<br>放置在上传的DN节点； (nn和dn放一个副本中，有利于提升速度)<br>假如是非DN节点，就随机挑选一个磁盘不太慢，cpu不太忙的节点；</p>
+<p>第二个副本：<br>放置在第一个副本不同的机架上的某个DN节点。</p>
+<p>第三个副本:<br>与第二个副本相同机架的不同节点上。</p>
+<p>如果副本数设置更多，就随机放。</p>
+<p>机架安装考虑用电和机架的安装能力</p>
+<p>生产上一般不配置</p>
+]]></content>
+      <categories>
+        <category>Hadoop</category>
+        <category>HDFS</category>
+      </categories>
+      <tags>
+        <tag>Hadoop</tag>
+        <tag>HDFS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>HDFS写流程</title>
     <url>/2020/05/11/HDFS%E5%86%99%E6%B5%81%E7%A8%8B/</url>
     <content><![CDATA[<p><strong>HDFS写流程</strong></p>
@@ -588,26 +627,6 @@
 <p>然后去与第二个块的最近的DN进行读取，以此类推。</p>
 <p>假如当block列表全部读取完成，文件还没读取结束，就调用FileSystem从nn获取下一批次的block列表。</p>
 <p>3.Client调用【FSDataInputStream】对象close方法，关闭输入流。</p>
-]]></content>
-      <categories>
-        <category>Hadoop</category>
-        <category>HDFS</category>
-      </categories>
-      <tags>
-        <tag>Hadoop</tag>
-        <tag>HDFS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>HDFS副本放置策略</title>
-    <url>/2020/05/11/HDFS%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5/</url>
-    <content><![CDATA[<p><img src="https://i.loli.net/2020/06/12/dcyqj9agiGWkRHf.jpg" alt="机架"><br>机架 rack1 5   rack2 5</p>
-<p>生产上读写操作 尽量选择 某个DN节点<br>第一个副本：<br>放置在上传的DN节点； (nn和dn放一个副本中，有利于提升速度)<br>假如是非DN节点，就随机挑选一个磁盘不太慢，cpu不太忙的节点；</p>
-<p>第二个副本：<br>放置在第一个副本不同的机架上的某个DN节点。</p>
-<p>第三个副本:<br>与第二个副本相同机架的不同节点上。</p>
-<p>如果副本数设置更多，就随机放。</p>
-<p>机架安装考虑用电和机架的安装能力</p>
-<p>生产上一般不配置</p>
 ]]></content>
       <categories>
         <category>Hadoop</category>
