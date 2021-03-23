@@ -94,3 +94,4 @@ TypeError [ERR_INVALID_ARG_TYPE]: The "mode" argument must be integer. Received 
 出现这些是因为node版本太高，切换成低版本的node来安装Hexo就可以了
 
 原先安装了最新版node14.0，后来装了一个比较稳定的node12.14版本，这个问题就解决了
+
