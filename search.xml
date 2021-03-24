@@ -803,23 +803,6 @@
       </tags>
   </entry>
   <entry>
-    <title>解决Git提示Permission denied (publickey)</title>
-    <url>/2020/05/10/%E8%A7%A3%E5%86%B3Git%E6%8F%90%E7%A4%BAPermission%20denied%20(publickey)/</url>
-    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/wangqi1994/wangqi1994.github.io qiblog</span><br><span class="line">Cloning into <span class="string">'protobuf'</span>...</span><br><span class="line">The authenticity of host <span class="string">'github.com (13.229.188.59)'</span> can<span class="string">'t be established.</span></span><br><span class="line"><span class="string">RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.</span></span><br><span class="line"><span class="string">Are you sure you want to continue connecting (yes/no)? yes</span></span><br><span class="line"><span class="string">Warning: Permanently added '</span>github.com,13.229.188.59<span class="string">' (RSA) to the list of known hosts.</span></span><br><span class="line"><span class="string">git@github.com: Permission denied (publickey).</span></span><br><span class="line"><span class="string">fatal: Could not read from remote repository.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Please make sure you have the correct access rights</span></span><br><span class="line"><span class="string">and the repository exists.</span></span><br></pre></td></tr></table></figure>
-<p>github中自己账户settings-SSH and GPG keys-new ssh key<br>名字自己定，key有以下步骤提取。</p>
-<p>回到需要下载源码的机器终端</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa  <span class="comment">#敲入命令，一路回车</span></span><br><span class="line"><span class="built_in">cd</span> /root/.ssh/</span><br><span class="line">cat id_rsa.pub </span><br><span class="line">ssh-rsa AAAAB3AAABIwAAAQEAzVPno/Cm5ApGGMP8YjituJGegOCq7TVKVECehWog9hTfC0Z5PMsf</span><br><span class="line">5OWkWvUZ85nFJBuwhMszxkjFSd7e6INYJ42WfGKxPXm7ZoOQxkBZAetUUaNvDhCKZCdLNHWGde8gaX84</span><br><span class="line">i39JKWgwYrzX9Y1T+bDI1cJiUuNN6Xr8x4ZkMm4e+LugYtVSKGZKz7zLcp1mXQszh9mWM08/yyRq/CdT</span><br><span class="line">Ely1ghojUDUNFTzyk6VQz/rzMFoiVuwbYlQasqdR4xIzvnIjfBrtSP4z+qdD+wZFvSABnFClXH0nJEaa</span><br><span class="line">KX9EdJpi2ezvLvAblDg371J</span><br><span class="line"><span class="comment">#取出公钥，复制粘贴github中的key中，保存</span></span><br><span class="line">ssh -T git@github.com  <span class="comment"># 测试是否成功</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>BUG</category>
-        <category>Git</category>
-      </categories>
-      <tags>
-        <tag>BUG</tag>
-        <tag>Git</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>数仓培训第九天</title>
     <url>/2020/05/10/%E8%8B%A5%E6%B3%BD%E5%A4%A7%E6%95%B0%E6%8D%AE-%E5%89%91%E6%8C%87%E6%95%B0%E4%BB%93%E5%9F%B9%E8%AE%AD%E7%AC%94%E8%AE%B09/</url>
     <content><![CDATA[<h3 id="1-YARN部署"><a href="#1-YARN部署" class="headerlink" title="1.YARN部署"></a>1.YARN部署</h3><p><a href="https://hadoop.apache.org/docs/r2.10.0/hadoop-project-dist/hadoop-common/SingleCluster.html" target="_blank" rel="noopener">官网文档</a></p>
@@ -879,6 +862,23 @@
       <tags>
         <tag>Hadoop</tag>
         <tag>HDFS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>解决Git提示Permission denied (publickey)</title>
+    <url>/2020/05/10/%E8%A7%A3%E5%86%B3Git%E6%8F%90%E7%A4%BAPermission%20denied%20(publickey)/</url>
+    <content><![CDATA[<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> https://github.com/wangqi1994/wangqi1994.github.io qiblog</span><br><span class="line">Cloning into <span class="string">'protobuf'</span>...</span><br><span class="line">The authenticity of host <span class="string">'github.com (13.229.188.59)'</span> can<span class="string">'t be established.</span></span><br><span class="line"><span class="string">RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.</span></span><br><span class="line"><span class="string">Are you sure you want to continue connecting (yes/no)? yes</span></span><br><span class="line"><span class="string">Warning: Permanently added '</span>github.com,13.229.188.59<span class="string">' (RSA) to the list of known hosts.</span></span><br><span class="line"><span class="string">git@github.com: Permission denied (publickey).</span></span><br><span class="line"><span class="string">fatal: Could not read from remote repository.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Please make sure you have the correct access rights</span></span><br><span class="line"><span class="string">and the repository exists.</span></span><br></pre></td></tr></table></figure>
+<p>github中自己账户settings-SSH and GPG keys-new ssh key<br>名字自己定，key有以下步骤提取。</p>
+<p>回到需要下载源码的机器终端</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa  <span class="comment">#敲入命令，一路回车</span></span><br><span class="line"><span class="built_in">cd</span> /root/.ssh/</span><br><span class="line">cat id_rsa.pub </span><br><span class="line">ssh-rsa AAAAB3AAABIwAAAQEAzVPno/Cm5ApGGMP8YjituJGegOCq7TVKVECehWog9hTfC0Z5PMsf</span><br><span class="line">5OWkWvUZ85nFJBuwhMszxkjFSd7e6INYJ42WfGKxPXm7ZoOQxkBZAetUUaNvDhCKZCdLNHWGde8gaX84</span><br><span class="line">i39JKWgwYrzX9Y1T+bDI1cJiUuNN6Xr8x4ZkMm4e+LugYtVSKGZKz7zLcp1mXQszh9mWM08/yyRq/CdT</span><br><span class="line">Ely1ghojUDUNFTzyk6VQz/rzMFoiVuwbYlQasqdR4xIzvnIjfBrtSP4z+qdD+wZFvSABnFClXH0nJEaa</span><br><span class="line">KX9EdJpi2ezvLvAblDg371J</span><br><span class="line"><span class="comment">#取出公钥，复制粘贴github中的key中，保存</span></span><br><span class="line">ssh -T git@github.com  <span class="comment"># 测试是否成功</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>BUG</category>
+        <category>Git</category>
+      </categories>
+      <tags>
+        <tag>BUG</tag>
+        <tag>Git</tag>
       </tags>
   </entry>
   <entry>
@@ -1150,7 +1150,7 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo init ruozedatablog</span><br><span class="line"></span><br><span class="line">npm install</span><br><span class="line"></span><br><span class="line">hexo clean <span class="comment">#清理缓存</span></span><br><span class="line"></span><br><span class="line">hexo g <span class="comment">#生成静态文件</span></span><br><span class="line"></span><br><span class="line">hexo s <span class="comment">#启动服务器</span></span><br><span class="line"></span><br><span class="line">hexo clean &amp;&amp; hexo g &amp;&amp; hexo s</span><br></pre></td></tr></table></figure>
 <p><a href="http://localhost:4000/" target="_blank" rel="noopener">http://localhost:4000/</a></p>
 <h3 id="4-github"><a href="#4-github" class="headerlink" title="4.github"></a>4.github</h3><p>注册 英文名称简约 好记 高大尚<br><a href="https://github.com/join?source=header-home">https://github.com/join?source=header-home</a>  注册 </p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">"zxcwangqi@163.com"</span></span><br><span class="line"><span class="comment">#settings进入ssh 点击generate ssh ，选generate new ssh </span></span><br><span class="line"><span class="built_in">cd</span> /c/Users/Administrator/.ssh/id_rsa.pub</span><br><span class="line"><span class="comment"># 在github上设置新的ssh，将上述文件拷入ssh的key中建立连接</span></span><br><span class="line">ssh -T git@github.com  <span class="comment"># 第一次执行 是需要输入yes</span></span><br><span class="line"></span><br><span class="line">git config --global user.name <span class="string">"wangqi1994"</span></span><br><span class="line">git config --global user.email <span class="string">"zxcwangqi@163.com"</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ssh-keygen -t rsa -b 4096 -C <span class="string">"zxcwangqi@163.com"</span></span><br><span class="line"><span class="comment">#settings进入ssh 点击generate ssh ，选generate new ssh </span></span><br><span class="line"><span class="built_in">cd</span> /c/Users/Administrator/.ssh/id_rsa.pub <span class="comment">#注意Administrator是本地电脑名称</span></span><br><span class="line"><span class="comment"># 在github上设置新的ssh，将上述文件拷入ssh的key中建立连接</span></span><br><span class="line">ssh -T git@github.com  <span class="comment"># 第一次执行 是需要输入yes</span></span><br><span class="line"></span><br><span class="line">git config --global user.name <span class="string">"wangqi1994"</span></span><br><span class="line">git config --global user.email <span class="string">"zxcwangqi@163.com"</span></span><br></pre></td></tr></table></figure>
 
 <p><a href="https://github.com/wangqi1994/wangqi1994.github.io">https://github.com/wangqi1994/wangqi1994.github.io</a><br>名字需要一致</p>
 <h3 id="5-hexo部署github"><a href="#5-hexo部署github" class="headerlink" title="5.hexo部署github"></a>5.hexo部署github</h3><p>window—&gt;github</p>
@@ -1442,6 +1442,30 @@
       </tags>
   </entry>
   <entry>
+    <title>JDK部署</title>
+    <url>/2020/04/26/JDK%E9%83%A8%E7%BD%B2/</url>
+    <content><![CDATA[<h3 id="环境："><a href="#环境：" class="headerlink" title="环境："></a>环境：</h3><p>OS：CentOS7.2 （虚拟机）<br>JDK版本：jdk-8u45-linux-x64.gz （百度下载)</p>
+<h3 id="1-安装准备"><a href="#1-安装准备" class="headerlink" title="1.安装准备"></a>1.安装准备</h3><p>windows下载安装包，通过rz上传到Linux系统中</p>
+<h3 id="2-解压JDK程序包"><a href="#2-解压JDK程序包" class="headerlink" title="2.解压JDK程序包"></a>2.解压JDK程序包</h3><p>jdk文件建议放在/usr/java,没有则创建</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@ruozedata001 ~]<span class="comment"># mkdir  /usr/java</span></span><br><span class="line">[root@ruozedata001 ~]<span class="comment"># tar -xzvf jdk-8u45-linux-x64.gz -C /usr/java/</span></span><br><span class="line"> <span class="comment"># -C 解压到那个文件夹 /usr/java</span></span><br><span class="line"> <span class="comment"># tar.gz解压储来之后建议习惯性查看一下所属用户和用户组有没有变化</span></span><br><span class="line"> <span class="comment"># 可能存在权限问题：那是解压一瞬间的用户和用户组，导致用户错误，可能会报错莫名其妙</span></span><br><span class="line">[root@hadoop001 java]<span class="comment"># ll</span></span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x. 8 10 143 4096 Apr 11  2015 jdk1.8.0_45</span><br><span class="line">[root@hadoop001 java]<span class="comment"># chown -R root:root jdk1.8.0_45</span></span><br><span class="line">[root@hadoop001 java]<span class="comment"># ll</span></span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x. 8 root root 4096 Apr 11  2015 jdk1.8.0_45</span><br><span class="line"> <span class="comment">#修改用户权限</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-配置环境变量"><a href="#3-配置环境变量" class="headerlink" title="3.配置环境变量"></a>3.配置环境变量</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@ruozedata001 java]<span class="comment"># vi /etc/profile</span></span><br><span class="line"><span class="comment">#ruozedata env</span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/java/jdk1.8.0_45</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
+<h3 id="4-source生效环境变量"><a href="#4-source生效环境变量" class="headerlink" title="4.source生效环境变量"></a>4.source生效环境变量</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@ruozedata001 ~]<span class="comment"># source /etc/profile</span></span><br><span class="line">[root@ruozedata001 ~]<span class="comment"># which java</span></span><br><span class="line">/usr/java/jdk1.8.0_45/bin/java</span><br></pre></td></tr></table></figure>
+<p>export 生效，路径必须是/usr/java<br>保存，生效</p>
+<h3 id="5-测试"><a href="#5-测试" class="headerlink" title="5.测试"></a>5.测试</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@hadoop001 ~]<span class="comment"># which java</span></span><br><span class="line">/usr/java/jdk1.8.0_45/bin/java</span><br><span class="line">[root@hadoop001 ~]<span class="comment"># java -version</span></span><br><span class="line">java version <span class="string">"1.8.0_45"</span></span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_45-b14)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.45-b02, mixed mode)</span><br></pre></td></tr></table></figure>
+<p>完成JDK部署</p>
+]]></content>
+      <categories>
+        <category>ruozedata</category>
+        <category>Linux</category>
+        <category>JAVA</category>
+      </categories>
+      <tags>
+        <tag>ruozedata</tag>
+        <tag>Linux</tag>
+        <tag>JAVA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>MySQL部署</title>
     <url>/2020/04/26/MySQL%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[<h3 id="环境："><a href="#环境：" class="headerlink" title="环境："></a>环境：</h3><p>OS：CentOS7.2 （虚拟机）<br>MySQL安装包版本mysql-5.7.11-linux-glibc2.5-x86_64.tar.gz</p>
@@ -1474,30 +1498,6 @@
         <tag>ruozedata</tag>
         <tag>Linux</tag>
         <tag>MySQL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>JDK部署</title>
-    <url>/2020/04/26/JDK%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[<h3 id="环境："><a href="#环境：" class="headerlink" title="环境："></a>环境：</h3><p>OS：CentOS7.2 （虚拟机）<br>JDK版本：jdk-8u45-linux-x64.gz （百度下载)</p>
-<h3 id="1-安装准备"><a href="#1-安装准备" class="headerlink" title="1.安装准备"></a>1.安装准备</h3><p>windows下载安装包，通过rz上传到Linux系统中</p>
-<h3 id="2-解压JDK程序包"><a href="#2-解压JDK程序包" class="headerlink" title="2.解压JDK程序包"></a>2.解压JDK程序包</h3><p>jdk文件建议放在/usr/java,没有则创建</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@ruozedata001 ~]<span class="comment"># mkdir  /usr/java</span></span><br><span class="line">[root@ruozedata001 ~]<span class="comment"># tar -xzvf jdk-8u45-linux-x64.gz -C /usr/java/</span></span><br><span class="line"> <span class="comment"># -C 解压到那个文件夹 /usr/java</span></span><br><span class="line"> <span class="comment"># tar.gz解压储来之后建议习惯性查看一下所属用户和用户组有没有变化</span></span><br><span class="line"> <span class="comment"># 可能存在权限问题：那是解压一瞬间的用户和用户组，导致用户错误，可能会报错莫名其妙</span></span><br><span class="line">[root@hadoop001 java]<span class="comment"># ll</span></span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x. 8 10 143 4096 Apr 11  2015 jdk1.8.0_45</span><br><span class="line">[root@hadoop001 java]<span class="comment"># chown -R root:root jdk1.8.0_45</span></span><br><span class="line">[root@hadoop001 java]<span class="comment"># ll</span></span><br><span class="line">total 4</span><br><span class="line">drwxr-xr-x. 8 root root 4096 Apr 11  2015 jdk1.8.0_45</span><br><span class="line"> <span class="comment">#修改用户权限</span></span><br></pre></td></tr></table></figure>
-<h3 id="3-配置环境变量"><a href="#3-配置环境变量" class="headerlink" title="3.配置环境变量"></a>3.配置环境变量</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@ruozedata001 java]<span class="comment"># vi /etc/profile</span></span><br><span class="line"><span class="comment">#ruozedata env</span></span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/java/jdk1.8.0_45</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$JAVA_HOME</span>/bin:<span class="variable">$PATH</span></span><br></pre></td></tr></table></figure>
-<h3 id="4-source生效环境变量"><a href="#4-source生效环境变量" class="headerlink" title="4.source生效环境变量"></a>4.source生效环境变量</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@ruozedata001 ~]<span class="comment"># source /etc/profile</span></span><br><span class="line">[root@ruozedata001 ~]<span class="comment"># which java</span></span><br><span class="line">/usr/java/jdk1.8.0_45/bin/java</span><br></pre></td></tr></table></figure>
-<p>export 生效，路径必须是/usr/java<br>保存，生效</p>
-<h3 id="5-测试"><a href="#5-测试" class="headerlink" title="5.测试"></a>5.测试</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@hadoop001 ~]<span class="comment"># which java</span></span><br><span class="line">/usr/java/jdk1.8.0_45/bin/java</span><br><span class="line">[root@hadoop001 ~]<span class="comment"># java -version</span></span><br><span class="line">java version <span class="string">"1.8.0_45"</span></span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_45-b14)</span><br><span class="line">Java HotSpot(TM) 64-Bit Server VM (build 25.45-b02, mixed mode)</span><br></pre></td></tr></table></figure>
-<p>完成JDK部署</p>
-]]></content>
-      <categories>
-        <category>ruozedata</category>
-        <category>Linux</category>
-        <category>JAVA</category>
-      </categories>
-      <tags>
-        <tag>ruozedata</tag>
-        <tag>Linux</tag>
-        <tag>JAVA</tag>
       </tags>
   </entry>
   <entry>
