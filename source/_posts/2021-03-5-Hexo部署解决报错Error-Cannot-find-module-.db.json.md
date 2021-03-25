@@ -2,14 +2,14 @@
 title: "Hexo部署解决报错Error: Cannot find module './db.json'"
 catalog: true
 toc_nav_num: true
-date: 2021-03-5 12:00:00
+date: 2021-03-25 12:00:00
 subtitle: "备忘流程"
 article_type: 0 # 0 原创，1 转载
 tags:
 - [hexo]
 categories:
 - [hexo]
-updateDate: 2021-03-5 12:00:00
+updateDate: 2021-03-25 12:00:00
 top: 0  #置顶
 
 ---
