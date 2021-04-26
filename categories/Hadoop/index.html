@@ -307,13 +307,13 @@
       
 
 
-<a href="/2020/05/11/HDFS%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5/" class="archive-article-date">
+<a href="/2020/05/11/HDFS%E5%86%99%E6%B5%81%E7%A8%8B/" class="archive-article-date">
   <time datetime="2020-05-11T04:00:00.000Z" itemprop="datePublished">05/11</time>
 </a>
        
 <h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/05/11/HDFS%E5%89%AF%E6%9C%AC%E6%94%BE%E7%BD%AE%E7%AD%96%E7%95%A5/"
-    >HDFS副本放置策略</a> 
+  <a class="archive-article-title" href="/2020/05/11/HDFS%E5%86%99%E6%B5%81%E7%A8%8B/"
+    >HDFS写流程</a> 
 </h2>
  
 
@@ -337,13 +337,13 @@
       
 
 
-<a href="/2020/05/11/HDFS%E5%86%99%E6%B5%81%E7%A8%8B/" class="archive-article-date">
+<a href="/2020/05/11/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B/" class="archive-article-date">
   <time datetime="2020-05-11T04:00:00.000Z" itemprop="datePublished">05/11</time>
 </a>
        
 <h2 itemprop="name">
-  <a class="archive-article-title" href="/2020/05/11/HDFS%E5%86%99%E6%B5%81%E7%A8%8B/"
-    >HDFS写流程</a> 
+  <a class="archive-article-title" href="/2020/05/11/HDFS%E8%AF%BB%E6%B5%81%E7%A8%8B/"
+    >HDFS读流程</a> 
 </h2>
  
 
@@ -746,6 +746,34 @@
         z-index: 998;
     }
 </style>
+
+<script>
+    var $DOC = $(document)
+    $('#musicMouseDrag').on('mousedown', function (e) {
+      // 阻止文本选中
+      $DOC.bind("selectstart", function () {
+        return false;
+      });
+      $('#musicDragArea').css('height', '100%');
+      var $moveTarget = $('#musicMouseDrag');
+      $moveTarget.css('border', '1px dashed grey')
+      var div_x = e.pageX - $moveTarget.offset().left;
+      var div_y = e.pageY - $moveTarget.offset().top;
+      $DOC.on('mousemove', function (e) {
+        var targetX = e.pageX - div_x;
+        var targetY = e.pageY - div_y;
+        targetX = targetX < 0 ? 0 : (targetX + $moveTarget.outerWidth() >= window.innerWidth) ? window.innerWidth - $moveTarget.outerWidth() : targetX;
+        targetY = targetY < 0 ? 0 : (targetY + $moveTarget.outerHeight() >= window.innerHeight) ? window.innerHeight - $moveTarget.outerHeight() : targetY;
+        $moveTarget.css({'left': targetX + 'px', 'top': targetY + 'px', 'bottom': 'inherit', 'right': 'inherit'})
+      }).on('mouseup', function () {
+        $DOC.unbind("selectstart");
+        $DOC.off('mousemove')
+        $DOC.off('mouseup')
+        $moveTarget.css('border', 'none')
+        $('#musicDragArea').css('height', '10px');
+      })
+    })
+</script>
     
   </div>
 </body>
