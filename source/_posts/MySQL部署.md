@@ -65,9 +65,9 @@ interactive_timeout = 86400
 max_connections = 600
 
 # Try number of CPU's*2 for thread_concurrency
-#thread_concurrency = 32 
+# thread_concurrency = 32 
 
-#isolation level and default engine 
+# isolation level and default engine 
 default-storage-engine = INNODB
 transaction-isolation = READ-COMMITTED
 
