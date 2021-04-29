@@ -8,6 +8,7 @@
 
 <head>
   <meta charset="utf-8" />
+  <meta name="baidu-site-verification" content="code-Ef28lExmUS" />
   <% var title = page.title; if (is_archive()) { title = __('archive_a'); if
     (is_month()) { title += ': ' + page.year + '/' + page.month; } else if
     (is_year()) { title += ': ' + page.year; } } else if (is_category()) { title
@@ -36,6 +37,7 @@
   <% } %>
   <%- partial('google-analytics') %>
   <%- partial('baidu-analytics') %>
+  
 </head>
 
 </html>

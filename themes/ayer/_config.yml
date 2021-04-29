@@ -239,3 +239,11 @@ ads:
     img: https://cdn.jsdelivr.net/gh/Shen-Yu/cdn/img/ad_2.jpg
     url: https://curl.qcloud.com/kvO7hb43
     width: 300
+    
+
+
+
+sitemap:
+	path: sitemap.xml
+baidusitemap:
+	path: baidusitemap.xml
